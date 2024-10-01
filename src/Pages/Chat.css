@@ -1,0 +1,101 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+}
+
+.message-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.message {
+  max-width: 70%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.user {
+  align-self: flex-start;
+  background-color: #e6f2ff;
+}
+
+.bot {
+  align-self: flex-end;
+  background-color: #f0f0f0;
+}
+.input-area {
+  padding: 20px;
+  border-top: 1px solid #ccc;
+}
+
+form {
+  display: flex;
+}
+
+input {
+  flex-grow: 1;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.option-grid button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.option-grid button:hover {
+  background-color: #0056b3;
+}
+
+.visa-options,
+.visa-type-options,
+.ssn-options {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.visa-options button,
+.visa-type-options button,
+.ssn-options button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.visa-options button:hover,
+.visa-type-options button:hover,
+.ssn-options button:hover {
+  background-color: #0056b3;
+}
