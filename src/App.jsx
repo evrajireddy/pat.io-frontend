@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./Pages/Home";
+import Welcome from "./Pages/Welcome";
 import Languages from "./Pages/Languages";
 import Chat from "./Pages/Chat";
 import About from "./Pages/About";
@@ -13,7 +13,7 @@ function App() {
       <Router>
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Welcome />} />
             <Route path="/language" element={<Languages />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/about" element={<About />} />
