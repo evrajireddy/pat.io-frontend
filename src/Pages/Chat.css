@@ -24,12 +24,12 @@
 }
 
 .user {
-  align-self: flex-start;
+  align-self: flex-end;
   background-color: #e6f2ff;
 }
 
 .bot {
-  align-self: flex-end;
+  align-self: flex-start;
   background-color: #f0f0f0;
 }
 .input-area {
@@ -77,7 +77,10 @@ button {
 
 .visa-options,
 .visa-type-options,
-.ssn-options {
+.ssn-options,
+.document-status-buttons,
+.office-info-buttons,
+.law30-options {
   display: flex;
   justify-content: space-around;
   margin-top: 10px;
@@ -85,7 +88,10 @@ button {
 
 .visa-options button,
 .visa-type-options button,
-.ssn-options button {
+.ssn-options button,
+.document-status-buttons button,
+.office-info-buttons button,
+.law30-options button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -96,6 +102,20 @@ button {
 
 .visa-options button:hover,
 .visa-type-options button:hover,
-.ssn-options button:hover {
+.ssn-options button:hover,
+.document-status-buttons button:hover,
+.office-info-buttons button:hover,
+.law30-options button:hover {
   background-color: #0056b3;
+}
+
+.checkbox-item {
+  /* display: flex; */
+  /* align-items: flex-start; */
+  margin-bottom: 5px;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px;
+  margin-top: 3px;
 }
