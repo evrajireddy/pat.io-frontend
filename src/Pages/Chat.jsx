@@ -79,7 +79,7 @@ export default function Chat() {
     });
 
     try {
-      const response = await fetch("http://pat-io.onrender.com/api/chat", {
+      const response = await fetch("https://pat-io.onrender.com/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -298,7 +298,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("http://pat-io.onrender.com/api/chat", {
+      const response = await fetch("https://pat-io.onrender.com/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
