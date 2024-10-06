@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router
 import Sketch from "react-p5"; // Directly import react-p5
 import "./Welcome.css";
 
 export default function Home() {
   const [isSplashVisible, setSplashVisible] = useState(true);
   const [lights, setLights] = useState([]);
+  const navigate = useNavigate(); // useNavigate for navigation
 
-  // Hide the splash screen after 5 seconds
+  // Hide the splash screen after 15 seconds and navigate to the languages page
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplashVisible(false);
+      navigate("/languages"); // Navigate to the language page after 15 seconds
     }, 15000);
+
     return () => clearTimeout(timer); // Cleanup the timer
-  }, []);
+  }, [navigate]);
 
   const setup = (p5, canvasParentRef) => {
     // Set canvas width and height based on the window size
@@ -101,11 +105,7 @@ export default function Home() {
     <div style={{ margin: 0, padding: 0, overflow: 'hidden', height: '100vh', width: '100vw' }}>
       {isSplashVisible ? (
         <Sketch setup={setup} draw={draw} />
-      ) : (
-        <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <h1>Home</h1>
-        </div>
-      )}
+      ) : null }
     </div>
   );
 }

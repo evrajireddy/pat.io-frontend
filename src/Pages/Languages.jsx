@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -34,35 +33,46 @@ export default function Languages() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [selectedLang, setSelectedLang] = useState(null);
 
-  const changeLanguage = (lang) => {
-    setLoading(true); // Activate loading state
-    i18n.changeLanguage(lang).then(() => {
-      const chatLangCode = languageMapping[lang] || "en";
-      localStorage.setItem("chatLanguage", chatLangCode);
-      setLoading(false); // Deactivate loading state
-      navigate("/chat");
-    });
+  const handleLanguageClick = (lang) => {
+    setSelectedLang(lang);
+    setTimeout(() => {
+      i18n.changeLanguage(lang);
+      localStorage.setItem("chatLanguage", languageMapping[lang] || "en");
+      setLoading(false);
+    }, 1000); // Simulate loading and language change
+  };
+
+  const confirmSelection = () => {
+    navigate("/chat");
   };
 
   return (
     <div className="languages-container">
       <h1 className="title">Select a Language</h1>
-      {loading ? (
-        <div className="loading-spinner">Loading...</div>
-      ) : (
-        <div className="languages-grid-container">
-          <div className="languages-grid">
-            {Object.entries(languageMapping).map(([lang, name]) => (
-              <div
-                key={lang}
-                onClick={() => changeLanguage(lang)}
-                className="language-card"
-              >
-                <span className="language-text">{name}</span>
-              </div>
-            ))}
-          </div>
+      <div className="languages-grid-container">
+        <div className="languages-grid">
+          {Object.entries(languageMapping).map(([lang, name]) => (
+            <div
+              key={lang}
+              onClick={() => handleLanguageClick(lang)}
+              className={`language-card ${selectedLang === lang ? "glow" : ""}`}
+            >
+              <span className="language-text">{name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      {selectedLang && (
+        <div className="confirmation-popup">
+          <p>
+            You selected <strong>{languageMapping[selectedLang]}</strong>. 
+            Would you like to continue?
+          </p>
+          <button className="confirm-button" onClick={confirmSelection}>
+            Yes, Continue
+          </button>
         </div>
       )}
     </div>
