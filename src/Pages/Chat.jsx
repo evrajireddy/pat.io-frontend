@@ -42,7 +42,7 @@ export default function Chat() {
 
   const messageListRef = useRef(null);
   const inputRef = useRef(null);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   console.log("User Interactions:", userInteractions);
 
