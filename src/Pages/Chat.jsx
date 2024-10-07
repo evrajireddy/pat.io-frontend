@@ -148,6 +148,9 @@ export default function Chat() {
         ...prevMessages,
         { text: "An error occurred. Please try again.", sender: "bot" },
       ]);
+    } finally {
+      setIsLoading(false);
+      resetAfterSubmit();
     }
   };
 
@@ -200,18 +203,40 @@ export default function Chat() {
         },
       ]);
     } finally {
+      resetAfterSubmit();
       setIsLoading(false);
       setInput("");
-      setUserInteractions({
-        buttonClicks: {
-          subject: null,
-          valid_visa: null,
-          visa_type: null,
-          request_info: null,
-        },
-        textInputs: [],
-      });
     }
+  };
+
+  // Function to reset user interactions
+  const resetUserInteractions = () => {
+    setUserInteractions({
+      buttonClicks: {
+        subject: null,
+        valid_visa: null,
+        visa_type: null,
+        request_info: null,
+      },
+      textInputs: [],
+    });
+  };
+
+  // Function to toggle all buttons off
+  const toggleAllButtonsOff = () => {
+    setUiState((prev) => ({
+      ...prev,
+      visibleOptions: Object.keys(prev.visibleOptions).reduce(
+        (acc, key) => ({ ...acc, [key]: false }),
+        {}
+      ),
+    }));
+  };
+
+  // Function to reset user interactions and toggle all buttons off
+  const resetAfterSubmit = () => {
+    resetUserInteractions();
+    toggleAllButtonsOff();
   };
 
   // Function to play audio response
@@ -369,6 +394,8 @@ export default function Chat() {
         ...prevMessages,
         { text: "An error occurred. Please try again.", sender: "bot" },
       ]);
+    } finally {
+      resetUserInteractions();
     }
   };
 
