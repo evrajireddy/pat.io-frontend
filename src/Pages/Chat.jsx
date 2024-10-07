@@ -105,6 +105,17 @@ export default function Chat() {
 
   // Function to get closest office
   const handleLocationSubmit = async (input) => {
+    if (!input || input.trim() === "") {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Please enter a valid zip code.", sender: "bot" },
+      ]);
+      return;
+    }
+
+    const finalUserLanguage = userLanguage || "en-US";
+    const finalTargetLanguage = targetLanguage || "en-US";
+
     try {
       const response = await fetch("http://localhost:3123/api/location", {
         method: "POST",
@@ -112,15 +123,19 @@ export default function Chat() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          zipCode: input,
+          userLanguage: finalUserLanguage,
+          targetLanguage: finalTargetLanguage,
+          zipCode: input.trim(), // trim extra spaces
         }),
       });
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(
           `Request failed with status ${response.status}: ${errorText}`
         );
       }
+
       const data = await response.json();
       console.log("API Response:", data);
       setMessages((prevMessages) => [
@@ -187,6 +202,15 @@ export default function Chat() {
     } finally {
       setIsLoading(false);
       setInput("");
+      setUserInteractions({
+        buttonClicks: {
+          subject: null,
+          valid_visa: null,
+          visa_type: null,
+          request_info: null,
+        },
+        textInputs: [],
+      });
     }
   };
 
@@ -615,8 +639,7 @@ export default function Chat() {
             e.preventDefault();
             if (
               input.trim() !== "" &&
-              messages[messages.length - 1].text ===
-                "Can I have your zip code please"
+              messages[messages.length - 1].text === t("nearestOffice")
             ) {
               setMessages((prevMessages) => [
                 ...prevMessages,
