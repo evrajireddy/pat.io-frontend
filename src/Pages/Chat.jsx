@@ -156,6 +156,7 @@ export default function Chat() {
 
   // Sending the targetLanguage to the backend along with the message
   const handleSubmit = async () => {
+    resetUserInteractions();
     if (!input.trim()) return;
     setIsLoading(true);
 
@@ -683,7 +684,10 @@ export default function Chat() {
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              resetUserInteractions();
+            }}
             placeholder={t("type")}
           />
           <button type="submit" disabled={!input.trim() || isLoading}>
