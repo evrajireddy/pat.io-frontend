@@ -117,7 +117,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("http://localhost:3123/api/location", {
+      const response = await fetch("https://pat-io.onrender.com/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -164,7 +164,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("http://localhost:3123/api/chat", {
+      const response = await fetch("https://pat-io.onrender.com/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -411,7 +411,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("http://localhost:3123/api/chat", {
+      const response = await fetch("https://pat-io.onrender.com/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
