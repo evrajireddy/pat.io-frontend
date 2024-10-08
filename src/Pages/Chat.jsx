@@ -17,11 +17,19 @@ export default function Chat() {
     () => localStorage.getItem("chatLanguage") || "en-US"
   );
 
-  const [showVisaOptions, setShowVisaOptions] = useState(false);
-  const [showLaw30Options, setShowLaw30Options] = useState(false);
-  const [showVisaTypeOptions, setShowVisaTypeOptions] = useState(false);
-  const [showSSNOptions, setShowSSNOptions] = useState(false);
+  // Unified UI visibility state
+  const [uiState, setUiState] = useState({
+    visibleOptions: {
+      visa: false,
+      law30: false,
+      visaType: false,
+      ssn: false,
+      showDocumentButtons: false,
+      showOfficeInfoButtons: false,
+    },
+  });
 
+  // Unified user interactions state
   const [userInteractions, setUserInteractions] = useState({
     buttonClicks: {
       subject: null,
@@ -34,7 +42,41 @@ export default function Chat() {
 
   const messageListRef = useRef(null);
   const inputRef = useRef(null);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+
+  console.log("User Interactions:", userInteractions);
+
+  // Helper function to update UI visibility
+  const toggleOption = (optionName, value = null) => {
+    setUiState((prev) => ({
+      ...prev,
+      visibleOptions: {
+        ...Object.keys(prev.visibleOptions).reduce(
+          (acc, key) => ({
+            ...acc,
+            [key]:
+              key === optionName
+                ? value !== null
+                  ? value
+                  : !prev.visibleOptions[key]
+                : false,
+          }),
+          {}
+        ),
+      },
+    }));
+  };
+
+  // Helper function to update user interactions
+  const updateUserInteraction = (category, key, value) => {
+    setUserInteractions((prev) => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [key]: value,
+      },
+    }));
+  };
 
   useEffect(() => {
     if (messageListRef.current) {
@@ -61,22 +103,65 @@ export default function Chat() {
     }
   }, []);
 
-  // Sending the targetLanguage to the backend along with the message
-  const handleSubmit = async () => {
-    if (!input.trim()) return;
+  // Function to get closest office
+  const handleLocationSubmit = async (input) => {
+    if (!input || input.trim() === "") {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Please enter a valid zip code.", sender: "bot" },
+      ]);
+      return;
+    }
 
-    setIsLoading(true);
-
-    // Use default language if user hasn't selected
     const finalUserLanguage = userLanguage || "en-US";
     const finalTargetLanguage = targetLanguage || "en-US";
 
-    console.log({
-      message: input,
-      userLanguage: finalUserLanguage,
-      targetLanguage: finalTargetLanguage,
-      userInteractions,
-    });
+    try {
+      const response = await fetch("https://pat-io.onrender.com/api/location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userLanguage: finalUserLanguage,
+          targetLanguage: finalTargetLanguage,
+          zipCode: input.trim(), // trim extra spaces
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Request failed with status ${response.status}: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("API Response:", data);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: data.textResponse, sender: "bot" },
+      ]);
+    } catch (error) {
+      console.error("Error in handleLocationSubmit:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "An error occurred. Please try again.", sender: "bot" },
+      ]);
+    } finally {
+      setIsLoading(false);
+      resetAfterSubmit();
+    }
+  };
+
+  // Sending the targetLanguage to the backend along with the message
+  const handleSubmit = async () => {
+    resetUserInteractions();
+    if (!input.trim()) return;
+    setIsLoading(true);
+
+    const finalUserLanguage = userLanguage || "en-US";
+    const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
       const response = await fetch("https://pat-io.onrender.com/api/chat", {
@@ -85,26 +170,23 @@ export default function Chat() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: input, // Message from user
-          userLanguage: finalUserLanguage, // Ensure this is passed
-          targetLanguage: finalTargetLanguage, // Ensure this is passed
-          userInteractions, // Additional user data
+          message: input,
+          userLanguage: finalUserLanguage,
+          targetLanguage: finalTargetLanguage,
+          userInteractions,
         }),
       });
 
       if (!response.ok) {
-        const errorText = await response.text(); // Get the error text from response
-        throw new Error(
-          `Request failed with status ${response.status}: ${errorText}`
-        );
+        throw new Error(`Request failed with status ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("API Response:", data);
 
       if (data.textResponse) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
+        setMessages((prev) => [
+          ...prev,
+          { text: input, sender: "user" },
           { text: data.textResponse, sender: "bot" },
         ]);
       }
@@ -114,17 +196,48 @@ export default function Chat() {
       }
     } catch (error) {
       console.error("Error:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
+      setMessages((prev) => [
+        ...prev,
         {
           text: "Sorry, there was an error processing your request.",
           sender: "bot",
         },
       ]);
+    } finally {
+      resetAfterSubmit();
+      setIsLoading(false);
+      setInput("");
     }
+  };
 
-    setIsLoading(false);
-    setInput("");
+  // Function to reset user interactions
+  const resetUserInteractions = () => {
+    setUserInteractions({
+      buttonClicks: {
+        subject: null,
+        valid_visa: null,
+        visa_type: null,
+        request_info: null,
+      },
+      textInputs: [],
+    });
+  };
+
+  // Function to toggle all buttons off
+  const toggleAllButtonsOff = () => {
+    setUiState((prev) => ({
+      ...prev,
+      visibleOptions: Object.keys(prev.visibleOptions).reduce(
+        (acc, key) => ({ ...acc, [key]: false }),
+        {}
+      ),
+    }));
+  };
+
+  // Function to reset user interactions and toggle all buttons off
+  const resetAfterSubmit = () => {
+    resetUserInteractions();
+    toggleAllButtonsOff();
   };
 
   // Function to play audio response
@@ -177,25 +290,19 @@ export default function Chat() {
 
     if (option === "How to apply for SSN") {
       botResponse = t("ssnSelected");
-      setShowVisaOptions(true);
-      setUserInteractions((prev) => ({
-        ...prev,
-        buttonClicks: { ...prev.buttonClicks, subject: "SSN" },
-      }));
+      toggleOption("visa", true);
+      updateUserInteraction("buttonClicks", "subject", "SSN");
     } else if (option === "What is NYC Local Law 30?") {
       botResponse = t("LL30Selected");
-      setShowLaw30Options(true);
-      setUserInteractions((prev) => ({
-        ...prev,
-        buttonClicks: { ...prev.buttonClicks, subject: "Law 30" },
-      }));
+      toggleOption("law30", true);
+      updateUserInteraction("buttonClicks", "subject", "Law 30");
     } else {
-      setShowLaw30Options(false);
-      setShowVisaOptions(false);
+      toggleOption("law30", false);
+      toggleOption("visa", false);
     }
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
+    setMessages((prev) => [
+      ...prev,
       { text: option, sender: "user" },
       { text: botResponse, sender: "bot" },
     ]);
@@ -203,90 +310,96 @@ export default function Chat() {
 
   // Handle visa option click (Yes/No for visa validity)
   const handleVisaOptionClick = (answer) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: answer, sender: "user" },
-      {
-        text: t("validVisa") + answer,
-        sender: "bot",
-      },
-    ]);
+    setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
 
-    setUserInteractions((prev) => ({
-      ...prev,
-      buttonClicks: { ...prev.buttonClicks, valid_visa: answer === "Yes" },
-    }));
-
-    setShowVisaOptions(false);
+    updateUserInteraction("buttonClicks", "valid_visa", answer === "Yes");
+    toggleOption("visa", false);
 
     if (answer === "Yes") {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: t("visaType"), sender: "bot" },
-      ]);
-      setShowVisaTypeOptions(true);
+      setMessages((prev) => [...prev, { text: t("visaType"), sender: "bot" }]);
+      toggleOption("visaType", true);
     }
   };
 
   // Handle visa type click (e.g., H1B, L1, etc.)
   const handleVisaTypeClick = (visaType) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
+    setMessages((prev) => [
+      ...prev,
       { text: visaType, sender: "user" },
       { text: t("eligible"), sender: "bot" },
     ]);
 
-    setUserInteractions((prev) => ({
-      ...prev,
-      buttonClicks: { ...prev.buttonClicks, visa_type: visaType },
-    }));
-
-    setShowVisaTypeOptions(false);
-    setShowSSNOptions(true);
+    updateUserInteraction("buttonClicks", "visa_type", visaType);
+    toggleOption("visaType", false);
+    toggleOption("ssn", true);
   };
 
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
-    // Update messages immediately
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: option, sender: "user" },
-      { text: t("optionSelected") + option, sender: "bot" },
-    ]);
+    try {
+      // Update messages immediately
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: option, sender: "user" },
+      ]);
 
-    // Default language settings, if needed
-    const finalUserLanguage = userLanguage || "en-US"; // Default to English if not set
-    const finalTargetLanguage = targetLanguage || "en-US"; // Default to English if not set
+      // Default language settings, if needed
+      const finalUserLanguage = userLanguage || "en-US";
+      const finalTargetLanguage = targetLanguage || "en-US";
 
-    // Update the user interactions state
-    const updatedInteractions = {
-      ...userInteractions,
-      buttonClicks: {
-        ...userInteractions.buttonClicks,
-        request_info: option, // Set request_info
-      },
-    };
+      // Update the user interactions state
+      const updatedInteractions = {
+        ...userInteractions,
+        buttonClicks: {
+          ...userInteractions.buttonClicks,
+          request_info: option,
+        },
+      };
 
-    // Log to see the data structure
-    console.log("Updated interactions:", updatedInteractions);
+      // Log to see the data structure
+      console.log("Updated interactions:", updatedInteractions);
 
-    // Now that the state is updated, call the backend
-    await sendMessageToBackend(option, updatedInteractions);
+      // Always call the backend, regardless of the option
+      const response = await sendMessageToBackend(option, updatedInteractions);
 
-    // Add new buttons after receiving the response
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        text: t("allRequired"), // "Do you have all the required documents?",
-        sender: "bot",
-        showDocumentButtons: true,
-      },
-    ]);
+      // Handle the response based on the option
+      if (option === "Documents Required") {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            text: t("allRequired"),
+            sender: "bot",
+          },
+        ]);
+        toggleOption("showDocumentButtons", true);
+      } else if (option === "Closest Office Location") {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            text: "Give me your current location",
+            sender: "bot",
+          },
+        ]);
+      }
 
-    setShowSSNOptions(false); // Hide SSN options after selection
+      // Add the backend response to messages
+      if (response && response.textResponse) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: response.textResponse, sender: "bot" },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error in handleSSNOptionClick:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "An error occurred. Please try again.", sender: "bot" },
+      ]);
+    } finally {
+      resetUserInteractions();
+    }
   };
 
-  // Function to send the message and interactions to the backend
   // Function to send the message and interactions to the backend
   const sendMessageToBackend = async (option, updatedUserInteractions) => {
     try {
@@ -338,6 +451,7 @@ export default function Chat() {
   };
 
   const handleDocumentStatus = (status) => {
+    toggleOption("showDocumentButtons", false);
     let response =
       status === "complete" ? t("ssaOffice") : t("missingDocuments");
 
@@ -350,12 +464,13 @@ export default function Chat() {
       {
         text: response,
         sender: "bot",
-        showOfficeInfoButtons: status === "complete",
       },
     ]);
+    toggleOption("showOfficeInfoButtons", true);
   };
 
   const handleOfficeInfoResponse = (answer) => {
+    toggleOption("showOfficeInfoButtons", false);
     let response = answer === "Yes" ? t("nearestOffice") : t("anymoreHelp");
 
     setMessages((prevMessages) => [
@@ -365,11 +480,11 @@ export default function Chat() {
     ]);
   };
 
+  console.log("Messages in Chat.jsx:", messages);
+
   return (
     <div className="chat-container">
       <h1>{t("chat")}</h1>
-
-      {/* Language selection for speech and translation */}
       <div className="language-selectors">
         <label>
           Speak Language:
@@ -458,16 +573,6 @@ export default function Chat() {
                 </React.Fragment>
               ))}
             </div>
-            {message.showDocumentButtons && (
-              <div className="document-status-buttons">
-                <button onClick={() => handleDocumentStatus("complete")}>
-                  {t("complete")}
-                </button>
-                <button onClick={() => handleDocumentStatus("incomplete")}>
-                  {t("incomplete")}
-                </button>
-              </div>
-            )}
             {message.isWelcome && (
               <div className="option-grid">
                 <button
@@ -490,19 +595,9 @@ export default function Chat() {
                 </button>
               </div>
             )}
-            {message.showOfficeInfoButtons && (
-              <div className="office-info-buttons">
-                <button onClick={() => handleOfficeInfoResponse("Yes")}>
-                  {t("yes")}
-                </button>
-                <button onClick={() => handleOfficeInfoResponse("No")}>
-                  {t("no")}
-                </button>
-              </div>
-            )}
           </React.Fragment>
         ))}
-        {showVisaOptions && (
+        {uiState.visibleOptions.visa && (
           <div className="visa-options">
             <button onClick={() => handleVisaOptionClick("Yes")}>
               {t("yes")}
@@ -512,7 +607,7 @@ export default function Chat() {
             </button>
           </div>
         )}
-        {showLaw30Options && (
+        {uiState.visibleOptions.law30 && (
           <div className="law30-options">
             <button onClick={() => handleLaw30OptionClick("Yes")}>
               {t("yes")}
@@ -522,7 +617,7 @@ export default function Chat() {
             </button>
           </div>
         )}
-        {showVisaTypeOptions && (
+        {uiState.visibleOptions.visaType && (
           <div className="visa-type-options">
             <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
             <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
@@ -532,7 +627,7 @@ export default function Chat() {
             </button>
           </div>
         )}
-        {showSSNOptions && (
+        {uiState.visibleOptions.ssn && (
           <div className="ssn-options">
             <button
               onClick={() => handleSSNOptionClick("Closest Office Location")}
@@ -544,20 +639,55 @@ export default function Chat() {
             </button>
           </div>
         )}
+        {uiState.visibleOptions.showDocumentButtons && (
+          <div className="document-status-buttons">
+            <button onClick={() => handleDocumentStatus("complete")}>
+              {t("complete")}
+            </button>
+            <button onClick={() => handleDocumentStatus("incomplete")}>
+              {t("incomplete")}
+            </button>
+          </div>
+        )}
+        {uiState.visibleOptions.showOfficeInfoButtons && (
+          <div className="office-info-buttons">
+            <button onClick={() => handleOfficeInfoResponse("Yes")}>
+              {t("yes")}
+            </button>
+            <button onClick={() => handleOfficeInfoResponse("No")}>
+              {t("no")}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="input-area">
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit();
+            if (
+              input.trim() !== "" &&
+              messages[messages.length - 1].text === t("nearestOffice")
+            ) {
+              setMessages((prevMessages) => [
+                ...prevMessages,
+                { text: input, sender: "user" },
+              ]);
+              handleLocationSubmit(input); // get data from server about location of nearest SSA office
+            } else {
+              handleSubmit(); // gets response from OpenAI API
+            }
+            setInput("");
           }}
         >
           <input
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              resetUserInteractions();
+            }}
             placeholder={t("type")}
           />
           <button type="submit" disabled={!input.trim() || isLoading}>

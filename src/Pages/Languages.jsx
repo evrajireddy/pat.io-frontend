@@ -5,28 +5,28 @@ import "./i18n";
 import "./Languages.css"; // Import the CSS file
 
 const languageMapping = {
-  en: "English",
-  ru: "Русский (Russian)",
-  it: "Italiano (Italian)",
-  pl: "Polski (Polish)",
-  el: "Ελληνικά (Greek)",
-  yi: "ייִדיש (Yiddish)",
-  he: "עברית (Hebrew)",
-  ht: "Kreyòl Ayisyen (Haitian Creole)",
-  fr: "Français (French)",
-  es: "Español (Spanish)",
-  pt: "Português (Portuguese)",
-  zh: "中文 (Mandarin Chinese)",
-  yue: "粵語 (Cantonese)",
-  hi: "हिन्दी (Hindi)",
-  bn: "বাংলা (Bengali)",
-  te: "తెలుగు (Telugu)",
-  pa: "ਪੰਜਾਬੀ (Punjabi)",
-  ta: "தமிழ் (Tamil)",
-  ko: "한국어 (Korean)",
-  ja: "日本語 (Japanese)",
-  vi: "Tiếng Việt (Vietnamese)",
-  ar: "العربية (Arabic)",
+  en: ["en-US", "English"],
+  ru: ["ru-RU", "Русский (Russian)"],
+  it: ["it-IT", "Italiano (Italian)"],
+  pl: ["pl-PL", "Polski (Polish)"],
+  el: ["el-GR", "Ελληνικά (Greek)"],
+  yi: ["yi", "ייִדיש (Yiddish)"],
+  he: ["he-IL", "עברית (Hebrew)"],
+  ht: ["ht-HT", "Kreyòl Ayisyen (Haitian Creole)"],
+  fr: ["fr-FR", "Français (French)"],
+  es: ["es-ES", "Español (Spanish)"],
+  pt: ["pt-PT", "Português (Portuguese)"],
+  zh: ["zh-CN", "中文 (Mandarin Chinese)"],
+  yue: ["zh-HK", "粵語 (Cantonese)"],
+  hi: ["hi-IN", "हिन्दी (Hindi)"],
+  bn: ["bn-IN", "বাংলা (Bengali)"],
+  te: ["te-IN", "తెలుగు (Telugu)"],
+  pa: ["pa-IN", "ਪੰਜਾਬੀ (Punjabi)"],
+  ta: ["ta-IN", "தமிழ் (Tamil)"],
+  ko: ["ko-KR", "한국어 (Korean)"],
+  ja: ["ja-JP", "日本語 (Japanese)"],
+  vi: ["vi-VN", "Tiếng Việt (Vietnamese)"],
+  ar: ["ar-SA", "العربية (Arabic)"],
 };
 
 export default function Languages() {
@@ -36,15 +36,12 @@ export default function Languages() {
   const [selectedLang, setSelectedLang] = useState(null);
 
   const handleLanguageClick = (lang) => {
+    console.log("Selected language:", lang);
     setSelectedLang(lang);
-    setTimeout(() => {
-      i18n.changeLanguage(lang);
-      localStorage.setItem("chatLanguage", languageMapping[lang] || "en");
-      setLoading(false);
-    }, 1000); // Simulate loading and language change
-  };
-
-  const confirmSelection = () => {
+    i18n.changeLanguage(lang);
+    const chatLangCode = languageMapping[lang][0] || "en-US";
+    localStorage.setItem("chatLanguage", chatLangCode);
+    setLoading(false);
     navigate("/chat");
   };
 
@@ -59,12 +56,12 @@ export default function Languages() {
               onClick={() => handleLanguageClick(lang)}
               className={`language-card ${selectedLang === lang ? "glow" : ""}`}
             >
-              <span className="language-text">{name}</span>
+              <span className="language-text">{name[1]}</span>
             </div>
           ))}
         </div>
       </div>
-      {selectedLang && (
+      {/* {selectedLang && (
         <div className="confirmation-popup">
           <p>
             You selected <strong>{languageMapping[selectedLang]}</strong>. 
@@ -74,7 +71,7 @@ export default function Languages() {
             Yes, Continue
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
