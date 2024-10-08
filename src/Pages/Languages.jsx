@@ -1,88 +1,77 @@
-// src/App.js
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./i18n";
+import "./Languages.css"; // Import the CSS file
 
 const languageMapping = {
-  en: "en-US",
-  ru: "ru-RU",
-  it: "it-IT",
-  pl: "pl-PL",
-  el: "el-GR",
-  yi: "yi",
-  he: "he-IL",
-  ht: "ht-HT",
-  fr: "fr-FR",
-  es: "es-ES",
-  pt: "pt-PT",
-  zh: "zh-CN",
-  yue: "zh-HK",
-  hi: "hi-IN",
-  bn: "bn-IN",
-  te: "te-IN",
-  pa: "pa-IN",
-  ta: "ta-IN",
-  ko: "ko-KR",
-  ja: "ja-JP",
-  vi: "vi-VN",
-  ar: "ar-SA",
+  en: ["en-US", "English"],
+  ru: ["ru-RU", "Русский (Russian)"],
+  it: ["it-IT", "Italiano (Italian)"],
+  pl: ["pl-PL", "Polski (Polish)"],
+  el: ["el-GR", "Ελληνικά (Greek)"],
+  yi: ["yi", "ייִדיש (Yiddish)"],
+  he: ["he-IL", "עברית (Hebrew)"],
+  ht: ["ht-HT", "Kreyòl Ayisyen (Haitian Creole)"],
+  fr: ["fr-FR", "Français (French)"],
+  es: ["es-ES", "Español (Spanish)"],
+  pt: ["pt-PT", "Português (Portuguese)"],
+  zh: ["zh-CN", "中文 (Mandarin Chinese)"],
+  yue: ["zh-HK", "粵語 (Cantonese)"],
+  hi: ["hi-IN", "हिन्दी (Hindi)"],
+  bn: ["bn-IN", "বাংলা (Bengali)"],
+  te: ["te-IN", "తెలుగు (Telugu)"],
+  pa: ["pa-IN", "ਪੰਜਾਬੀ (Punjabi)"],
+  ta: ["ta-IN", "தமிழ் (Tamil)"],
+  ko: ["ko-KR", "한국어 (Korean)"],
+  ja: ["ja-JP", "日本語 (Japanese)"],
+  vi: ["vi-VN", "Tiếng Việt (Vietnamese)"],
+  ar: ["ar-SA", "العربية (Arabic)"],
 };
 
 export default function Languages() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [selectedLang, setSelectedLang] = useState(null);
 
-  const changeLanguage = (lang) => {
-    // Change i18n language
+  const handleLanguageClick = (lang) => {
+    console.log("Selected language:", lang);
+    setSelectedLang(lang);
     i18n.changeLanguage(lang);
-
-    // Store the chat language code in localStorage
-    const chatLangCode = languageMapping[lang] || "en-US";
+    const chatLangCode = languageMapping[lang][0] || "en-US";
     localStorage.setItem("chatLanguage", chatLangCode);
-
-    // Navigate to chat page
+    setLoading(false);
     navigate("/chat");
   };
 
   return (
-    <div className="Languages">
-      <h1>{t("select")}</h1>
-      <div>
-        <button onClick={() => changeLanguage("en")}>English</button>
-        <button onClick={() => changeLanguage("ru")}>Русский (Russian)</button>
-        <button onClick={() => changeLanguage("it")}>Italiano (Italian)</button>
-        <button onClick={() => changeLanguage("pl")}>Polski (Polish)</button>
-        <button onClick={() => changeLanguage("el")}>Ελληνικά (Greek)</button>
-        <button onClick={() => changeLanguage("yi")}>ייִדיש (Yiddish)</button>
-        <button onClick={() => changeLanguage("he")}>עברית (Hebrew)</button>
-        <button onClick={() => changeLanguage("ht")}>
-          Kreyòl Ayisyen (Haitian Creole)
-        </button>
-        <button onClick={() => changeLanguage("fr")}>Français (French)</button>
-        <button onClick={() => changeLanguage("es")}>Español (Spanish)</button>
-        <button onClick={() => changeLanguage("pt")}>
-          Português (Portuguese)
-        </button>
-        <button onClick={() => changeLanguage("zh")}>
-          中文 (Mandarin Chinese)
-        </button>
-        <button onClick={() => changeLanguage("yue")}>粵語 (Cantonese)</button>
-        <button onClick={() => changeLanguage("hi")}>हिन्दी (Hindi)</button>
-        <button onClick={() => changeLanguage("bn")}>বাংলা (Bengali)</button>
-        <button onClick={() => changeLanguage("te")}>తెలుగు (Telugu)</button>
-        <button onClick={() => changeLanguage("pa")}>ਪੰਜਾਬੀ (Punjabi)</button>
-        <button onClick={() => changeLanguage("ta")}>தமிழ் (Tamil)</button>
-        <button onClick={() => changeLanguage("ko")}>한국어 (Korean)</button>
-        <button onClick={() => changeLanguage("ja")}>日本語 (Japanese)</button>
-        <button onClick={() => changeLanguage("vi")}>
-          Tiếng Việt (Vietnamese)
-        </button>
-        <button onClick={() => changeLanguage("ar")}>العربية (Arabic)</button>
+    <div className="languages-container">
+      <h1 className="title">Select a Language</h1>
+      <div className="languages-grid-container">
+        <div className="languages-grid">
+          {Object.entries(languageMapping).map(([lang, name]) => (
+            <div
+              key={lang}
+              onClick={() => handleLanguageClick(lang)}
+              className={`language-card ${selectedLang === lang ? "glow" : ""}`}
+            >
+              <span className="language-text">{name[1]}</span>
+            </div>
+          ))}
+        </div>
       </div>
-      <Link to="/chat">
-        <button>{t("chat")}</button>
-      </Link>
+      {/* {selectedLang && (
+        <div className="confirmation-popup">
+          <p>
+            You selected <strong>{languageMapping[selectedLang]}</strong>. 
+            Would you like to continue?
+          </p>
+          <button className="confirm-button" onClick={confirmSelection}>
+            Yes, Continue
+          </button>
+        </div>
+      )} */}
     </div>
   );
 }
