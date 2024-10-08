@@ -23,7 +23,7 @@ i18n.use(initReactI18next).init({
           "Of course! I have all the information about NYC's Local Law 30, do you want to learn more about it?",
         infoLL30: `Your answer to knowing more about NYC's Local Law 30 is `,
         validVisa: `Your answer to having a valid visa is `,
-        visaType: "What is your type of visa? Please choose below options.",
+        visaType: "What type of visa do you have? Please choose below options.",
         eligible:
           "Great! you are eligible to apply for SSN, you can choose a suggestion below for more info.",
         send: "Send",
@@ -34,7 +34,7 @@ i18n.use(initReactI18next).init({
           "Great! You're all set to apply for your SSN. Would you like information on the nearest SSA office?",
         missingDocuments:
           "No problem. Which documents are you missing? I can provide more information on how to obtain them.",
-        nearestOffice: "Here's information about the nearest SSA office: ",
+        nearestOffice: "Can I have your zip code please",
         anymoreHelp:
           "Alright. Is there anything else I can help you with regarding your SSN application?",
         more: "More",

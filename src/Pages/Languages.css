@@ -1,114 +1,172 @@
-/* src/languages.css */
+/* Root Variables */
+:root {
+  --primary-color: #388e3c;
+  --secondary-color: #4caf50;
+  --dark-color: #1b5e20;
+  --light-color: #81c784;
+  --neutral-color: #ffffff;
+  --font-color-dark: #16181d;
+  --font-color-light: #fff;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.2);
+  --border-radius: 0.5rem;
+  --transition-speed: 0.3s;
+  --container-padding: 1.5rem;
+}
 
+/* Ensure the body and html allow scrolling */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Prevent page from scrolling */
+}
+
+/* Container Styles */
 .languages-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    background-color: #f0f4f8; /* Page background remains light */
-  }
-  
-  .title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: rgb(34, 33, 33); /* Title text */
-    margin-bottom: 2.5rem;
-  }
-  
-  .languages-grid-container {
-    border: 3px solid #d7dde4; /* Full border around the grid */
-    padding: 1rem;
-    border-radius: 0.5rem; /* Rounded border */
-    background-color: #ffffff; /* White background inside the grid container */
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--container-padding);
+  background-color: #fffef7;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: rgb(34, 33, 33);
+  margin-bottom: 2.5rem;
+}
+
+/* Language Grid */
+.languages-grid-container {
+  border: 3px solid var(--dark-color);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  background-color: var(--neutral-color);
+  height: 70vh;
+  overflow-y: auto;
+}
+
+.languages-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
   .languages-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  
-  @media (min-width: 640px) {
-    .languages-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+}
+
+@media (min-width: 1024px) {
+  .languages-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  
-  @media (min-width: 768px) {
-    .languages-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+}
+
+/* Language Card */
+.language-card {
+  width: 15rem;
+  height: 5rem;
+  background-color: var(--neutral-color);
+  box-shadow: 0 4px 6px var(--shadow-light);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed);
+}
+
+.language-card.glow {
+  animation: gradient-background 75s linear infinite;
+}
+
+@keyframes gradient-background {
+  0% {
+    background: linear-gradient(135deg, #3b7738, #4caf50);
   }
-  
-  @media (min-width: 1024px) {
-    .languages-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+  50% {
+    background: linear-gradient(135deg, #81c784, #4caf50);
   }
-  
+  100% {
+    background: linear-gradient(135deg, #388e3c, #2e7d32);
+  }
+}
+
+.language-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px var(--shadow-dark);
+}
+
+.language-card.selected {
+  background-color: var(--light-color); /* Highlight selected language */
+  color: var(--font-color-light);
+}
+
+.language-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--font-color-dark);
+}
+
+.language-card:hover .language-text {
+  color: var(--font-color-dark);
+}
+
+/* Confirmation Popup */
+.confirmation-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--neutral-color);
+  padding: 1rem;
+  border: 2px solid #d7dde4;
+  border-radius: var(--border-radius);
+  width: 250px;
+  box-shadow: 0 4px 6px var(--shadow-light);
+  z-index: 1000; /* Keep it above other elements */
+}
+
+.confirm-button {
+  background-color: var(--primary-color);
+  color: var(--font-color-light);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-speed);
+}
+
+.confirm-button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Mobile-friendly Adjustments */
+@media (max-width: 640px) {
+  .languages-container {
+    padding: 1rem;
+    height: auto;
+  }
+
+  .title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .languages-grid-container {
+    height: 60vh;
+  }
+
   .language-card {
-    width: 15rem; /* Reduced card size */
-    height: 5rem; /* Reduced card height */
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    width: 12rem;
+    height: 4rem;
   }
-  
-  .language-card:hover {
-    transform: scale(1.1); /* Larger scale for hover effect */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
-    background-color: #3b82f6; /* Hover background color */
-    color: white; /* Change text to white on hover */
-  }
-  
-  .language-text {
-    font-size: 1.25rem; /* Smaller text to fit smaller cards */
-    font-weight: 600;
-    color: #16181d; /* Gray color */
-  }
-  
-  .language-card:hover .language-text {
-    color: white;
-  }
-  
-  /* Animation effect for hover highlight */
-  .language-card:hover {
-    animation: pop 0.2s forwards ease-in-out;
-  }
-  
-  @keyframes pop {
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(1.1);
-    }
-  }
-  
-  /* Add a simple loading spinner style */
-  .loading-spinner {
-    font-size: 1.5rem;
-    color: #60a5fa;
-  }
-  
-  /* Mobile-friendly adjustments */
-  @media (max-width: 640px) {
-    .title {
-      font-size: 1.75rem; /* Smaller title for mobile */
-      margin-bottom: 1.5rem;
-    }
-  
-    .language-card {
-      width: 12rem; /* Smaller card size for mobile */
-      height: 4rem; /* Smaller card height for mobile */
-      font-size: 1rem; /* Adjusted font size */
-    }
-  }
-  
+}
