@@ -117,7 +117,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/location", {
+      const response = await fetch("http://localhost:3123/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -164,7 +164,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -336,6 +336,7 @@ export default function Chat() {
 
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
+    toggleOption("ssn", false);
     try {
       // Update messages immediately
       setMessages((prevMessages) => [
@@ -411,7 +412,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -517,6 +518,7 @@ export default function Chat() {
             <option value="ja-JP">Japanese</option>
             <option value="vi-VN">Vietnamese</option>
             <option value="ar-SA">Arabic</option>
+            <option value="ur-PK">Urdu</option>
           </select>
         </label>
 
@@ -551,6 +553,7 @@ export default function Chat() {
             <option value="ja-JP">Japanese</option>
             <option value="vi-VN">Vietnamese</option>
             <option value="ar-SA">Arabic</option>
+            <option value="ur-PK">Urdu</option>
           </select>
         </label>
       </div>

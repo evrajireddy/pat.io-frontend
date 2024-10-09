@@ -27,6 +27,7 @@ const languageMapping = {
   ja: ["ja-JP", "日本語 (Japanese)"],
   vi: ["vi-VN", "Tiếng Việt (Vietnamese)"],
   ar: ["ar-SA", "العربية (Arabic)"],
+  ur: ["ur-PK", "اردو (Urdu)"],
 };
 
 export default function Languages() {
