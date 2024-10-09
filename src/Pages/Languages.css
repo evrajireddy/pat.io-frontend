@@ -20,6 +20,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color: #fffef7;
   overflow: hidden; /* Prevent page from scrolling */
 }
 
@@ -164,7 +165,7 @@ body {
   }
 
   .languages-grid-container {
-    height: 80vh;
+    height: 60vh;
   }
 
   .language-card {
