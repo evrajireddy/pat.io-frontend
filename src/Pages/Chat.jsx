@@ -670,7 +670,7 @@ export default function Chat() {
             onTouchEnd={stopListeningAndSend}
             disabled={isLoading}
           >
-            Push to Talk
+            Hold to Talk to Patio
           </button>
         </form>
       </div>
