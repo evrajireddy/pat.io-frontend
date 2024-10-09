@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
 import { useTranslation } from "react-i18next";
+import LanguageSelector from "../Componets/LanguageSelector";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showWelcomeButtons, setShowWelcomeButtons] = useState(true);
   const recognitionRef = useRef(null); // For speech recognition
   const audioRef = useRef(new Audio()); // For audio responses
 
@@ -117,7 +119,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/location", {
+      const response = await fetch("http://localhost:3123/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -164,7 +166,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -286,17 +288,23 @@ export default function Chat() {
 
   // Handle option click (e.g., SSN, Local Law 30, etc.)
   const handleOptionClick = (option) => {
+    setShowWelcomeButtons(false);
     let botResponse = t("optionSelected") + option;
-
     if (option === "How to apply for SSN") {
       botResponse = t("ssnSelected");
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
     } else if (option === "What is NYC Local Law 30?") {
-      botResponse = t("LL30Selected");
-      toggleOption("law30", true);
-      updateUserInteraction("buttonClicks", "subject", "Law 30");
+      botResponse = "Under Construction";
+      // botResponse = t("LL30Selected");
+      // toggleOption("law30", true);
+      // updateUserInteraction("buttonClicks", "subject", "Law 30");
+    } else if (option === "What is an ITIN number?") {
+      botResponse = "Under Construction";
+      toggleOption("law30", false);
+      toggleOption("visa", false);
     } else {
+      botResponse = "Under Construction";
       toggleOption("law30", false);
       toggleOption("visa", false);
     }
@@ -336,67 +344,75 @@ export default function Chat() {
 
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
-    try {
-      // Update messages immediately
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: option, sender: "user" },
-      ]);
-
-      // Default language settings, if needed
-      const finalUserLanguage = userLanguage || "en-US";
-      const finalTargetLanguage = targetLanguage || "en-US";
-
-      // Update the user interactions state
-      const updatedInteractions = {
-        ...userInteractions,
-        buttonClicks: {
-          ...userInteractions.buttonClicks,
-          request_info: option,
-        },
-      };
-
-      // Log to see the data structure
-      console.log("Updated interactions:", updatedInteractions);
-
-      // Always call the backend, regardless of the option
-      const response = await sendMessageToBackend(option, updatedInteractions);
-
-      // Handle the response based on the option
-      if (option === "Documents Required") {
+    toggleOption("ssn", false);
+    if (option === "Closest Office Location") {
+      toggleOption("showDocumentButtons", true);
+    } else {
+      try {
+        // Update messages immediately
         setMessages((prevMessages) => [
           ...prevMessages,
-          {
-            text: t("allRequired"),
-            sender: "bot",
+          { text: option, sender: "user" },
+        ]);
+
+        // Default language settings, if needed
+        const finalUserLanguage = userLanguage || "en-US";
+        const finalTargetLanguage = targetLanguage || "en-US";
+
+        // Update the user interactions state
+        const updatedInteractions = {
+          ...userInteractions,
+          buttonClicks: {
+            ...userInteractions.buttonClicks,
+            request_info: option,
           },
-        ]);
-        toggleOption("showDocumentButtons", true);
-      } else if (option === "Closest Office Location") {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            text: "Give me your current location",
-            sender: "bot",
-          },
-        ]);
-      }
+        };
 
-      // Add the backend response to messages
-      if (response && response.textResponse) {
+        // Log to see the data structure
+        console.log("Updated interactions:", updatedInteractions);
+
+        // Always call the backend, regardless of the option
+        const response = await sendMessageToBackend(
+          option,
+          updatedInteractions
+        );
+
+        // Handle the response based on the option
+        if (option === "Documents Required") {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: t("allRequired"),
+              sender: "bot",
+            },
+          ]);
+          toggleOption("showDocumentButtons", true);
+        } else if (option === "Closest Office Location") {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: "Give me your current location",
+              sender: "bot",
+            },
+          ]);
+        }
+
+        // Add the backend response to messages
+        if (response && response.textResponse) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { text: response.textResponse, sender: "bot" },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error in handleSSNOptionClick:", error);
         setMessages((prevMessages) => [
           ...prevMessages,
-          { text: response.textResponse, sender: "bot" },
+          { text: "An error occurred. Please try again.", sender: "bot" },
         ]);
+      } finally {
+        resetUserInteractions();
       }
-    } catch (error) {
-      console.error("Error in handleSSNOptionClick:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: "An error occurred. Please try again.", sender: "bot" },
-      ]);
-    } finally {
-      resetUserInteractions();
     }
   };
 
@@ -411,7 +427,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -482,79 +498,32 @@ export default function Chat() {
 
   console.log("Messages in Chat.jsx:", messages);
 
+  const handleStartOver = () => {
+    setMessages([
+      {
+        text: t("welcome"),
+        sender: "bot",
+        isWelcome: true,
+      },
+    ]);
+    resetUserInteractions();
+    toggleAllButtonsOff();
+    setShowWelcomeButtons(true);
+    setInput("");
+  };
+
   return (
     <div className="chat-container">
       <h1>{t("chat")}</h1>
-      <div className="language-selectors">
-        <label>
-          Speak Language:
-          <select
-            value={userLanguage}
-            onChange={(e) => {
-              setUserLanguage(e.target.value);
-              localStorage.setItem("chatLanguage", e.target.value);
-            }}
-          >
-            <option value="en-US">English</option>
-            <option value="ru-RU">Russian</option>
-            <option value="it-IT">Italian</option>
-            <option value="pl-PL">Polish</option>
-            <option value="el-GR">Greek</option>
-            <option value="yi">Yiddish</option>
-            <option value="he-IL">Hebrew</option>
-            <option value="ht-HT">Haitian Creole</option>
-            <option value="fr-FR">French</option>
-            <option value="es-ES">Spanish</option>
-            <option value="pt-PT">Portuguese</option>
-            <option value="zh-CN">Mandarin</option>
-            <option value="zh-HK">Cantonese</option>
-            <option value="hi-IN">Hindi</option>
-            <option value="bn-IN">Bengali</option>
-            <option value="te-IN">Telugu</option>
-            <option value="pa-IN">Punjabi</option>
-            <option value="ta-IN">Tamil</option>
-            <option value="ko-KR">Korean</option>
-            <option value="ja-JP">Japanese</option>
-            <option value="vi-VN">Vietnamese</option>
-            <option value="ar-SA">Arabic</option>
-          </select>
-        </label>
-
-        <label>
-          Translate To:
-          <select
-            value={targetLanguage}
-            onChange={(e) => {
-              setTargetLanguage(e.target.value);
-              localStorage.setItem("chatLanguage", e.target.value);
-            }}
-          >
-            <option value="en-US">English</option>
-            <option value="ru-RU">Russian</option>
-            <option value="it-IT">Italian</option>
-            <option value="pl-PL">Polish</option>
-            <option value="el-GR">Greek</option>
-            <option value="yi">Yiddish</option>
-            <option value="he-IL">Hebrew</option>
-            <option value="ht-HT">Haitian Creole</option>
-            <option value="fr-FR">French</option>
-            <option value="es-ES">Spanish</option>
-            <option value="pt-PT">Portuguese</option>
-            <option value="zh-CN">Mandarin</option>
-            <option value="zh-HK">Cantonese</option>
-            <option value="hi-IN">Hindi</option>
-            <option value="bn-IN">Bengali</option>
-            <option value="te-IN">Telugu</option>
-            <option value="pa-IN">Punjabi</option>
-            <option value="ta-IN">Tamil</option>
-            <option value="ko-KR">Korean</option>
-            <option value="ja-JP">Japanese</option>
-            <option value="vi-VN">Vietnamese</option>
-            <option value="ar-SA">Arabic</option>
-          </select>
-        </label>
-      </div>
-
+      <button onClick={handleStartOver} className="start-over-button">
+        Start Over
+      </button>
+      {/* <LanguageSelector
+        setUserLanguage={setUserLanguage}
+        userLanguage={userLanguage}
+        targetLanguage={targetLanguage}
+        setTargetLanguage={setTargetLanguage}
+      /> */}
       <div className="message-list" ref={messageListRef} aria-live="polite">
         {messages.map((message, index) => (
           <React.Fragment key={index}>
@@ -573,7 +542,7 @@ export default function Chat() {
                 </React.Fragment>
               ))}
             </div>
-            {message.isWelcome && (
+            {message.isWelcome && showWelcomeButtons && (
               <div className="option-grid">
                 <button
                   onClick={() => handleOptionClick("How to apply for SSN")}
@@ -622,9 +591,9 @@ export default function Chat() {
             <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
             <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
             <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
-            <button onClick={() => handleVisaTypeClick("Others")}>
+            {/* <button onClick={() => handleVisaTypeClick("Others")}>
               {t("more")}
-            </button>
+            </button> */}
           </div>
         )}
         {uiState.visibleOptions.ssn && (
@@ -701,7 +670,7 @@ export default function Chat() {
             onTouchEnd={stopListeningAndSend}
             disabled={isLoading}
           >
-            Push to Talk
+            Hold to Talk to Patio
           </button>
         </form>
       </div>
