@@ -15,7 +15,8 @@
 }
 
 /* Ensure the body and html allow scrolling */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -81,7 +82,8 @@ html, body {
   align-items: center;
   cursor: pointer;
   text-align: center;
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed);
+  transition: transform var(--transition-speed),
+    box-shadow var(--transition-speed), background-color var(--transition-speed);
 }
 
 .language-card.glow {
@@ -152,7 +154,7 @@ html, body {
 /* Mobile-friendly Adjustments */
 @media (max-width: 640px) {
   .languages-container {
-    padding: 1rem;
+    padding: 0;
     height: auto;
   }
 
@@ -162,7 +164,7 @@ html, body {
   }
 
   .languages-grid-container {
-    height: 60vh;
+    height: 80vh;
   }
 
   .language-card {
