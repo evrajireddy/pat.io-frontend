@@ -13,14 +13,16 @@ export default function Welcome() {
     const timer = setTimeout(() => {
       setSplashVisible(false);
       navigate("/language"); // Navigate to the language page after 15 seconds
-    }, 7000);
+    }, 2500);
 
     return () => clearTimeout(timer); // Cleanup the timer
   }, [navigate]);
 
   const setup = (p5, canvasParentRef) => {
     // Set canvas width and height based on the window size
-    p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL).parent(canvasParentRef);
+    p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL).parent(
+      canvasParentRef
+    );
     p5.pixelDensity(1);
     p5.noStroke();
 
@@ -80,7 +82,11 @@ export default function Welcome() {
   class FloatingLight {
     constructor(x, y, z, p5) {
       this.pos = p5.createVector(x, y, z);
-      this.vel = p5.createVector(p5.random(-1, 1), p5.random(-1, 1), p5.random(-1, 1));
+      this.vel = p5.createVector(
+        p5.random(-1, 1),
+        p5.random(-1, 1),
+        p5.random(-1, 1)
+      );
       this.size = p5.random(2, 15);
     }
 
@@ -102,10 +108,16 @@ export default function Welcome() {
   }
 
   return (
-    <div style={{ margin: 0, padding: 0, overflow: 'hidden', height: '100vh', width: '100vw' }}>
-      {isSplashVisible ? (
-        <Sketch setup={setup} draw={draw} />
-      ) : null }
+    <div
+      style={{
+        margin: 0,
+        padding: 0,
+        overflow: "hidden",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      {isSplashVisible ? <Sketch setup={setup} draw={draw} /> : null}
     </div>
   );
 }
