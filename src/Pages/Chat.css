@@ -119,3 +119,23 @@ button {
   margin-right: 10px;
   margin-top: 3px;
 }
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.start-over-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.start-over-button:hover {
+  background-color: #e0e0e0;
+}

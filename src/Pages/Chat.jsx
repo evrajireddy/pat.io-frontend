@@ -295,10 +295,16 @@ export default function Chat() {
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
     } else if (option === "What is NYC Local Law 30?") {
-      botResponse = t("LL30Selected");
-      toggleOption("law30", true);
-      updateUserInteraction("buttonClicks", "subject", "Law 30");
+      botResponse = "Under Construction";
+      // botResponse = t("LL30Selected");
+      // toggleOption("law30", true);
+      // updateUserInteraction("buttonClicks", "subject", "Law 30");
+    } else if (option === "What is an ITIN number?") {
+      botResponse = "Under Construction";
+      toggleOption("law30", false);
+      toggleOption("visa", false);
     } else {
+      botResponse = "Under Construction";
       toggleOption("law30", false);
       toggleOption("visa", false);
     }
@@ -492,9 +498,26 @@ export default function Chat() {
 
   console.log("Messages in Chat.jsx:", messages);
 
+  const handleStartOver = () => {
+    setMessages([
+      {
+        text: t("welcome"),
+        sender: "bot",
+        isWelcome: true,
+      },
+    ]);
+    resetUserInteractions();
+    toggleAllButtonsOff();
+    setShowWelcomeButtons(true);
+    setInput("");
+  };
+
   return (
     <div className="chat-container">
       <h1>{t("chat")}</h1>
+      <button onClick={handleStartOver} className="start-over-button">
+        Start Over
+      </button>
       {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
         userLanguage={userLanguage}
@@ -568,9 +591,9 @@ export default function Chat() {
             <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
             <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
             <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
-            <button onClick={() => handleVisaTypeClick("Others")}>
+            {/* <button onClick={() => handleVisaTypeClick("Others")}>
               {t("more")}
-            </button>
+            </button> */}
           </div>
         )}
         {uiState.visibleOptions.ssn && (
