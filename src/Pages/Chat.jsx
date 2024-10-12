@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
 import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
+import { use } from "i18next";
 // import LanguageSelector from "../Componets/LanguageSelector";
 
 export default function Chat() {
@@ -296,10 +297,8 @@ export default function Chat() {
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
     } else if (option === "What is NYC Local Law 30?") {
-      botResponse = "Under Construction";
-      // botResponse = t("LL30Selected");
-      // toggleOption("law30", true);
-      // updateUserInteraction("buttonClicks", "subject", "Law 30");
+      botResponse = t("LL30Selected");
+      toggleOption("law30", true);
     } else if (option === "What is an ITIN?") {
       botResponse = "Under Construction";
       toggleOption("law30", false);
@@ -575,11 +574,16 @@ export default function Chat() {
         )}
         {uiState.visibleOptions.law30 && (
           <div className="law30-options">
-            <button onClick={() => handleLaw30OptionClick("Yes")}>
-              {t("yes")}
-            </button>
-            <button onClick={() => handleLaw30OptionClick("No")}>
-              {t("no")}
+            <button>
+              <a
+                href={`https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                click here to learn more about the law in your language
+              </a>
             </button>
           </div>
         )}

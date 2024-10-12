@@ -14,14 +14,12 @@ i18n.use(initReactI18next).init({
         sorry: "Sorry, there was an error processing your request.",
         SSN: "How to apply for SSN?",
         LL30: "What is NYC Local Law 30?",
+        LL30Selected: `Local Law 30 of 2017 (LL30) in New York City is one of the strongest laws in the country and requires that covered city agencies appoint a language access coordinator, develop language access implementation plans, provide telephonic interpretation in at least 100 languages, translate their most commonly distributed documents into the 10 designated citywide languages, and post signage about the availability of free interpretation services, among other requirements. You can ask me more about this law and its impact on your rights. Or you can follow the link below to learn more about the law in your language.`,
         ITIN: "What is an ITIN?",
         other: "Other questions",
         optionSelected: "You selected: ",
         ssnSelected:
           "Of course! I have all the information about getting an SSN, but first, do you have a valid visa?",
-        LL30Selected:
-          "Of course! I have all the information about NYC's Local Law 30, do you want to learn more about it?",
-        infoLL30: `Your answer to knowing more about NYC's Local Law 30 is `,
         validVisa: `Your answer to having a valid visa is `,
         visaType: "What type of visa do you have? Please choose below options.",
         eligible:
