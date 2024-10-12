@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
 import { useTranslation } from "react-i18next";
+import BreadCrumb from "../Componets/BreadCrumb";
 // import LanguageSelector from "../Componets/LanguageSelector";
 
 export default function Chat() {
@@ -515,7 +516,7 @@ export default function Chat() {
   return (
     <div className="chat-container">
       {/* <h1>{t("chat")}</h1> */}
-      <h4>This is the breadcrumb component</h4>
+      <BreadCrumb />
       <button onClick={handleStartOver} className="start-over-button">
         Start Over
       </button>
