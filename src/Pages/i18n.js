@@ -9,12 +9,12 @@ i18n.use(initReactI18next).init({
         select: "Select a language",
         chat: "Chat with Pat.io",
         welcome:
-          "Welcome to Pat.io\nDo you have any questions about SSN? NYC's Local Law 30? ITIN number?",
+          "Hi there! 👋 I'm Pat.io, your personal AI assistant, here to help with everything related to Social Security Numbers (SSN), Individual Taxpayer Identification Numbers (ITIN), and New York City's Local Law 30. How can I assist you today? Do you have any questions about SSNs, ITINs, or your rights to language access under Local Law 30?",
         error: "Network response was not ok",
         sorry: "Sorry, there was an error processing your request.",
-        SSN: "How to apply for SSN",
+        SSN: "How to apply for SSN?",
         LL30: "What is NYC Local Law 30?",
-        ITIN: "What is an ITIN number?",
+        ITIN: "What is an ITIN?",
         other: "Other questions",
         optionSelected: "You selected: ",
         ssnSelected:

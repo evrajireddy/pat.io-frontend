@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
 import { useTranslation } from "react-i18next";
-import LanguageSelector from "../Componets/LanguageSelector";
+// import LanguageSelector from "../Componets/LanguageSelector";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -119,7 +119,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/location", {
+      const response = await fetch("http://localhost:3123/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -166,7 +166,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -290,7 +290,7 @@ export default function Chat() {
   const handleOptionClick = (option) => {
     setShowWelcomeButtons(false);
     let botResponse = t("optionSelected") + option;
-    if (option === "How to apply for SSN") {
+    if (option === "How to apply for SSN?") {
       botResponse = t("ssnSelected");
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
@@ -299,7 +299,7 @@ export default function Chat() {
       // botResponse = t("LL30Selected");
       // toggleOption("law30", true);
       // updateUserInteraction("buttonClicks", "subject", "Law 30");
-    } else if (option === "What is an ITIN number?") {
+    } else if (option === "What is an ITIN?") {
       botResponse = "Under Construction";
       toggleOption("law30", false);
       toggleOption("visa", false);
@@ -427,7 +427,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -514,7 +514,8 @@ export default function Chat() {
 
   return (
     <div className="chat-container">
-      <h1>{t("chat")}</h1>
+      {/* <h1>{t("chat")}</h1> */}
+      <h4>This is the breadcrumb component</h4>
       <button onClick={handleStartOver} className="start-over-button">
         Start Over
       </button>
@@ -527,6 +528,23 @@ export default function Chat() {
       <div className="message-list" ref={messageListRef} aria-live="polite">
         {messages.map((message, index) => (
           <React.Fragment key={index}>
+            {message.isWelcome && showWelcomeButtons && (
+              <div className="option-grid">
+                <button
+                  onClick={() => handleOptionClick("How to apply for SSN?")}
+                >
+                  {t("SSN")}
+                </button>
+                <button
+                  onClick={() => handleOptionClick("What is NYC Local Law 30?")}
+                >
+                  {t("LL30")}
+                </button>
+                <button onClick={() => handleOptionClick("What is an ITIN?")}>
+                  {t("ITIN")}
+                </button>
+              </div>
+            )}
             <div className={`message ${message.sender}`}>
               {(message.text || "").split("\n").map((line, i) => (
                 <React.Fragment key={i}>
@@ -542,28 +560,6 @@ export default function Chat() {
                 </React.Fragment>
               ))}
             </div>
-            {message.isWelcome && showWelcomeButtons && (
-              <div className="option-grid">
-                <button
-                  onClick={() => handleOptionClick("How to apply for SSN")}
-                >
-                  {t("SSN")}
-                </button>
-                <button
-                  onClick={() => handleOptionClick("What is NYC Local Law 30?")}
-                >
-                  {t("LL30")}
-                </button>
-                <button
-                  onClick={() => handleOptionClick("What is an ITIN number?")}
-                >
-                  {t("ITIN")}
-                </button>
-                <button onClick={() => handleOptionClick("Other questions")}>
-                  {t("other")}
-                </button>
-              </div>
-            )}
           </React.Fragment>
         ))}
         {uiState.visibleOptions.visa && (
@@ -635,8 +631,9 @@ export default function Chat() {
           onSubmit={(e) => {
             e.preventDefault();
             if (
-              input.trim() !== "" &&
-              messages[messages.length - 1].text === t("nearestOffice")
+              (input.trim() !== "" &&
+                messages[messages.length - 1].text === t("nearestOffice")) ||
+              (input.length === 5 && typeof Number(input) === "number")
             ) {
               setMessages((prevMessages) => [
                 ...prevMessages,
