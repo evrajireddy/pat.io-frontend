@@ -26,6 +26,7 @@ export default function Chat() {
     visibleOptions: {
       visa: false,
       law30: false,
+      itin: false,
       visaType: false,
       ssn: false,
       showDocumentButtons: false,
@@ -300,9 +301,8 @@ export default function Chat() {
       botResponse = t("LL30Selected");
       toggleOption("law30", true);
     } else if (option === "What is an ITIN?") {
-      botResponse = "Under Construction";
-      toggleOption("law30", false);
-      toggleOption("visa", false);
+      botResponse = t("ITINSelected");
+      toggleOption("itin", true);
     } else {
       botResponse = "Under Construction";
       toggleOption("law30", false);
@@ -583,6 +583,44 @@ export default function Chat() {
                 rel="noopener noreferrer"
               >
                 click here to learn more about the law in your language
+              </a>
+            </button>
+          </div>
+        )}
+        {uiState.visibleOptions.itin && (
+          <div className="itin-options">
+            <button>
+              <a
+                href={`https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                click here to learn more about different Taxpayer Identification
+                Numbers from IRS
+              </a>
+            </button>
+            <button>
+              <a
+                href={`https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                click here to learn more about ITIN from NYC Service
+              </a>
+            </button>
+            <button>
+              <a
+                href={`https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                click here to learn more about ITIN from IRS
               </a>
             </button>
           </div>
