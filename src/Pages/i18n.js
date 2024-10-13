@@ -9,7 +9,7 @@ i18n.use(initReactI18next).init({
         select: "Select a language",
         chat: "Chat with Pat.io",
         welcome:
-          "Hi there! 👋 I'm Pat.io, your personal AI assistant, here to help with everything related to Social Security Numbers (SSN), Individual Taxpayer Identification Numbers (ITIN), and New York City's Local Law 30. How can I assist you today? Do you have any questions about SSNs, ITINs, or your rights to language access under Local Law 30?",
+          "Hi there! 👋 I'm Pat.io, your personal AI assistant, here to help with everything related to Social Security Numbers (SSN), Individual Taxpayer Identification Numbers (ITIN), and New York City's Local Law 30. How can I assist you today?",
         error: "Network response was not ok",
         sorry: "Sorry, there was an error processing your request.",
         SSN: "How to apply for SSN?",

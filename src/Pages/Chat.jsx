@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Chat.css";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
-import { use } from "i18next";
 // import LanguageSelector from "../Componets/LanguageSelector";
+import "./Chat.css";
 
 export default function Chat() {
+  // State variables
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcomeButtons, setShowWelcomeButtons] = useState(true);
-  const recognitionRef = useRef(null); // For speech recognition
-  const audioRef = useRef(new Audio()); // For audio responses
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -45,44 +44,19 @@ export default function Chat() {
     textInputs: [],
   });
 
+  // useRef for speech recognition and audio playback
+  const recognitionRef = useRef(null); // For speech recognition
+  const audioRef = useRef(new Audio()); // For audio responses
   const messageListRef = useRef(null);
   const inputRef = useRef(null);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
+  // Debugging logs
   console.log("User Interactions:", userInteractions);
+  console.log("Messages in Chat.jsx:", messages);
 
-  // Helper function to update UI visibility
-  const toggleOption = (optionName, value = null) => {
-    setUiState((prev) => ({
-      ...prev,
-      visibleOptions: {
-        ...Object.keys(prev.visibleOptions).reduce(
-          (acc, key) => ({
-            ...acc,
-            [key]:
-              key === optionName
-                ? value !== null
-                  ? value
-                  : !prev.visibleOptions[key]
-                : false,
-          }),
-          {}
-        ),
-      },
-    }));
-  };
-
-  // Helper function to update user interactions
-  const updateUserInteraction = (category, key, value) => {
-    setUserInteractions((prev) => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [key]: value,
-      },
-    }));
-  };
-
+  // useEffects
   useEffect(() => {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
@@ -108,6 +82,38 @@ export default function Chat() {
     }
   }, []);
 
+  // Function to update UI visibility
+  const toggleOption = (optionName, value = null) => {
+    setUiState((prev) => ({
+      ...prev,
+      visibleOptions: {
+        ...Object.keys(prev.visibleOptions).reduce(
+          (acc, key) => ({
+            ...acc,
+            [key]:
+              key === optionName
+                ? value !== null
+                  ? value
+                  : !prev.visibleOptions[key]
+                : false,
+          }),
+          {}
+        ),
+      },
+    }));
+  };
+
+  // Function to update user interactions
+  const updateUserInteraction = (category, key, value) => {
+    setUserInteractions((prev) => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [key]: value,
+      },
+    }));
+  };
+
   // Function to get closest office
   const handleLocationSubmit = async (input) => {
     if (!input || input.trim() === "") {
@@ -122,7 +128,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/location", {
+      const response = await fetch("http://localhost:3123/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,7 +165,7 @@ export default function Chat() {
     }
   };
 
-  // Sending the targetLanguage to the backend along with the message
+  // Submit sending the targetLanguage to the backend along with the message
   const handleSubmit = async () => {
     resetUserInteractions();
     if (!input.trim()) return;
@@ -169,7 +175,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -427,7 +433,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -466,6 +472,7 @@ export default function Chat() {
     }
   };
 
+  // Function to handle document status
   const handleDocumentStatus = (status) => {
     toggleOption("showDocumentButtons", false);
     let response =
@@ -485,6 +492,7 @@ export default function Chat() {
     toggleOption("showOfficeInfoButtons", true);
   };
 
+  // Function to handle office info response
   const handleOfficeInfoResponse = (answer) => {
     toggleOption("showOfficeInfoButtons", false);
     let response = answer === t("yes") ? t("nearestOffice") : t("anymoreHelp");
@@ -496,8 +504,7 @@ export default function Chat() {
     ]);
   };
 
-  console.log("Messages in Chat.jsx:", messages);
-
+  // Function to handle the "Start Over" button click
   const handleStartOver = () => {
     setMessages([
       {
@@ -574,53 +581,62 @@ export default function Chat() {
         )}
         {uiState.visibleOptions.law30 && (
           <div className="law30-options">
-            <button>
-              <a
-                href={`https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("learnLL30")}
-              </a>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("learnLL30")}
             </button>
           </div>
         )}
         {uiState.visibleOptions.itin && (
           <div className="itin-options">
-            <button>
-              <a
-                href={`https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("TIN")}
-              </a>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("TIN")}
             </button>
-            <button>
-              <a
-                href={`https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("nycITIN")}
-              </a>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("nycITIN")}
             </button>
-            <button>
-              <a
-                href={`https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("irsITIN")}
-              </a>
+
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("irsITIN")}
             </button>
           </div>
         )}
@@ -704,6 +720,7 @@ export default function Chat() {
             {t("send")}
           </button>
           <button
+            className="mic-button"
             type="button"
             onMouseDown={startListening}
             onMouseUp={stopListeningAndSend}
@@ -711,7 +728,7 @@ export default function Chat() {
             onTouchEnd={stopListeningAndSend}
             disabled={isLoading}
           >
-            🎤
+            <i className="fa-solid fa-microphone"></i>
           </button>
         </form>
       </div>
