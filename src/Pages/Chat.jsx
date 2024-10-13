@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
 import { useTranslation } from "react-i18next";
-import LanguageSelector from "../Componets/LanguageSelector";
+import BreadCrumb from "../Componets/BreadCrumb";
+import { use } from "i18next";
+// import LanguageSelector from "../Componets/LanguageSelector";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -24,6 +26,7 @@ export default function Chat() {
     visibleOptions: {
       visa: false,
       law30: false,
+      itin: false,
       visaType: false,
       ssn: false,
       showDocumentButtons: false,
@@ -290,19 +293,16 @@ export default function Chat() {
   const handleOptionClick = (option) => {
     setShowWelcomeButtons(false);
     let botResponse = t("optionSelected") + option;
-    if (option === "How to apply for SSN") {
+    if (option === t("howToApplyForSSN")) {
       botResponse = t("ssnSelected");
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
-    } else if (option === "What is NYC Local Law 30?") {
-      botResponse = "Under Construction";
-      // botResponse = t("LL30Selected");
-      // toggleOption("law30", true);
-      // updateUserInteraction("buttonClicks", "subject", "Law 30");
-    } else if (option === "What is an ITIN number?") {
-      botResponse = "Under Construction";
-      toggleOption("law30", false);
-      toggleOption("visa", false);
+    } else if (option === t("whatIsNYCLocalLaw30")) {
+      botResponse = t("LL30Selected");
+      toggleOption("law30", true);
+    } else if (option === t("whatIsAnITIN")) {
+      botResponse = t("ITINSelected");
+      toggleOption("itin", true);
     } else {
       botResponse = "Under Construction";
       toggleOption("law30", false);
@@ -320,10 +320,10 @@ export default function Chat() {
   const handleVisaOptionClick = (answer) => {
     setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
 
-    updateUserInteraction("buttonClicks", "valid_visa", answer === "Yes");
+    updateUserInteraction("buttonClicks", "valid_visa", answer === t("yes"));
     toggleOption("visa", false);
 
-    if (answer === "Yes") {
+    if (answer === t("yes")) {
       setMessages((prev) => [...prev, { text: t("visaType"), sender: "bot" }]);
       toggleOption("visaType", true);
     }
@@ -345,7 +345,7 @@ export default function Chat() {
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
     toggleOption("ssn", false);
-    if (option === "Closest Office Location") {
+    if (option === t("closestOfficeLocation")) {
       toggleOption("showDocumentButtons", true);
     } else {
       try {
@@ -378,7 +378,7 @@ export default function Chat() {
         );
 
         // Handle the response based on the option
-        if (option === "Documents Required") {
+        if (option === t("documentsRequired")) {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -387,7 +387,7 @@ export default function Chat() {
             },
           ]);
           toggleOption("showDocumentButtons", true);
-        } else if (option === "Closest Office Location") {
+        } else if (option === t("closestOfficeLocation")) {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -487,7 +487,7 @@ export default function Chat() {
 
   const handleOfficeInfoResponse = (answer) => {
     toggleOption("showOfficeInfoButtons", false);
-    let response = answer === "Yes" ? t("nearestOffice") : t("anymoreHelp");
+    let response = answer === t("yes") ? t("nearestOffice") : t("anymoreHelp");
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -514,9 +514,10 @@ export default function Chat() {
 
   return (
     <div className="chat-container">
-      <h1>{t("chat")}</h1>
+      {/* <h1>{t("chat")}</h1> */}
+      <BreadCrumb />
       <button onClick={handleStartOver} className="start-over-button">
-        Start Over
+        {t("startOver")}
       </button>
       {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
@@ -527,6 +528,23 @@ export default function Chat() {
       <div className="message-list" ref={messageListRef} aria-live="polite">
         {messages.map((message, index) => (
           <React.Fragment key={index}>
+            {message.isWelcome && showWelcomeButtons && (
+              <div className="option-grid">
+                <button
+                  onClick={() => handleOptionClick(t("howToApplyForSSN"))}
+                >
+                  {t("SSN")}
+                </button>
+                <button
+                  onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
+                >
+                  {t("LL30")}
+                </button>
+                <button onClick={() => handleOptionClick(t("whatIsAnITIN"))}>
+                  {t("ITIN")}
+                </button>
+              </div>
+            )}
             <div className={`message ${message.sender}`}>
               {(message.text || "").split("\n").map((line, i) => (
                 <React.Fragment key={i}>
@@ -542,47 +560,67 @@ export default function Chat() {
                 </React.Fragment>
               ))}
             </div>
-            {message.isWelcome && showWelcomeButtons && (
-              <div className="option-grid">
-                <button
-                  onClick={() => handleOptionClick("How to apply for SSN")}
-                >
-                  {t("SSN")}
-                </button>
-                <button
-                  onClick={() => handleOptionClick("What is NYC Local Law 30?")}
-                >
-                  {t("LL30")}
-                </button>
-                <button
-                  onClick={() => handleOptionClick("What is an ITIN number?")}
-                >
-                  {t("ITIN")}
-                </button>
-                <button onClick={() => handleOptionClick("Other questions")}>
-                  {t("other")}
-                </button>
-              </div>
-            )}
           </React.Fragment>
         ))}
         {uiState.visibleOptions.visa && (
           <div className="visa-options">
-            <button onClick={() => handleVisaOptionClick("Yes")}>
+            <button onClick={() => handleVisaOptionClick(t("yes"))}>
               {t("yes")}
             </button>
-            <button onClick={() => handleVisaOptionClick("No")}>
+            <button onClick={() => handleVisaOptionClick(t("no"))}>
               {t("no")}
             </button>
           </div>
         )}
         {uiState.visibleOptions.law30 && (
           <div className="law30-options">
-            <button onClick={() => handleLaw30OptionClick("Yes")}>
-              {t("yes")}
+            <button>
+              <a
+                href={`https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("learnLL30")}
+              </a>
             </button>
-            <button onClick={() => handleLaw30OptionClick("No")}>
-              {t("no")}
+          </div>
+        )}
+        {uiState.visibleOptions.itin && (
+          <div className="itin-options">
+            <button>
+              <a
+                href={`https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("TIN")}
+              </a>
+            </button>
+            <button>
+              <a
+                href={`https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("nycITIN")}
+              </a>
+            </button>
+            <button>
+              <a
+                href={`https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
+                  userLanguage === "en" ? "eng" : userLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("irsITIN")}
+              </a>
             </button>
           </div>
         )}
@@ -599,11 +637,13 @@ export default function Chat() {
         {uiState.visibleOptions.ssn && (
           <div className="ssn-options">
             <button
-              onClick={() => handleSSNOptionClick("Closest Office Location")}
+              onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
             >
               {t("office")}
             </button>
-            <button onClick={() => handleSSNOptionClick("Documents Required")}>
+            <button
+              onClick={() => handleSSNOptionClick(t("documentsRequired"))}
+            >
               {t("documents")}
             </button>
           </div>
@@ -620,10 +660,10 @@ export default function Chat() {
         )}
         {uiState.visibleOptions.showOfficeInfoButtons && (
           <div className="office-info-buttons">
-            <button onClick={() => handleOfficeInfoResponse("Yes")}>
+            <button onClick={() => handleOfficeInfoResponse(t("yes"))}>
               {t("yes")}
             </button>
-            <button onClick={() => handleOfficeInfoResponse("No")}>
+            <button onClick={() => handleOfficeInfoResponse(t("no"))}>
               {t("no")}
             </button>
           </div>
@@ -635,8 +675,9 @@ export default function Chat() {
           onSubmit={(e) => {
             e.preventDefault();
             if (
-              input.trim() !== "" &&
-              messages[messages.length - 1].text === t("nearestOffice")
+              (input.trim() !== "" &&
+                messages[messages.length - 1].text === t("nearestOffice")) ||
+              (input.length === 5 && typeof Number(input) === "number")
             ) {
               setMessages((prevMessages) => [
                 ...prevMessages,
@@ -670,7 +711,7 @@ export default function Chat() {
             onTouchEnd={stopListeningAndSend}
             disabled={isLoading}
           >
-            Hold to Talk to Patio
+            🎤
           </button>
         </form>
       </div>
