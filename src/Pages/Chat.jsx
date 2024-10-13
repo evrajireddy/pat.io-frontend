@@ -293,14 +293,14 @@ export default function Chat() {
   const handleOptionClick = (option) => {
     setShowWelcomeButtons(false);
     let botResponse = t("optionSelected") + option;
-    if (option === "How to apply for SSN?") {
+    if (option === t("howToApplyForSSN")) {
       botResponse = t("ssnSelected");
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
-    } else if (option === "What is NYC Local Law 30?") {
+    } else if (option === t("whatIsNYCLocalLaw30")) {
       botResponse = t("LL30Selected");
       toggleOption("law30", true);
-    } else if (option === "What is an ITIN?") {
+    } else if (option === t("whatIsAnITIN")) {
       botResponse = t("ITINSelected");
       toggleOption("itin", true);
     } else {
@@ -320,10 +320,10 @@ export default function Chat() {
   const handleVisaOptionClick = (answer) => {
     setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
 
-    updateUserInteraction("buttonClicks", "valid_visa", answer === "Yes");
+    updateUserInteraction("buttonClicks", "valid_visa", answer === t("yes"));
     toggleOption("visa", false);
 
-    if (answer === "Yes") {
+    if (answer === t("yes")) {
       setMessages((prev) => [...prev, { text: t("visaType"), sender: "bot" }]);
       toggleOption("visaType", true);
     }
@@ -345,7 +345,7 @@ export default function Chat() {
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
     toggleOption("ssn", false);
-    if (option === "Closest Office Location") {
+    if (option === t("closestOfficeLocation")) {
       toggleOption("showDocumentButtons", true);
     } else {
       try {
@@ -378,7 +378,7 @@ export default function Chat() {
         );
 
         // Handle the response based on the option
-        if (option === "Documents Required") {
+        if (option === t("documentsRequired")) {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -387,7 +387,7 @@ export default function Chat() {
             },
           ]);
           toggleOption("showDocumentButtons", true);
-        } else if (option === "Closest Office Location") {
+        } else if (option === t("closestOfficeLocation")) {
           setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -487,7 +487,7 @@ export default function Chat() {
 
   const handleOfficeInfoResponse = (answer) => {
     toggleOption("showOfficeInfoButtons", false);
-    let response = answer === "Yes" ? t("nearestOffice") : t("anymoreHelp");
+    let response = answer === t("yes") ? t("nearestOffice") : t("anymoreHelp");
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -517,7 +517,7 @@ export default function Chat() {
       {/* <h1>{t("chat")}</h1> */}
       <BreadCrumb />
       <button onClick={handleStartOver} className="start-over-button">
-        Start Over
+        {t("startOver")}
       </button>
       {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
@@ -531,16 +531,16 @@ export default function Chat() {
             {message.isWelcome && showWelcomeButtons && (
               <div className="option-grid">
                 <button
-                  onClick={() => handleOptionClick("How to apply for SSN?")}
+                  onClick={() => handleOptionClick(t("howToApplyForSSN"))}
                 >
                   {t("SSN")}
                 </button>
                 <button
-                  onClick={() => handleOptionClick("What is NYC Local Law 30?")}
+                  onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
                 >
                   {t("LL30")}
                 </button>
-                <button onClick={() => handleOptionClick("What is an ITIN?")}>
+                <button onClick={() => handleOptionClick(t("whatIsAnITIN"))}>
                   {t("ITIN")}
                 </button>
               </div>
@@ -564,10 +564,10 @@ export default function Chat() {
         ))}
         {uiState.visibleOptions.visa && (
           <div className="visa-options">
-            <button onClick={() => handleVisaOptionClick("Yes")}>
+            <button onClick={() => handleVisaOptionClick(t("yes"))}>
               {t("yes")}
             </button>
-            <button onClick={() => handleVisaOptionClick("No")}>
+            <button onClick={() => handleVisaOptionClick(t("no"))}>
               {t("no")}
             </button>
           </div>
@@ -582,7 +582,7 @@ export default function Chat() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                click here to learn more about the law in your language
+                {t("learnLL30")}
               </a>
             </button>
           </div>
@@ -597,8 +597,7 @@ export default function Chat() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                click here to learn more about different Taxpayer Identification
-                Numbers from IRS
+                {t("TIN")}
               </a>
             </button>
             <button>
@@ -609,7 +608,7 @@ export default function Chat() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                click here to learn more about ITIN from NYC Service
+                {t("nycITIN")}
               </a>
             </button>
             <button>
@@ -620,7 +619,7 @@ export default function Chat() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                click here to learn more about ITIN from IRS
+                {t("irsITIN")}
               </a>
             </button>
           </div>
@@ -638,11 +637,13 @@ export default function Chat() {
         {uiState.visibleOptions.ssn && (
           <div className="ssn-options">
             <button
-              onClick={() => handleSSNOptionClick("Closest Office Location")}
+              onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
             >
               {t("office")}
             </button>
-            <button onClick={() => handleSSNOptionClick("Documents Required")}>
+            <button
+              onClick={() => handleSSNOptionClick(t("documentsRequired"))}
+            >
               {t("documents")}
             </button>
           </div>
@@ -659,10 +660,10 @@ export default function Chat() {
         )}
         {uiState.visibleOptions.showOfficeInfoButtons && (
           <div className="office-info-buttons">
-            <button onClick={() => handleOfficeInfoResponse("Yes")}>
+            <button onClick={() => handleOfficeInfoResponse(t("yes"))}>
               {t("yes")}
             </button>
-            <button onClick={() => handleOfficeInfoResponse("No")}>
+            <button onClick={() => handleOfficeInfoResponse(t("no"))}>
               {t("no")}
             </button>
           </div>
@@ -710,7 +711,7 @@ export default function Chat() {
             onTouchEnd={stopListeningAndSend}
             disabled={isLoading}
           >
-            Hold to Talk to Patio
+            🎤
           </button>
         </form>
       </div>
