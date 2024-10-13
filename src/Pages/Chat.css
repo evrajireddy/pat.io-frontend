@@ -80,7 +80,8 @@ button {
 .ssn-options,
 .document-status-buttons,
 .office-info-buttons,
-.law30-options {
+.law30-options,
+.itin-options {
   display: flex;
   justify-content: space-around;
   margin-top: 10px;
@@ -91,7 +92,8 @@ button {
 .ssn-options button,
 .document-status-buttons button,
 .office-info-buttons button,
-.law30-options button {
+.law30-options button,
+.itin-options button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -105,7 +107,8 @@ button {
 .ssn-options button:hover,
 .document-status-buttons button:hover,
 .office-info-buttons button:hover,
-.law30-options button:hover {
+.law30-options button:hover,
+.itin-options button:hover {
   background-color: #0056b3;
 }
 

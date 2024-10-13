@@ -28,6 +28,7 @@ const languageMapping = {
   vi: ["vi-VN", "Tiếng Việt (Vietnamese)"],
   ar: ["ar-SA", "العربية (Arabic)"],
   ur: ["ur-PK", "اردو (Urdu)"],
+  tl: ["tl-PH", "Tagalog (Filipino)"],
 };
 
 export default function Languages() {
