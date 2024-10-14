@@ -9,7 +9,7 @@ i18n.use(initReactI18next).init({
         select: "Select a language",
         chat: "Chat with Pat.io",
         welcome:
-          "Hi there! 👋 I'm Pat.io, your personal AI assistant, here to help with everything related to Social Security Numbers (SSN), Individual Taxpayer Identification Numbers (ITIN), and New York City's Local Law 30. How can I assist you today? Do you have any questions about SSNs, ITINs, or your rights to language access under Local Law 30?",
+          "Hi there! 👋 I'm Pat.io, your personal AI assistant, here to help with everything related to Social Security Numbers (SSN), Individual Taxpayer Identification Numbers (ITIN), and New York City's Local Law 30. How can I assist you today?",
         error: "Network response was not ok",
         sorry: "Sorry, there was an error processing your request.",
         SSN: "How to apply for SSN?",
@@ -34,7 +34,7 @@ i18n.use(initReactI18next).init({
         ssaOffice:
           "Great! You're all set to apply for your SSN. Would you like information on the nearest SSA office?",
         missingDocuments:
-          "No problem. Which documents are you missing? I can provide more information on how to obtain them.",
+          "No worries! Here's a list of the documents you’ll need. Once you have everything ready, feel free to continue your application process.  I'm here to help!",
         nearestOffice: "Can I have your zip code please",
         anymoreHelp:
           "Alright. Is there anything else I can help you with regarding your SSN application?",
@@ -54,6 +54,10 @@ i18n.use(initReactI18next).init({
         howToApplyForSSN: "How to apply for SSN?",
         documentsRequired: "Documents Required",
         closestOfficeLocation: "Closest Office Location",
+        noValidVisa:
+          "Sorry, please visit the USCIS website below to apply for a visa.",
+        applyForImmigrantVisa: "Apply for a Immigrant Visa.",
+        applyForNonImmigrantVisa: "Apply for a Non Immigrant Visa.",
       },
     },
     ru: {
