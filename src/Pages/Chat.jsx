@@ -28,8 +28,10 @@ export default function Chat() {
       itin: false,
       visaType: false,
       ssn: false,
+      travelVisa: false,
       showDocumentButtons: false,
       showOfficeInfoButtons: false,
+      moreVisaType: false,
     },
   });
 
@@ -332,20 +334,30 @@ export default function Chat() {
     if (answer === t("yes")) {
       setMessages((prev) => [...prev, { text: t("visaType"), sender: "bot" }]);
       toggleOption("visaType", true);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { text: t("noValidVisa"), sender: "bot" },
+      ]);
+      toggleOption("travelVisa", true);
     }
   };
 
   // Handle visa type click (e.g., H1B, L1, etc.)
   const handleVisaTypeClick = (visaType) => {
-    setMessages((prev) => [
-      ...prev,
-      { text: visaType, sender: "user" },
-      { text: t("eligible"), sender: "bot" },
-    ]);
+    if (visaType === "Others") {
+      toggleOption("moreVisaType", true);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { text: visaType, sender: "user" },
+        { text: t("eligible"), sender: "bot" },
+      ]);
 
-    updateUserInteraction("buttonClicks", "visa_type", visaType);
-    toggleOption("visaType", false);
-    toggleOption("ssn", true);
+      updateUserInteraction("buttonClicks", "visa_type", visaType);
+      toggleOption("visaType", false);
+      toggleOption("ssn", true);
+    }
   };
 
   // Handle SSN options click (e.g., Closest Office, Documents Required)
@@ -579,6 +591,36 @@ export default function Chat() {
             </button>
           </div>
         )}
+        {uiState.visibleOptions.travelVisa && (
+          <div className="visa-form-options">
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/ds-160-online-nonimmigrant-visa-application.html?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("applyForNonImmigrantVisa")}
+            </button>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/online-immigrant-visa-forms.html?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("applyForImmigrantVisa")}
+            </button>
+          </div>
+        )}
         {uiState.visibleOptions.law30 && (
           <div className="law30-options">
             <button
@@ -645,9 +687,25 @@ export default function Chat() {
             <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
             <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
             <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
-            {/* <button onClick={() => handleVisaTypeClick("Others")}>
+            <button onClick={() => handleVisaTypeClick("Others")}>
               {t("more")}
-            </button> */}
+            </button>
+          </div>
+        )}
+        {uiState.visibleOptions.moreVisaType && (
+          <div className="visa-type-options">
+            <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
+            {/* <button onClick={() => handleVisaTypeClick("H-2A")}>H-2A</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("H-2B")}>H-2B</button> */}
+            <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
+            {/* <button onClick={() => handleVisaTypeClick("O-1")}>O-1</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("E-1")}>E-1</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("E-2")}>E-2</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("TN")}>TN</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("J-1")}>J-1</button> */}
+            <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
+            {/* <button onClick={() => handleVisaTypeClick("H-4")}>H-4</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("J-2")}>J-2</button> */}
           </div>
         )}
         {uiState.visibleOptions.ssn && (
@@ -693,7 +751,7 @@ export default function Chat() {
             if (
               (input.trim() !== "" &&
                 messages[messages.length - 1].text === t("nearestOffice")) ||
-              (input.length === 5 && typeof Number(input) === "number")
+              (input.length === 5 && /^\d+$/.test(input))
             ) {
               setMessages((prevMessages) => [
                 ...prevMessages,
@@ -716,20 +774,29 @@ export default function Chat() {
             }}
             placeholder={t("type")}
           />
-          <button type="submit" disabled={!input.trim() || isLoading}>
+          <button
+            className="send-button"
+            type="submit"
+            disabled={!input.trim() || isLoading}
+          >
             {t("send")}
           </button>
-          <button
-            className="mic-button"
-            type="button"
-            onMouseDown={startListening}
-            onMouseUp={stopListeningAndSend}
-            onTouchStart={startListening}
-            onTouchEnd={stopListeningAndSend}
-            disabled={isLoading}
-          >
-            <i className="fa-solid fa-microphone"></i>
-          </button>
+          <div className="mic-button-wrapper">
+            <button
+              className="mic-button"
+              type="button"
+              onMouseDown={startListening}
+              onMouseUp={stopListeningAndSend}
+              onTouchStart={startListening}
+              onTouchEnd={stopListeningAndSend}
+              disabled={isLoading}
+            >
+              <i className="fa-solid fa-microphone"></i>
+            </button>
+            <span className="bubble-message">
+              Hold to speak, release to send.
+            </span>
+          </div>
         </form>
       </div>
     </div>

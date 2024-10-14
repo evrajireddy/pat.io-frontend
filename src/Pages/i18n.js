@@ -54,6 +54,10 @@ i18n.use(initReactI18next).init({
         howToApplyForSSN: "How to apply for SSN?",
         documentsRequired: "Documents Required",
         closestOfficeLocation: "Closest Office Location",
+        noValidVisa:
+          "Sorry, please visit the USCIS website below to apply for a visa.",
+        applyForImmigrantVisa: "Apply for a Immigrant Visa.",
+        applyForNonImmigrantVisa: "Apply for a Non Immigrant Visa.",
       },
     },
     ru: {

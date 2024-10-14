@@ -81,7 +81,8 @@ button {
 .document-status-buttons,
 .office-info-buttons,
 .law30-options,
-.itin-options {
+.itin-options,
+.visa-form-options {
   display: flex;
   justify-content: space-around;
   margin-top: 10px;
@@ -93,7 +94,8 @@ button {
 .document-status-buttons button,
 .office-info-buttons button,
 .law30-options button,
-.itin-options button {
+.itin-options button,
+.visa-form-options button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
@@ -108,7 +110,8 @@ button {
 .document-status-buttons button:hover,
 .office-info-buttons button:hover,
 .law30-options button:hover,
-.itin-options button:hover {
+.itin-options button:hover,
+.visa-form-options button:hover {
   background-color: #0056b3;
 }
 
@@ -141,4 +144,50 @@ button {
 
 .start-over-button:hover {
   background-color: #e0e0e0;
+}
+
+.send-button {
+  background-color: green;
+}
+
+.mic-button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.mic-button {
+  background-color: #007bff; /* Customize your button color */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+}
+
+.bubble-message {
+  visibility: hidden;
+  width: 120px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  bottom: 100%; /* Position it above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px; /* Adjust distance from the button */
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+/* Show the bubble when hovering over the button */
+.mic-button-wrapper:hover .bubble-message,
+.mic-button-wrapper:focus .bubble-message,
+.mic-button-wrapper:active .bubble-message {
+  visibility: visible;
+  opacity: 1;
 }
