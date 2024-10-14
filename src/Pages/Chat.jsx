@@ -13,6 +13,7 @@ export default function Chat() {
   const [showWelcomeButtons, setShowWelcomeButtons] = useState(true);
   const [breadcrumbPath, setBreadcrumbPath] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
+  const [showBubble, setShowBubble] = useState(false);
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -364,6 +365,7 @@ export default function Chat() {
 
   // Function to start speech recognition
   const startListening = () => {
+    setShowBubble(true);
     if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -386,6 +388,7 @@ export default function Chat() {
 
   // Function to stop speech recognition and submit message
   const stopListeningAndSend = async () => {
+    setShowBubble(false);
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       await handleSubmit();
@@ -907,7 +910,7 @@ export default function Chat() {
             >
               <i className="fa-solid fa-microphone"></i>
             </button>
-            <span className="bubble-message">
+            <span className={`bubble-message ${showBubble ? "visible" : ""}`}>
               Hold to speak, release to send.
             </span>
           </div>
