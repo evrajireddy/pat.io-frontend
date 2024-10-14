@@ -34,7 +34,7 @@ i18n.use(initReactI18next).init({
         ssaOffice:
           "Great! You're all set to apply for your SSN. Would you like information on the nearest SSA office?",
         missingDocuments:
-          "No problem. Which documents are you missing? I can provide more information on how to obtain them.",
+          "No worries! Here's a list of the documents you’ll need. Once you have everything ready, feel free to continue your application process.  I'm here to help!",
         nearestOffice: "Can I have your zip code please",
         anymoreHelp:
           "Alright. Is there anything else I can help you with regarding your SSN application?",

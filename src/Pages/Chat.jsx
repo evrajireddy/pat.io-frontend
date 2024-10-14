@@ -11,6 +11,8 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcomeButtons, setShowWelcomeButtons] = useState(true);
+  const [breadcrumbPath, setBreadcrumbPath] = useState([]);
+  const [chatHistory, setChatHistory] = useState([]);
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -57,6 +59,7 @@ export default function Chat() {
   // Debugging logs
   console.log("User Interactions:", userInteractions);
   console.log("Messages in Chat.jsx:", messages);
+  console.log("UI State:", uiState);
 
   // useEffects
   useEffect(() => {
@@ -83,6 +86,98 @@ export default function Chat() {
       setTargetLanguage(storedLanguage);
     }
   }, []);
+
+  // Breadcrumb update function
+  const updateBreadcrumb = (selection) => {
+    setBreadcrumbPath((prevPath) => {
+      const newPath = [...prevPath, selection];
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { path: newPath, messages: [...messages] },
+      ]);
+      return newPath;
+    });
+  };
+
+  const handleBreadcrumbNavigation = (index) => {
+    const newPath = breadcrumbPath.slice(0, index + 1);
+    setBreadcrumbPath(newPath);
+
+    const historicalState = chatHistory.find(
+      (state) => state.path.length === newPath.length
+    );
+    if (historicalState) {
+      setMessages(historicalState.messages);
+
+      // Reset other relevant state variables
+      setShowWelcomeButtons(index === 0);
+      setInput("");
+      resetUserInteractions();
+      toggleAllButtonsOff();
+
+      // Determine which UI elements should be visible based on the historical state
+      const lastMessage =
+        historicalState.messages[historicalState.messages.length - 1];
+      updateUIStateBasedOnMessage(lastMessage);
+    }
+  };
+
+  const updateUIStateBasedOnMessage = (message) => {
+    // Reset all UI options first
+    const resetUIState = {
+      visa: false,
+      law30: false,
+      itin: false,
+      visaType: false,
+      ssn: false,
+      travelVisa: false,
+      showDocumentButtons: false,
+      showOfficeInfoButtons: false,
+      moreVisaType: false,
+    };
+
+    let newUIState = { ...resetUIState };
+
+    // Check the message content and update UI state accordingly
+    console.log("Message:", message);
+    if (message.text.includes(t("welcome"))) {
+      setBreadcrumbPath([]);
+      setShowWelcomeButtons(true);
+    } else {
+      setShowWelcomeButtons(false);
+
+      if (message.text.includes(t("visaType"))) {
+        newUIState.visaType = true;
+      } else if (message.text.includes(t("eligible"))) {
+        newUIState.ssn = true;
+      } else if (message.text.includes(t("noValidVisa"))) {
+        newUIState.travelVisa = true;
+      } else if (message.text.includes(t("allRequired"))) {
+        newUIState.showDocumentButtons = true;
+      } else if (
+        message.text.includes(t("ssaOffice")) ||
+        message.text.includes(t("missingDocuments"))
+      ) {
+        newUIState.showOfficeInfoButtons = true;
+      } else if (message.text.includes(t("nearestOffice"))) {
+        // Do nothing, waiting for user input
+      } else if (message.text.includes(t("anymoreHelp"))) {
+        // Do nothing, end of conversation
+      } else if (message.text.includes(t("ssnSelected"))) {
+        newUIState.visa = true;
+      } else if (message.text.includes(t("LL30"))) {
+        newUIState.law30 = true;
+      } else if (message.text.includes(t("ITIN"))) {
+        newUIState.itin = true;
+      }
+    }
+
+    // Update the UI state
+    setUiState((prevState) => ({
+      ...prevState,
+      visibleOptions: newUIState,
+    }));
+  };
 
   // Function to update UI visibility
   const toggleOption = (optionName, value = null) => {
@@ -300,6 +395,7 @@ export default function Chat() {
   // Handle option click (e.g., SSN, Local Law 30, etc.)
   const handleOptionClick = (option) => {
     setShowWelcomeButtons(false);
+    updateBreadcrumb(option);
     let botResponse = t("optionSelected") + option;
     if (option === t("howToApplyForSSN")) {
       botResponse = t("ssnSelected");
@@ -326,6 +422,7 @@ export default function Chat() {
 
   // Handle visa option click (Yes/No for visa validity)
   const handleVisaOptionClick = (answer) => {
+    updateBreadcrumb(answer);
     setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
 
     updateUserInteraction("buttonClicks", "valid_visa", answer === t("yes"));
@@ -345,6 +442,7 @@ export default function Chat() {
 
   // Handle visa type click (e.g., H1B, L1, etc.)
   const handleVisaTypeClick = (visaType) => {
+    updateBreadcrumb(visaType);
     if (visaType === "Others") {
       toggleOption("moreVisaType", true);
     } else {
@@ -362,9 +460,15 @@ export default function Chat() {
 
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
+    updateBreadcrumb(option);
     toggleOption("ssn", false);
     if (option === t("closestOfficeLocation")) {
-      toggleOption("showDocumentButtons", true);
+      let response = t("nearestOffice");
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: response, sender: "bot" },
+      ]);
     } else {
       try {
         // Update messages immediately
@@ -486,6 +590,7 @@ export default function Chat() {
 
   // Function to handle document status
   const handleDocumentStatus = (status) => {
+    updateBreadcrumb(status);
     toggleOption("showDocumentButtons", false);
     let response =
       status === "complete" ? t("ssaOffice") : t("missingDocuments");
@@ -501,11 +606,16 @@ export default function Chat() {
         sender: "bot",
       },
     ]);
-    toggleOption("showOfficeInfoButtons", true);
+    if (response === t("missingDocuments")) {
+      toggleOption("showOfficeInfoButtons", false);
+    } else {
+      toggleOption("showOfficeInfoButtons", true);
+    }
   };
 
   // Function to handle office info response
   const handleOfficeInfoResponse = (answer) => {
+    updateBreadcrumb(answer);
     toggleOption("showOfficeInfoButtons", false);
     let response = answer === t("yes") ? t("nearestOffice") : t("anymoreHelp");
 
@@ -518,6 +628,7 @@ export default function Chat() {
 
   // Function to handle the "Start Over" button click
   const handleStartOver = () => {
+    setBreadcrumbPath([]);
     setMessages([
       {
         text: t("welcome"),
@@ -534,7 +645,10 @@ export default function Chat() {
   return (
     <div className="chat-container">
       {/* <h1>{t("chat")}</h1> */}
-      <BreadCrumb />
+      <BreadCrumb
+        path={breadcrumbPath}
+        onNavigate={handleBreadcrumbNavigation}
+      />
       <button onClick={handleStartOver} className="start-over-button">
         {t("startOver")}
       </button>
