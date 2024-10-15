@@ -14,6 +14,10 @@ export default function Chat() {
   const [breadcrumbPath, setBreadcrumbPath] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
   const [showBubble, setShowBubble] = useState(false);
+  const [voices, setVoices] = useState([]); // For storing available voices
+
+  // Track the currently reading message (boolean array)
+  const [isReading, setIsReading] = useState({});
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -87,6 +91,50 @@ export default function Chat() {
       setTargetLanguage(storedLanguage);
     }
   }, []);
+
+  // Fetch available voices for text-to-speech
+  useEffect(() => {
+    const fetchVoices = () => {
+      const availableVoices = speechSynthesis.getVoices();
+      setVoices(availableVoices);
+    };
+
+    // Fetch voices when they become available
+    if (window.speechSynthesis) {
+      fetchVoices();
+      // Some browsers (like Chrome) might need a timeout
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = fetchVoices;
+      }
+    }
+  }, []);
+
+  // Play the text message using Web Speech API in the appropriate language
+  const readMessage = (text, language, index) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language || "en-US"; // Set the language dynamically based on the passed argument
+      window.speechSynthesis.speak(utterance);
+
+      // When the message is being read, show the "Stop" button
+      setIsReading((prev) => ({ ...prev, [index]: true }));
+
+      // Handle when speech ends (reset buttons)
+      utterance.onend = () => {
+        setIsReading((prev) => ({ ...prev, [index]: false }));
+      };
+    } else {
+      alert("Sorry, your browser does not support text-to-speech.");
+    }
+  };
+
+  // Stop the currently playing speech
+  const stopSpeech = (index) => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel(); // Stop any ongoing speech
+      setIsReading((prev) => ({ ...prev, [index]: false })); // Reset the state to show "Read" button again
+    }
+  };
 
   // Breadcrumb update function
   const updateBreadcrumb = (selection) => {
@@ -647,16 +695,30 @@ export default function Chat() {
 
   return (
     <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-      <BreadCrumb
-        path={breadcrumbPath}
-        onNavigate={handleBreadcrumbNavigation}
-      />
-      <div className="flex justify-end">
+      <div className="flex justify-apart">
+        <BreadCrumb
+          path={breadcrumbPath}
+          onNavigate={handleBreadcrumbNavigation}
+        />
         <button
           onClick={handleStartOver}
           className="bg-blue-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
         >
           {t("startOver")}
+        </button>
+        <button
+          onClick={() => {
+            // Stop and reset the audio
+            setIsReading({});
+            stopSpeech();
+            if (audioRef.current) {
+              audioRef.current.pause(); // Stop the audio
+              audioRef.current.currentTime = 0; // Reset the audio to the beginning
+            }
+          }}
+          className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
+        >
+          Stop Audio
         </button>
       </div>
       {/* <LanguageSelector
@@ -683,7 +745,7 @@ export default function Chat() {
                   </div>
                   <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
                     <img
-                      src="src/assets/applying.webp" // Replace with the actual path to your image
+                      src="src/assets/applying.webp"
                       alt="SSN Icon"
                       className="object-cover w-full h-full"
                     />
@@ -698,7 +760,7 @@ export default function Chat() {
                   </div>
                   <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
                     <img
-                      src="src/assets/ll30.webp" // Replace with the actual path to your image
+                      src="src/assets/ll30.webp"
                       alt="LL30 Icon"
                       className="object-cover w-full h-full"
                     />
@@ -713,7 +775,7 @@ export default function Chat() {
                   </div>
                   <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
                     <img
-                      src="src/assets/itin.webp" // Replace with the actual path to your image
+                      src="src/assets/itin.webp"
                       alt="ITIN Icon"
                       className="object-cover w-full h-full"
                     />
@@ -722,31 +784,66 @@ export default function Chat() {
               </div>
             )}
             <div
-              className={`message ${
-                message.sender
-              } max-w-3/4 my-2 py-2 px-3 rounded-lg ${
-                message.sender === "user"
-                  ? "bg-blue-100 self-end"
-                  : "bg-gray-200 self-start"
+              className={`message-wrapper flex items-start space-x-2 ${
+                message.sender === "user" ? "ml-auto" : ""
               }`}
             >
-              {(message.text || "").split("\n").map((line, i) => (
-                <React.Fragment key={i}>
-                  {line.match(/^\d+\./) ? (
-                    <div className="checkbox-item mb-1 flex items-start">
-                      <input
-                        type="checkbox"
-                        className="mr-1 mt-1"
-                        id={`item-${i}`}
-                      />
-                      <label htmlFor={`item-${i}`}>{line}</label>
-                    </div>
-                  ) : (
-                    line
+              <div
+                className={`message ${
+                  message.sender
+                } max-w-3/4 my-2 py-2 px-3 rounded-lg ${
+                  message.sender === "user"
+                    ? "bg-blue-100 self-end whitespace-nowrap overflow-auto"
+                    : "bg-gray-200 self-start"
+                }`}
+                style={{ maxWidth: "100%" }}
+              >
+                {(message.text || "").split("\n").map((line, i) => (
+                  <React.Fragment key={i}>
+                    {line.match(/^\d+\./) ? (
+                      <div className="checkbox-item mb-1 flex items-start">
+                        <input
+                          type="checkbox"
+                          className="mr-1 mt-1"
+                          id={`item-${i}`}
+                        />
+                        <label htmlFor={`item-${i}`}>{line}</label>
+                      </div>
+                    ) : (
+                      line
+                    )}
+                    <br />
+                  </React.Fragment>
+                ))}
+              </div>
+              {message.sender === "bot" && (
+                <div className="flex gap-4 mt-2">
+                  {!isReading[index] && (
+                    <button
+                      onClick={() =>
+                        readMessage(message.text, targetLanguage, index)
+                      } // Pass targetLanguage to read the message in the correct language
+                      className="bg-green-500 text-white py-1 px-2 rounded"
+                    >
+                      <i className="fa-solid fa-volume-high"></i>
+                    </button>
                   )}
-                  <br />
-                </React.Fragment>
-              ))}
+                  {isReading[index] && (
+                    <button
+                      onClick={() => {
+                        stopSpeech(index);
+                        if (audioRef.current) {
+                          audioRef.current.pause(); // Stop the audio
+                          audioRef.current.currentTime = 0; // Reset the audio to the beginning
+                        }
+                      }} // Stop the speech and reset to show "Read" button
+                      className="bg-red-500 text-white py-1 px-2 rounded"
+                    >
+                      <i className="fa-solid fa-circle-stop"></i>
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </React.Fragment>
         ))}
