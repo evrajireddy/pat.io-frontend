@@ -1,109 +1,126 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router
+import { useNavigate } from "react-router-dom";
 import Sketch from "react-p5";
 import "./Welcome.css";
 
 export default function Welcome() {
   const [isSplashVisible, setSplashVisible] = useState(true);
-  const [lights, setLights] = useState([]);
   const navigate = useNavigate(); // useNavigate for navigation
 
-  // Hide the splash screen after 15 seconds and navigate to the languages page
+  // Hide the splash screen after 2.5 seconds and navigate to the languages page
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplashVisible(false);
-      navigate("/language"); // Navigate to the language page after 15 seconds
-    }, 2500);
+      navigate("/language");
+    }, 8600);
 
-    return () => clearTimeout(timer); // Cleanup the timer
+    return () => clearTimeout(timer);
   }, [navigate]);
 
-  const setup = (p5, canvasParentRef) => {
-    // Set canvas width and height based on the window size
-    p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL).parent(
-      canvasParentRef
-    );
-    p5.pixelDensity(1);
-    p5.noStroke();
+  const preload = (p5) => {
+    // Preload assets (replace the paths with the correct ones)
+    p5.svgImage = p5.loadImage('/assets/Logo.svg');
+    p5.textSvg = p5.loadImage('/assets/Text.svg');
+  };
 
-    // Initialize floating lights
-    let tempLights = [];
-    for (let i = 0; i < 10; i++) {
-      tempLights.push(
-        new FloatingLight(
-          p5.random(-200, 200),
-          p5.random(-200, 200),
-          p5.random(-200, 200),
-          p5
-        )
-      );
+  const setup = (p5, canvasParentRef) => {
+    p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL).parent(canvasParentRef);
+    p5.planeSize = Math.min(p5.windowWidth, p5.windowHeight) * 0.5;
+    p5.frameRate(60);
+    p5.pixelDensity(3);
+
+    p5.particles = [];
+    for (let i = 0; i < 900; i++) {
+      p5.particles.push(new Particle(p5));
     }
-    setLights(tempLights);
   };
 
   const draw = (p5) => {
-    p5.background(255, 251, 235);
-    p5.directionalLight(255, 255, 255, 0, 0, -1);
-    p5.ambientLight(50);
+    p5.background(250);
+    p5.translate(0, 0, 0);
+    let pulse = p5.map(p5.sin(p5.frameCount * 0.02), -1, 1, 0.95, 1.05);
+    p5.scale(pulse);
 
-    // Floating and rotating chip
-    p5.rotateY(p5.millis() / 2000);
-    p5.rotateX(p5.millis() / 4000);
-    p5.rotateZ(p5.millis() / 4000);
-
-    drawChip(p5);
-
-    lights.forEach((light) => {
-      light.move();
-      light.display(p5);
-    });
-  };
-
-  const drawChip = (p5) => {
     p5.push();
-    p5.specularMaterial(210, 210, 210);
-    p5.shininess(100);
-    p5.box(40, 40, 5);
+    let zMovement = p5.sin(p5.frameCount * 0.01) * 300;
+    p5.translate(0, -p5.planeSize / 1.5 + 50, zMovement);
+    p5.texture(p5.textSvg);
+    p5.noStroke();
+    p5.plane(p5.planeSize * 0.8, p5.planeSize * 0.25);
     p5.pop();
 
-    const pinOffset = 30;
-    const pinSize = 10;
+    p5.push();
+    p5.translate(0, 0, zMovement);
+    p5.texture(p5.svgImage);
+    p5.noStroke();
+    p5.plane(p5.planeSize * 0.75, p5.planeSize * 0.75);
+    p5.pop();
 
-    // Drawing the pins
-    for (let i = -15; i <= 15; i += pinSize) {
-      p5.push();
-      p5.specularMaterial(255);
-      p5.shininess(100);
-      p5.box(5, 10, 5);
-      p5.pop();
+    let shading = p5.map(p5.mouseX, 0, p5.width, 150, 255);
+    p5.ambientLight(shading);
+    p5.directionalLight(255, 255, 255, 0, 1, 0);
+
+    for (let i = p5.particles.length - 1; i >= 0; i--) {
+      p5.particles[i].update();
+      p5.particles[i].display(p5);
+      if (p5.particles[i].isOffScreen()) {
+        p5.particles.splice(i, 1);
+        p5.particles.push(new Particle(p5));
+      }
     }
   };
 
-  class FloatingLight {
-    constructor(x, y, z, p5) {
-      this.pos = p5.createVector(x, y, z);
-      this.vel = p5.createVector(
-        p5.random(-1, 1),
-        p5.random(-1, 1),
-        p5.random(-1, 1)
-      );
-      this.size = p5.random(2, 15);
+  const windowResized = (p5) => {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+    p5.planeSize = Math.min(p5.windowWidth, p5.windowHeight) * 0.5;
+  };
+
+  class Particle {
+    constructor(p5) {
+      this.p5 = p5; // Store the p5 instance
+      this.x = this.p5.random(p5.width);
+      this.y = this.p5.random(p5.height);
+      this.z = this.p5.random(-500, 500); 
+      this.size = this.p5.random(3, 6);  
+      this.speedY = this.p5.random(1, 3); 
+      this.speedX = this.p5.random(-0.5, 0.5); 
+      this.alpha = this.p5.random(200, 255);  
+      this.color = [this.p5.random(100, 255), this.p5.random(100, 255), this.p5.random(255)];
     }
 
-    move() {
-      this.pos.add(this.vel);
-      if (this.pos.x > 200 || this.pos.x < -200) this.vel.x *= -1;
-      if (this.pos.y > 200 || this.pos.y < -200) this.vel.y *= -1;
-      if (this.pos.z > 200 || this.pos.z < -200) this.vel.z *= -1;
+    update() {
+      this.y -= this.speedY; 
+      this.x += this.speedX; 
+      this.z += this.p5.random(-0.5, 0.5); 
+      this.alpha -= 0.9;  
+
+      if (this.isOffScreen()) {
+        this.reset();
+      }
     }
 
     display(p5) {
       p5.push();
-      p5.translate(this.pos.x, this.pos.y, this.pos.z);
-      p5.specularMaterial(0, 200, 200);
-      p5.shininess(100);
+      p5.noStroke();
+      p5.emissiveMaterial(this.color[2], this.color[1], this.color[2], this.alpha); 
+      p5.translate(this.x - p5.width / 2, this.y - p5.height / 2, this.z);
       p5.sphere(this.size);
       p5.pop();
+    }
+
+    isOffScreen() {
+      return this.y < -100 || this.alpha <= 0;  
+    }
+
+    reset() {
+      this.x = this.p5.random(this.p5.width);
+      this.y = this.p5.random(this.p5.height);  
+      this.z = this.p5.random(-500, 500);
+      this.alpha = this.p5.random(200, 255); 
+      this.size = this.p5.random(3, 6);  
+      this.speedY = this.p5.random(1, 3);
+      this.speedX = this.p5.random(-0.5, 0.5);  
+      this.color = [this.p5.random(100, 255), this.p5.random(100, 255), this.p5.random(255)];  
     }
   }
 
@@ -117,7 +134,14 @@ export default function Welcome() {
         width: "100vw",
       }}
     >
-      {isSplashVisible ? <Sketch setup={setup} draw={draw} /> : null}
+      {isSplashVisible ? (
+        <Sketch
+          preload={preload}
+          setup={setup}
+          draw={draw}
+          windowResized={windowResized}
+        />
+      ) : null}
     </div>
   );
 }
