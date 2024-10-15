@@ -12,7 +12,7 @@ export default function Welcome() {
     const timer = setTimeout(() => {
       setSplashVisible(false);
       navigate("/language");
-    }, 5500);
+    }, 8600);
 
     return () => clearTimeout(timer);
   }, [navigate]);

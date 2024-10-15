@@ -29,23 +29,22 @@ body {
   flex-direction: column;
   align-items: center;
   padding: var(--container-padding);
-  background-color: #fffef7;
+  background-color: #ffffff;
   height: 100vh;
   width: 100%;
   position: relative;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem; /* Adjust title font size */
   font-weight: bold;
   color: rgb(34, 33, 33);
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem; /* Reduce margin for compact look */
 }
 
 /* Language Grid */
 .languages-grid-container {
-  border: 3px solid var(--dark-color);
-  padding: 1rem;
+  padding: 0.5rem; /* Reduced padding */
   border-radius: var(--border-radius);
   background-color: var(--neutral-color);
   height: 70vh;
@@ -54,28 +53,22 @@ body {
 
 .languages-grid {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .languages-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  grid-template-columns: repeat(2, 1fr); /* Two columns on all views */
+  gap: 0.75rem; /* Smaller gap */
 }
 
 @media (min-width: 1024px) {
   .languages-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Three columns on larger screens */
   }
 }
 
 /* Language Card */
 .language-card {
-  width: 15rem;
-  height: 5rem;
-  background-color: var(--neutral-color);
-  box-shadow: 0 4px 6px var(--shadow-light);
+  width: 100%; /* Full width inside grid cell */
+  height: 3.5rem; /* Smaller height */
+  background-color: #1b5e1f5e;
+  box-shadow: 0 2px 4px var(--shadow-light); /* Reduced shadow */
   border-radius: var(--border-radius);
   display: flex;
   justify-content: center;
@@ -103,8 +96,8 @@ body {
 }
 
 .language-card:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 12px var(--shadow-dark);
+  transform: scale(1.05); /* Slightly less scaling on hover */
+  box-shadow: 0 4px 8px var(--shadow-dark); /* Reduced hover shadow */
 }
 
 .language-card.selected {
@@ -113,7 +106,7 @@ body {
 }
 
 .language-text {
-  font-size: 1.25rem;
+  font-size: 1rem; /* Smaller font size */
   font-weight: 600;
   color: var(--font-color-dark);
 }
@@ -129,7 +122,6 @@ body {
   right: 20px;
   background-color: var(--neutral-color);
   padding: 1rem;
-  border: 2px solid #d7dde4;
   border-radius: var(--border-radius);
   width: 250px;
   box-shadow: 0 4px 6px var(--shadow-light);
@@ -155,20 +147,32 @@ body {
 @media (max-width: 640px) {
   .languages-container {
     padding: 0;
-    height: auto;
+    height: 100vh;
   }
 
   .title {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.5rem; /* Smaller title font size for mobile */
+    margin-bottom: 1rem;
   }
 
+  /* Language Grid for Mobile */
   .languages-grid-container {
-    height: 60vh;
+    height: auto; /* Remove height to fit all cards */
+    overflow: visible; /* Ensure no scroll */
+    padding: 1rem 0;
+  }
+
+  .languages-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for mobile view */
+    gap: 0.5rem;
   }
 
   .language-card {
-    width: 12rem;
-    height: 4rem;
+    width: 100%; /* Full width inside grid cell */
+    height: 3rem; /* Smaller height for mobile */
+  }
+
+  .language-text {
+    font-size: 0.9rem; /* Slightly smaller font size for mobile */
   }
 }
