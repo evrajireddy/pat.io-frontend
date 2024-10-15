@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Chat.css";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
-import { use } from "i18next";
 // import LanguageSelector from "../Componets/LanguageSelector";
+import "./Chat.css";
 
 export default function Chat() {
+  // State variables
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcomeButtons, setShowWelcomeButtons] = useState(true);
-  const recognitionRef = useRef(null); // For speech recognition
-  const audioRef = useRef(new Audio()); // For audio responses
+  const [breadcrumbPath, setBreadcrumbPath] = useState([]);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [showBubble, setShowBubble] = useState(false);
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -29,8 +31,10 @@ export default function Chat() {
       itin: false,
       visaType: false,
       ssn: false,
+      travelVisa: false,
       showDocumentButtons: false,
       showOfficeInfoButtons: false,
+      moreVisaType: false,
     },
   });
 
@@ -45,44 +49,20 @@ export default function Chat() {
     textInputs: [],
   });
 
+  // useRef for speech recognition and audio playback
+  const recognitionRef = useRef(null); // For speech recognition
+  const audioRef = useRef(new Audio()); // For audio responses
   const messageListRef = useRef(null);
   const inputRef = useRef(null);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
+  // Debugging logs
   console.log("User Interactions:", userInteractions);
+  console.log("Messages in Chat.jsx:", messages);
+  console.log("UI State:", uiState);
 
-  // Helper function to update UI visibility
-  const toggleOption = (optionName, value = null) => {
-    setUiState((prev) => ({
-      ...prev,
-      visibleOptions: {
-        ...Object.keys(prev.visibleOptions).reduce(
-          (acc, key) => ({
-            ...acc,
-            [key]:
-              key === optionName
-                ? value !== null
-                  ? value
-                  : !prev.visibleOptions[key]
-                : false,
-          }),
-          {}
-        ),
-      },
-    }));
-  };
-
-  // Helper function to update user interactions
-  const updateUserInteraction = (category, key, value) => {
-    setUserInteractions((prev) => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [key]: value,
-      },
-    }));
-  };
-
+  // useEffects
   useEffect(() => {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
@@ -107,6 +87,130 @@ export default function Chat() {
       setTargetLanguage(storedLanguage);
     }
   }, []);
+
+  // Breadcrumb update function
+  const updateBreadcrumb = (selection) => {
+    setBreadcrumbPath((prevPath) => {
+      const newPath = [...prevPath, selection];
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { path: newPath, messages: [...messages] },
+      ]);
+      return newPath;
+    });
+  };
+
+  const handleBreadcrumbNavigation = (index) => {
+    const newPath = breadcrumbPath.slice(0, index + 1);
+    setBreadcrumbPath(newPath);
+
+    const historicalState = chatHistory.find(
+      (state) => state.path.length === newPath.length
+    );
+    if (historicalState) {
+      setMessages(historicalState.messages);
+
+      // Reset other relevant state variables
+      setShowWelcomeButtons(index === 0);
+      setInput("");
+      resetUserInteractions();
+      toggleAllButtonsOff();
+
+      // Determine which UI elements should be visible based on the historical state
+      const lastMessage =
+        historicalState.messages[historicalState.messages.length - 1];
+      updateUIStateBasedOnMessage(lastMessage);
+    }
+  };
+
+  const updateUIStateBasedOnMessage = (message) => {
+    // Reset all UI options first
+    const resetUIState = {
+      visa: false,
+      law30: false,
+      itin: false,
+      visaType: false,
+      ssn: false,
+      travelVisa: false,
+      showDocumentButtons: false,
+      showOfficeInfoButtons: false,
+      moreVisaType: false,
+    };
+
+    let newUIState = { ...resetUIState };
+
+    // Check the message content and update UI state accordingly
+    console.log("Message:", message);
+    if (message.text.includes(t("welcome"))) {
+      setBreadcrumbPath([]);
+      setShowWelcomeButtons(true);
+    } else {
+      setShowWelcomeButtons(false);
+
+      if (message.text.includes(t("visaType"))) {
+        newUIState.visaType = true;
+      } else if (message.text.includes(t("eligible"))) {
+        newUIState.ssn = true;
+      } else if (message.text.includes(t("noValidVisa"))) {
+        newUIState.travelVisa = true;
+      } else if (message.text.includes(t("allRequired"))) {
+        newUIState.showDocumentButtons = true;
+      } else if (
+        message.text.includes(t("ssaOffice")) ||
+        message.text.includes(t("missingDocuments"))
+      ) {
+        newUIState.showOfficeInfoButtons = true;
+      } else if (message.text.includes(t("nearestOffice"))) {
+        // Do nothing, waiting for user input
+      } else if (message.text.includes(t("anymoreHelp"))) {
+        // Do nothing, end of conversation
+      } else if (message.text.includes(t("ssnSelected"))) {
+        newUIState.visa = true;
+      } else if (message.text.includes(t("LL30"))) {
+        newUIState.law30 = true;
+      } else if (message.text.includes(t("ITIN"))) {
+        newUIState.itin = true;
+      }
+    }
+
+    // Update the UI state
+    setUiState((prevState) => ({
+      ...prevState,
+      visibleOptions: newUIState,
+    }));
+  };
+
+  // Function to update UI visibility
+  const toggleOption = (optionName, value = null) => {
+    setUiState((prev) => ({
+      ...prev,
+      visibleOptions: {
+        ...Object.keys(prev.visibleOptions).reduce(
+          (acc, key) => ({
+            ...acc,
+            [key]:
+              key === optionName
+                ? value !== null
+                  ? value
+                  : !prev.visibleOptions[key]
+                : false,
+          }),
+          {}
+        ),
+      },
+    }));
+  };
+
+  // Function to update user interactions
+  const updateUserInteraction = (category, key, value) => {
+    setUserInteractions((prev) => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [key]: value,
+      },
+    }));
+  };
 
   // Function to get closest office
   const handleLocationSubmit = async (input) => {
@@ -159,7 +263,7 @@ export default function Chat() {
     }
   };
 
-  // Sending the targetLanguage to the backend along with the message
+  // Submit sending the targetLanguage to the backend along with the message
   const handleSubmit = async () => {
     resetUserInteractions();
     if (!input.trim()) return;
@@ -261,6 +365,7 @@ export default function Chat() {
 
   // Function to start speech recognition
   const startListening = () => {
+    setShowBubble(true);
     if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -283,6 +388,7 @@ export default function Chat() {
 
   // Function to stop speech recognition and submit message
   const stopListeningAndSend = async () => {
+    setShowBubble(false);
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       await handleSubmit();
@@ -292,6 +398,7 @@ export default function Chat() {
   // Handle option click (e.g., SSN, Local Law 30, etc.)
   const handleOptionClick = (option) => {
     setShowWelcomeButtons(false);
+    updateBreadcrumb(option);
     let botResponse = t("optionSelected") + option;
     if (option === t("howToApplyForSSN")) {
       botResponse = t("ssnSelected");
@@ -318,6 +425,7 @@ export default function Chat() {
 
   // Handle visa option click (Yes/No for visa validity)
   const handleVisaOptionClick = (answer) => {
+    updateBreadcrumb(answer);
     setMessages((prev) => [...prev, { text: answer, sender: "user" }]);
 
     updateUserInteraction("buttonClicks", "valid_visa", answer === t("yes"));
@@ -326,27 +434,44 @@ export default function Chat() {
     if (answer === t("yes")) {
       setMessages((prev) => [...prev, { text: t("visaType"), sender: "bot" }]);
       toggleOption("visaType", true);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { text: t("noValidVisa"), sender: "bot" },
+      ]);
+      toggleOption("travelVisa", true);
     }
   };
 
   // Handle visa type click (e.g., H1B, L1, etc.)
   const handleVisaTypeClick = (visaType) => {
-    setMessages((prev) => [
-      ...prev,
-      { text: visaType, sender: "user" },
-      { text: t("eligible"), sender: "bot" },
-    ]);
+    updateBreadcrumb(visaType);
+    if (visaType === "Others") {
+      toggleOption("moreVisaType", true);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { text: visaType, sender: "user" },
+        { text: t("eligible"), sender: "bot" },
+      ]);
 
-    updateUserInteraction("buttonClicks", "visa_type", visaType);
-    toggleOption("visaType", false);
-    toggleOption("ssn", true);
+      updateUserInteraction("buttonClicks", "visa_type", visaType);
+      toggleOption("visaType", false);
+      toggleOption("ssn", true);
+    }
   };
 
   // Handle SSN options click (e.g., Closest Office, Documents Required)
   const handleSSNOptionClick = async (option) => {
+    updateBreadcrumb(option);
     toggleOption("ssn", false);
     if (option === t("closestOfficeLocation")) {
-      toggleOption("showDocumentButtons", true);
+      let response = t("nearestOffice");
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: response, sender: "bot" },
+      ]);
     } else {
       try {
         // Update messages immediately
@@ -466,7 +591,9 @@ export default function Chat() {
     }
   };
 
+  // Function to handle document status
   const handleDocumentStatus = (status) => {
+    updateBreadcrumb(status);
     toggleOption("showDocumentButtons", false);
     let response =
       status === "complete" ? t("ssaOffice") : t("missingDocuments");
@@ -482,10 +609,16 @@ export default function Chat() {
         sender: "bot",
       },
     ]);
-    toggleOption("showOfficeInfoButtons", true);
+    if (response === t("missingDocuments")) {
+      toggleOption("showOfficeInfoButtons", false);
+    } else {
+      toggleOption("showOfficeInfoButtons", true);
+    }
   };
 
+  // Function to handle office info response
   const handleOfficeInfoResponse = (answer) => {
+    updateBreadcrumb(answer);
     toggleOption("showOfficeInfoButtons", false);
     let response = answer === t("yes") ? t("nearestOffice") : t("anymoreHelp");
 
@@ -496,9 +629,9 @@ export default function Chat() {
     ]);
   };
 
-  console.log("Messages in Chat.jsx:", messages);
-
+  // Function to handle the "Start Over" button click
   const handleStartOver = () => {
+    setBreadcrumbPath([]);
     setMessages([
       {
         text: t("welcome"),
@@ -515,7 +648,10 @@ export default function Chat() {
   return (
     <div className="chat-container">
       {/* <h1>{t("chat")}</h1> */}
-      <BreadCrumb />
+      <BreadCrumb
+        path={breadcrumbPath}
+        onNavigate={handleBreadcrumbNavigation}
+      />
       <button onClick={handleStartOver} className="start-over-button">
         {t("startOver")}
       </button>
@@ -572,55 +708,94 @@ export default function Chat() {
             </button>
           </div>
         )}
+        {uiState.visibleOptions.travelVisa && (
+          <div className="visa-form-options">
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/ds-160-online-nonimmigrant-visa-application.html?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("applyForNonImmigrantVisa")}
+            </button>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/online-immigrant-visa-forms.html?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("applyForImmigrantVisa")}
+            </button>
+          </div>
+        )}
         {uiState.visibleOptions.law30 && (
           <div className="law30-options">
-            <button>
-              <a
-                href={`https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("learnLL30")}
-              </a>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("learnLL30")}
             </button>
           </div>
         )}
         {uiState.visibleOptions.itin && (
           <div className="itin-options">
-            <button>
-              <a
-                href={`https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("TIN")}
-              </a>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("TIN")}
             </button>
-            <button>
-              <a
-                href={`https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("nycITIN")}
-              </a>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("nycITIN")}
             </button>
-            <button>
-              <a
-                href={`https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
-                  userLanguage === "en" ? "eng" : userLanguage
-                }`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("irsITIN")}
-              </a>
+
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
+                    userLanguage === "en" ? "eng" : userLanguage
+                  }`,
+                  "_blank",
+                  "noopener noreferrer"
+                )
+              }
+            >
+              {t("irsITIN")}
             </button>
           </div>
         )}
@@ -629,9 +804,25 @@ export default function Chat() {
             <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
             <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
             <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
-            {/* <button onClick={() => handleVisaTypeClick("Others")}>
+            <button onClick={() => handleVisaTypeClick("Others")}>
               {t("more")}
-            </button> */}
+            </button>
+          </div>
+        )}
+        {uiState.visibleOptions.moreVisaType && (
+          <div className="visa-type-options">
+            <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
+            {/* <button onClick={() => handleVisaTypeClick("H-2A")}>H-2A</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("H-2B")}>H-2B</button> */}
+            <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
+            {/* <button onClick={() => handleVisaTypeClick("O-1")}>O-1</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("E-1")}>E-1</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("E-2")}>E-2</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("TN")}>TN</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("J-1")}>J-1</button> */}
+            <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
+            {/* <button onClick={() => handleVisaTypeClick("H-4")}>H-4</button> */}
+            {/* <button onClick={() => handleVisaTypeClick("J-2")}>J-2</button> */}
           </div>
         )}
         {uiState.visibleOptions.ssn && (
@@ -677,7 +868,7 @@ export default function Chat() {
             if (
               (input.trim() !== "" &&
                 messages[messages.length - 1].text === t("nearestOffice")) ||
-              (input.length === 5 && typeof Number(input) === "number")
+              (input.length === 5 && /^\d+$/.test(input))
             ) {
               setMessages((prevMessages) => [
                 ...prevMessages,
@@ -700,19 +891,29 @@ export default function Chat() {
             }}
             placeholder={t("type")}
           />
-          <button type="submit" disabled={!input.trim() || isLoading}>
+          <button
+            className="send-button"
+            type="submit"
+            disabled={!input.trim() || isLoading}
+          >
             {t("send")}
           </button>
-          <button
-            type="button"
-            onMouseDown={startListening}
-            onMouseUp={stopListeningAndSend}
-            onTouchStart={startListening}
-            onTouchEnd={stopListeningAndSend}
-            disabled={isLoading}
-          >
-            🎤
-          </button>
+          <div className="mic-button-wrapper">
+            <button
+              className="mic-button"
+              type="button"
+              onMouseDown={startListening}
+              onMouseUp={stopListeningAndSend}
+              onTouchStart={startListening}
+              onTouchEnd={stopListeningAndSend}
+              disabled={isLoading}
+            >
+              <i className="fa-solid fa-microphone"></i>
+            </button>
+            <span className={`bubble-message ${showBubble ? "visible" : ""}`}>
+              Hold to speak, release to send.
+            </span>
+          </div>
         </form>
       </div>
     </div>
