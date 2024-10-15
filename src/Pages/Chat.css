@@ -151,6 +151,7 @@ button {
 }
 
 .mic-button-wrapper {
+  margin-left: 100px;
   position: relative;
   display: inline-block;
 }
@@ -190,6 +191,10 @@ button {
 .mic-button-wrapper:active .bubble-message {
   visibility: visible;
   opacity: 1;
+}
+
+.BreadCrumb {
+  padding: 10px;
 }
 
 .breadcrumb-button {
