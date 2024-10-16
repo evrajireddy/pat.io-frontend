@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
 // import LanguageSelector from "../Componets/LanguageSelector";
+import myChipSvg from "../assets/patio.svg";
+import user from "../assets/user.svg";
 import "./Chat.css";
 
 export default function Chat() {
@@ -738,7 +740,7 @@ export default function Chat() {
               <div className="flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
                 <button
                   onClick={() => handleOptionClick(t("howToApplyForSSN"))}
-                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-gray-200"
+                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
                 >
                   <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
                     {t("SSN")}
@@ -753,7 +755,7 @@ export default function Chat() {
                 </button>
                 <button
                   onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
-                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-gray-200"
+                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
                 >
                   <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
                     {t("LL30")}
@@ -768,7 +770,7 @@ export default function Chat() {
                 </button>
                 <button
                   onClick={() => handleOptionClick(t("whatIsAnITIN"))}
-                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-gray-200"
+                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
                 >
                   <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
                     {t("ITIN")}
@@ -783,20 +785,39 @@ export default function Chat() {
                 </button>
               </div>
             )}
-            <div
-              className={`message-wrapper flex items-start space-x-2 ${
-                message.sender === "user" ? "ml-auto" : ""
-              }`}
-            >
+<div
+  className={`message-wrapper flex items-start space-x-2 ${
+    message.sender === "user" ? "ml-auto flex-row-reverse" : ""
+  }`}
+>
+              <div>
+                {message.sender === "bot" && (
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={myChipSvg}
+                      alt="Bot"
+                      className="w-10 h-10 mt-2"
+                    />
+                  </div>
+                )}
+                {message.sender === "user" && (
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={user}
+                      alt="User"
+                      className="w-10 h-10 mt-2"
+                    />
+                  </div>
+                )}
+              </div>
               <div
                 className={`message ${
                   message.sender
                 } max-w-3/4 my-2 py-2 px-3 rounded-lg ${
                   message.sender === "user"
-                    ? "bg-blue-100 self-end whitespace-nowrap overflow-auto"
-                    : "bg-gray-200 self-start"
+                    ? "bg-blue-100 self-end whitespace-nowrap overflow-auto max-w-full"
+                    : "bg-gray-200 self-start max-w-[70%]"
                 }`}
-                style={{ maxWidth: "100%" }}
               >
                 {(message.text || "").split("\n").map((line, i) => (
                   <React.Fragment key={i}>
@@ -814,7 +835,7 @@ export default function Chat() {
                     )}
                     <br />
                   </React.Fragment>
-                ))}
+                ))}   
               </div>
               {message.sender === "bot" && (
                 <div className="flex gap-4 mt-2">
@@ -851,20 +872,20 @@ export default function Chat() {
           <div className="visa-options flex justify-around mt-2">
             <button
               onClick={() => handleVisaOptionClick(t("yes"))}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("yes")}
             </button>
             <button
               onClick={() => handleVisaOptionClick(t("no"))}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("no")}
             </button>
           </div>
         )}
         {uiState.visibleOptions.travelVisa && (
-          <div className="visa-form-options flex justify-around mt-2">
+          <div className="visa-form-options flex justify-apart mt-2">
             <button
               onClick={() =>
                 window.open(
@@ -875,7 +896,7 @@ export default function Chat() {
                   "noopener noreferrer"
                 )
               }
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("applyForNonImmigrantVisa")}
             </button>
@@ -889,7 +910,7 @@ export default function Chat() {
                   "noopener noreferrer"
                 )
               }
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("applyForImmigrantVisa")}
             </button>
@@ -907,7 +928,7 @@ export default function Chat() {
                   "noopener noreferrer"
                 )
               }
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("learnLL30")}
             </button>
@@ -925,7 +946,7 @@ export default function Chat() {
                   "noopener noreferrer"
                 )
               }
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("TIN")}
             </button>
@@ -939,7 +960,7 @@ export default function Chat() {
                   "noopener noreferrer"
                 )
               }
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("nycITIN")}
             </button>
@@ -954,7 +975,7 @@ export default function Chat() {
                   "noopener noreferrer"
                 )
               }
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("irsITIN")}
             </button>
@@ -992,13 +1013,13 @@ export default function Chat() {
           <div className="ssn-options flex justify-around mt-2">
             <button
               onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("office")}
             </button>
             <button
               onClick={() => handleSSNOptionClick(t("documentsRequired"))}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("documents")}
             </button>
@@ -1008,13 +1029,13 @@ export default function Chat() {
           <div className="document-status-buttons flex justify-around mt-2">
             <button
               onClick={() => handleDocumentStatus("complete")}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("complete")}
             </button>
             <button
               onClick={() => handleDocumentStatus("incomplete")}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("incomplete")}
             </button>
@@ -1024,13 +1045,13 @@ export default function Chat() {
           <div className="office-info-buttons flex justify-around mt-2">
             <button
               onClick={() => handleOfficeInfoResponse(t("yes"))}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("yes")}
             </button>
             <button
               onClick={() => handleOfficeInfoResponse(t("no"))}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 mx-2 rounded"
             >
               {t("no")}
             </button>
