@@ -2,7 +2,7 @@ import React from "react";
 
 export default function BreadCrumb({ path, onNavigate }) {
   return (
-    <div className="BreadCrumb">
+    <div className="bg-blue-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto">
       {path.map((item, index) => (
         <span key={index}>
           {index > 0 && " > "}

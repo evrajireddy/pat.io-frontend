@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sketch from "react-p5";
+import myChipSvg from "../assets/patio.svg"; // Import your SVG file
 import "./Welcome.css";
 
 export default function Welcome() {
   const [isSplashVisible, setSplashVisible] = useState(true);
+
+  const [lights, setLights] = useState([]);
+  const [chipImage, setChipImage] = useState(null); // State to hold the SVG image
   const navigate = useNavigate(); // useNavigate for navigation
 
   // Hide the splash screen after 2.5 seconds and navigate to the languages page
@@ -23,6 +27,23 @@ export default function Welcome() {
     p5.textSvg = p5.loadImage('/assets/Text.svg');
   };
 
+    // Load the SVG chip image
+    const img = p5.loadImage(myChipSvg, () => {
+      setChipImage(img); // Once the image is loaded, set it to state
+    });
+
+    // Initialize floating lights
+    let tempLights = [];
+    for (let i = 0; i < 10; i++) {
+      tempLights.push(
+        new FloatingLight(
+          p5.random(-200, 200),
+          p5.random(-200, 200),
+          p5.random(-200, 200),
+          p5
+        )
+      );
+
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL).parent(canvasParentRef);
     p5.planeSize = Math.min(p5.windowWidth, p5.windowHeight) * 0.5;
@@ -36,6 +57,38 @@ export default function Welcome() {
   };
 
   const draw = (p5) => {
+
+    p5.background(255, 251, 235);
+    p5.directionalLight(255, 255, 255, 0, 0, -1);
+    p5.ambientLight(50);
+
+    // Rotate the floating SVG
+    p5.rotateY(p5.millis() / 2000);
+    p5.rotateX(p5.millis() / 4000);
+    p5.rotateZ(p5.millis() / 4000);
+
+    // If the chip image (SVG) is loaded, display it
+    if (chipImage) {
+      p5.imageMode(p5.CENTER);
+      p5.image(chipImage, 0, 0, 100, 100); // Adjust the size and position as needed
+    }
+
+    lights.forEach((light) => {
+      light.move();
+      light.display(p5);
+    });
+  };
+
+  class FloatingLight {
+    constructor(x, y, z, p5) {
+      this.pos = p5.createVector(x, y, z);
+      this.vel = p5.createVector(
+        p5.random(-1, 1),
+        p5.random(-1, 1),
+        p5.random(-1, 1)
+      );
+      this.size = p5.random(2, 15);
+
     p5.background(250);
     p5.translate(0, 0, 0);
     let pulse = p5.map(p5.sin(p5.frameCount * 0.02), -1, 1, 0.95, 1.05);
