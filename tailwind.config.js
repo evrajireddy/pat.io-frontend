@@ -1,11 +1,39 @@
-module.exports = {
+export default {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    './index.html',
+    './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    themes: [
+      {
+        mytheme: {
+          
+"primary": "#1b5e1fe",
+          
+"secondary": "#d9f99d",
+          
+"accent": "#00ffff",
+          
+"neutral": "#ff00ff",
+          
+"base-100": "#ffffff",
+          
+"info": "#0000ff",
+          
+"success": "#00ff00",
+          
+"warning": "#00ff00",
+          
+"error": "#ff0000",
+          },
+        },
+      ],
   },
-  plugins: [],
-  
-  darkMode: 'class',
-}
+        
+  plugins: [
+    require('daisyui'),
+  ],
+  daisyui: {
+    themes: ["emerald",],  // Customize DaisyUI themes here
+  },
+};

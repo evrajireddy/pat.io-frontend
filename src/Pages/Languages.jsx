@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import "./i18n";
-import "./Languages.css"; // Import the CSS file
+import "./i18n"; // Keep i18n for language translation
 
 const languageMapping = {
   en: ["en-US", "English"],
@@ -34,40 +33,43 @@ const languageMapping = {
 export default function Languages() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [selectedLang, setSelectedLang] = useState(null);
 
+  useEffect(() => {
+    document.body.classList.add("languages-page");
+
+    return () => {
+      document.body.classList.remove("languages-page");
+    };
+  }, []);
+
   const handleLanguageClick = (lang) => {
-    console.log("Selected language:", lang);
     setSelectedLang(lang);
     i18n.changeLanguage(lang);
-    const chatLangCode = languageMapping[lang][0] || "en-US";
-    localStorage.setItem("chatLanguage", chatLangCode);
-    setLoading(false);
+    localStorage.setItem("chatLanguage", languageMapping[lang][0] || "en-US");
     navigate("/chat");
   };
 
   return (
-    <div className="languages-container">
-      <h1 className="title">Select a Language</h1>
-      <div className="languages-grid-container">
-      <div className="languages-grid">
-  {Object.entries(languageMapping).map(([lang, name]) => (
-    <div
-      key={lang}
-      onClick={() => handleLanguageClick(lang)}
-      className={`language-card ${selectedLang === lang ? "glow" : ""}`}
-    >
-      <div className="language-text-container">
-        {/* Native language name (e.g., Русский) */}
-        <span className="language-text native-name">{name[1].split(" ")[0]}</span>
-        {/* English translation (e.g., Russian) */}
-        <span className="language-text translation-name">{name[1].match(/\(([^)]+)\)/)?.[1]}</span>
-      </div>
-    </div>
-  ))}
-</div>
-
+    <div className="flex justify-center items-center h-screen w-screen">
+      <div className="flex flex-col items-center h-screen w-screen p-4 bg-white">
+        <h1 className="text-3xl font-bold mb-4">Select a Language</h1>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 w-full overflow-y-auto h-[calc(100vh-4rem)]">
+          {Object.entries(languageMapping).map(([lang, name]) => (
+            <div
+              key={lang}
+              onClick={() => handleLanguageClick(lang)}
+              className={`p-4 bg-green-300 rounded-lg shadow-lg hover:shadow-2xl transition-transform duration-300 hover:-translate-y-1 cursor-pointer ${
+                selectedLang === lang ? "bg-green-300" : ""
+              }`}
+            >
+              <div className="flex flex-col justify-center items-center text-center">
+                <span className="text-lg font-semibold mb-1">{name[1].split(" ")[0]}</span>
+                <span className="text-sm text-gray-600">{name[1].match(/\(([^)]+)\)/)?.[1]}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
