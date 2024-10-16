@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router
 import Sketch from "react-p5";
+import myChipSvg from "../assets/patio.svg"; // Import your SVG file
 import "./Welcome.css";
 
 export default function Welcome() {
   const [isSplashVisible, setSplashVisible] = useState(true);
   const [lights, setLights] = useState([]);
+  const [chipImage, setChipImage] = useState(null); // State to hold the SVG image
   const navigate = useNavigate(); // useNavigate for navigation
 
   // Hide the splash screen after 15 seconds and navigate to the languages page
@@ -25,6 +27,11 @@ export default function Welcome() {
     );
     p5.pixelDensity(1);
     p5.noStroke();
+
+    // Load the SVG chip image
+    const img = p5.loadImage(myChipSvg, () => {
+      setChipImage(img); // Once the image is loaded, set it to state
+    });
 
     // Initialize floating lights
     let tempLights = [];
@@ -46,37 +53,21 @@ export default function Welcome() {
     p5.directionalLight(255, 255, 255, 0, 0, -1);
     p5.ambientLight(50);
 
-    // Floating and rotating chip
+    // Rotate the floating SVG
     p5.rotateY(p5.millis() / 2000);
     p5.rotateX(p5.millis() / 4000);
     p5.rotateZ(p5.millis() / 4000);
 
-    drawChip(p5);
+    // If the chip image (SVG) is loaded, display it
+    if (chipImage) {
+      p5.imageMode(p5.CENTER);
+      p5.image(chipImage, 0, 0, 100, 100); // Adjust the size and position as needed
+    }
 
     lights.forEach((light) => {
       light.move();
       light.display(p5);
     });
-  };
-
-  const drawChip = (p5) => {
-    p5.push();
-    p5.specularMaterial(210, 210, 210);
-    p5.shininess(100);
-    p5.box(40, 40, 5);
-    p5.pop();
-
-    const pinOffset = 30;
-    const pinSize = 10;
-
-    // Drawing the pins
-    for (let i = -15; i <= 15; i += pinSize) {
-      p5.push();
-      p5.specularMaterial(255);
-      p5.shininess(100);
-      p5.box(5, 10, 5);
-      p5.pop();
-    }
   };
 
   class FloatingLight {
