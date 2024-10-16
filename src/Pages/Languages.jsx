@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./i18n";
-import "./Languages.css"; // Import the CSS file
+// import "./Languages.css"; // Import the CSS file
 
 const languageMapping = {
   en: ["en-US", "English"],

@@ -11,7 +11,7 @@ export default function Welcome() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplashVisible(false);
-      navigate("/language");
+      navigate("/chat");
     }, 8600);
 
     return () => clearTimeout(timer);
