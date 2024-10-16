@@ -51,29 +51,24 @@ export default function Languages() {
     <div className="languages-container">
       <h1 className="title">Select a Language</h1>
       <div className="languages-grid-container">
-        <div className="languages-grid">
-          {Object.entries(languageMapping).map(([lang, name]) => (
-            <div
-              key={lang}
-              onClick={() => handleLanguageClick(lang)}
-              className={`language-card ${selectedLang === lang ? "glow" : ""}`}
-            >
-              <span className="language-text">{name[1]}</span>
-            </div>
-          ))}
-        </div>
+      <div className="languages-grid">
+  {Object.entries(languageMapping).map(([lang, name]) => (
+    <div
+      key={lang}
+      onClick={() => handleLanguageClick(lang)}
+      className={`language-card ${selectedLang === lang ? "glow" : ""}`}
+    >
+      <div className="language-text-container">
+        {/* Native language name (e.g., Русский) */}
+        <span className="language-text native-name">{name[1].split(" ")[0]}</span>
+        {/* English translation (e.g., Russian) */}
+        <span className="language-text translation-name">{name[1].match(/\(([^)]+)\)/)?.[1]}</span>
       </div>
-      {/* {selectedLang && (
-        <div className="confirmation-popup">
-          <p>
-            You selected <strong>{languageMapping[selectedLang]}</strong>. 
-            Would you like to continue?
-          </p>
-          <button className="confirm-button" onClick={confirmSelection}>
-            Yes, Continue
-          </button>
-        </div>
-      )} */}
+    </div>
+  ))}
+</div>
+
+      </div>
     </div>
   );
 }
