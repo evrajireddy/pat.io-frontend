@@ -9,7 +9,7 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="App">
+    <div className="bg-[#fffbeb] min-h-screen">
       <Router>
         <main>
           <Routes>
