@@ -700,7 +700,7 @@ export default function Chat() {
     <div className="flex h-screen">
     <SideNavBar />
     <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-      <div className="flex justify-apart">
+      <div className="flex justify-apart mt-10">
         <BreadCrumb
           path={breadcrumbPath}
           onNavigate={handleBreadcrumbNavigation}
@@ -1088,46 +1088,48 @@ export default function Chat() {
           className="flex"
         >
           <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              resetUserInteractions();
-            }}
-            placeholder={t("type")}
-            className="flex-grow p-2 mr-2 border border-gray-300 rounded"
-          />
-          <button
-            className="send-button p-2 bg-green-500 text-white rounded"
-            type="submit"
-            disabled={!input.trim() || isLoading}
-          >
-            {t("send")}
-          </button>
-          <div className="mic-button-wrapper ml-12 relative inline-block">
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                resetUserInteractions();
+              }}
+              placeholder={t("type")}
+              className="flex-grow p-2 mr-2 border border-gray-300 rounded"
+            />
+            {/* Microphone button */}
+            <div className="mic-button-wrapper mr-2 relative inline-block">
+              <button
+                className="mic-button bg-[#1D4C47] text-white rounded-full p-2 text-lg"
+                type="button"
+                onMouseDown={startListening}
+                onMouseUp={stopListeningAndSend}
+                onTouchStart={startListening}
+                onTouchEnd={stopListeningAndSend}
+                disabled={isLoading}
+              >
+                <i className="fa-solid fa-microphone"></i>
+              </button>
+              <span
+                className={`bubble-message ${
+                  showBubble ? "visible" : ""
+                } absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs rounded px-2 py-1`}
+              >
+                Hold to speak, release to send.
+              </span>
+            </div>
+            {/* Send button */}
             <button
-              className="mic-button bg-[#1d4c47] text-white rounded-full p-2 text-lg"
-              type="button"
-              onMouseDown={startListening}
-              onMouseUp={stopListeningAndSend}
-              onTouchStart={startListening}
-              onTouchEnd={stopListeningAndSend}
-              disabled={isLoading}
+              className="send-button p-2 bg-green-500 text-white rounded"
+              type="submit"
+              disabled={!input.trim() || isLoading}
             >
-              <i className="fa-solid fa-microphone"></i>
+              {t("send")}
             </button>
-            <span
-              className={`bubble-message ${
-                showBubble ? "visible" : ""
-              } absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs rounded px-2 py-1`}
-            >
-              Hold to speak, release to send.
-            </span>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
   );
 }
