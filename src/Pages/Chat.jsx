@@ -700,7 +700,7 @@ export default function Chat() {
     <div className="flex h-screen">
     <SideNavBar />
     <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-      <div className="flex justify-apart mt-10">
+      <div className="flex justify-apart mt-20">
         <BreadCrumb
           path={breadcrumbPath}
           onNavigate={handleBreadcrumbNavigation}
