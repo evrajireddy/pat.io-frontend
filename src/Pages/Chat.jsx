@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
 import SideNavBar from "../Componets/SideNavBar";
 // import LanguageSelector from "../Componets/LanguageSelector";
@@ -698,436 +698,438 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen">
-    <SideNavBar />
-    <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-      <div className="flex justify-apart">
-        <BreadCrumb
-          path={breadcrumbPath}
-          onNavigate={handleBreadcrumbNavigation}
-        />
-        <button
-          onClick={handleStartOver}
-          className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
-        >
-          {t("startOver")}
-        </button>
-        <button
-          onClick={() => {
-            // Stop and reset the audio
-            setIsReading({});
-            stopSpeech();
-            if (audioRef.current) {
-              audioRef.current.pause(); // Stop the audio
-              audioRef.current.currentTime = 0; // Reset the audio to the beginning
-            }
-          }}
-          className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
-        >
-          Stop Audio
-        </button>
-        <button className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
-        onClick={() => navigate("/language")}>
-          Select Language
-        </button>
-      </div>
-      {/* <LanguageSelector
+      <SideNavBar />
+      <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
+        <div className="flex justify-apart mt-5">
+          <BreadCrumb
+            path={breadcrumbPath}
+            onNavigate={handleBreadcrumbNavigation}
+          />
+          <button
+            onClick={handleStartOver}
+            className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
+          >
+            {t("startOver")}
+          </button>
+          <button
+            onClick={() => {
+              // Stop and reset the audio
+              setIsReading({});
+              stopSpeech();
+              if (audioRef.current) {
+                audioRef.current.pause(); // Stop the audio
+                audioRef.current.currentTime = 0; // Reset the audio to the beginning
+              }
+            }}
+            className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
+          >
+            Stop Audio
+          </button>
+          <button
+            className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
+            onClick={() => navigate("/language")}
+          >
+            Select Language
+          </button>
+        </div>
+        {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
         userLanguage={userLanguage}
         targetLanguage={targetLanguage}
         setTargetLanguage={setTargetLanguage}
       /> */}
-      <div
-        className="message-list flex-grow overflow-y-auto flex flex-col p-5"
-        ref={messageListRef}
-        aria-live="polite"
-      >
-        {messages.map((message, index) => (
-          <React.Fragment key={index}>
-            {message.isWelcome && showWelcomeButtons && (
-              <div className="flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
-                <button
-                  onClick={() => handleOptionClick(t("howToApplyForSSN"))}
-                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                >
-                  <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                    {t("SSN")}
-                  </div>
-                  <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                    <img
-                      src="src/assets/applying.webp"
-                      alt="SSN Icon"
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
-                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                >
-                  <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                    {t("LL30")}
-                  </div>
-                  <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                    <img
-                      src="src/assets/ll30.webp"
-                      alt="LL30 Icon"
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleOptionClick(t("whatIsAnITIN"))}
-                  className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                >
-                  <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                    {t("ITIN")}
-                  </div>
-                  <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                    <img
-                      src="src/assets/itin.webp"
-                      alt="ITIN Icon"
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                </button>
-              </div>
-            )}
-<div
-  className={`message-wrapper flex items-start space-x-2 ${
-    message.sender === "user" ? "ml-auto flex-row-reverse" : ""
-  }`}
->
-              <div>
-                {message.sender === "bot" && (
-                  <div className="flex items-center justify-center">
-                    <img
-                      src={myChipSvg}
-                      alt="Bot"
-                      className="w-10 h-10 mt-2"
-                    />
-                  </div>
-                )}
-                {message.sender === "user" && (
-                  <div className="flex items-center justify-center">
-                    <img
-                      src={user}
-                      alt="User"
-                      className="w-10 h-10 mt-2"
-                    />
-                  </div>
-                )}
-              </div>
-              <div
-                className={`message ${
-                  message.sender
-                } max-w-3/4 my-2 py-2 px-3 rounded-lg ${
-                  message.sender === "user"
-                    ? "bg-blue-100 italic font-semibold self-end whitespace-nowrap overflow-auto max-w-full"
-                    : "bg-gray-200 font-semibold self-start max-w-[70%]"
-                }`}
-              >
-                {(message.text || "").split("\n").map((line, i) => (
-                  <React.Fragment key={i}>
-                    {line.match(/^\d+\./) ? (
-                      <div className="checkbox-item mb-1 flex items-start">
-                        <input
-                          type="checkbox"
-                          className="mr-1 mt-1"
-                          id={`item-${i}`}
-                        />
-                        <label htmlFor={`item-${i}`}>{line}</label>
-                      </div>
-                    ) : (
-                      line
-                    )}
-                    <br />
-                  </React.Fragment>
-                ))}   
-              </div>
-              {message.sender === "bot" && (
-                <div className="flex gap-4 mt-2">
-                  {!isReading[index] && (
-                    <button
-                      onClick={() =>
-                        readMessage(message.text, targetLanguage, index)
-                      } // Pass targetLanguage to read the message in the correct language
-                      className="bg-green-500 text-white py-1 px-2 rounded"
-                    >
-                      <i className="fa-solid fa-volume-high"></i>
-                    </button>
-                  )}
-                  {isReading[index] && (
-                    <button
-                      onClick={() => {
-                        stopSpeech(index);
-                        if (audioRef.current) {
-                          audioRef.current.pause(); // Stop the audio
-                          audioRef.current.currentTime = 0; // Reset the audio to the beginning
-                        }
-                      }} // Stop the speech and reset to show "Read" button
-                      className="bg-red-500 text-white py-1 px-2 rounded"
-                    >
-                      <i className="fa-solid fa-circle-stop"></i>
-                    </button>
-                  )}
+        <div
+          className="message-list flex-grow overflow-y-auto flex flex-col p-5"
+          ref={messageListRef}
+          aria-live="polite"
+        >
+          {messages.map((message, index) => (
+            <React.Fragment key={index}>
+              {message.isWelcome && showWelcomeButtons && (
+                <div className="flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
+                  <button
+                    onClick={() => handleOptionClick(t("howToApplyForSSN"))}
+                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
+                  >
+                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
+                      {t("SSN")}
+                    </div>
+                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
+                      <img
+                        src="src/assets/applying.webp"
+                        alt="SSN Icon"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
+                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
+                  >
+                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
+                      {t("LL30")}
+                    </div>
+                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
+                      <img
+                        src="src/assets/ll30.webp"
+                        alt="LL30 Icon"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => handleOptionClick(t("whatIsAnITIN"))}
+                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
+                  >
+                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
+                      {t("ITIN")}
+                    </div>
+                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
+                      <img
+                        src="src/assets/itin.webp"
+                        alt="ITIN Icon"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </button>
                 </div>
               )}
+              <div
+                className={`message-wrapper flex items-start space-x-2 ${
+                  message.sender === "user" ? "ml-auto flex-row-reverse" : ""
+                }`}
+              >
+                <div>
+                  {message.sender === "bot" && (
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={myChipSvg}
+                        alt="Bot"
+                        className="w-10 h-10 mt-2"
+                      />
+                    </div>
+                  )}
+                  {message.sender === "user" && (
+                    <div className="flex items-center justify-center">
+                      <img src={user} alt="User" className="w-10 h-10 mt-2" />
+                    </div>
+                  )}
+                </div>
+                <div
+                  className={`message ${
+                    message.sender
+                  } max-w-3/4 my-2 py-2 px-3 rounded-lg ${
+                    message.sender === "user"
+                      ? "bg-blue-100 italic font-semibold self-end whitespace-nowrap overflow-auto max-w-full"
+                      : "bg-gray-200 font-semibold self-start max-w-[70%]"
+                  }`}
+                >
+                  {(message.text || "").split("\n").map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line.match(/^\d+\./) ? (
+                        <div className="checkbox-item mb-1 flex items-start">
+                          <input
+                            type="checkbox"
+                            className="mr-1 mt-1"
+                            id={`item-${i}`}
+                          />
+                          <label htmlFor={`item-${i}`}>{line}</label>
+                        </div>
+                      ) : (
+                        line
+                      )}
+                      <br />
+                    </React.Fragment>
+                  ))}
+                </div>
+                {message.sender === "bot" && (
+                  <div className="flex gap-4 mt-2">
+                    {!isReading[index] && (
+                      <button
+                        onClick={() =>
+                          readMessage(message.text, targetLanguage, index)
+                        } // Pass targetLanguage to read the message in the correct language
+                        className="bg-green-500 text-white py-1 px-2 rounded"
+                      >
+                        <i className="fa-solid fa-volume-high"></i>
+                      </button>
+                    )}
+                    {isReading[index] && (
+                      <button
+                        onClick={() => {
+                          stopSpeech(index);
+                          if (audioRef.current) {
+                            audioRef.current.pause(); // Stop the audio
+                            audioRef.current.currentTime = 0; // Reset the audio to the beginning
+                          }
+                        }} // Stop the speech and reset to show "Read" button
+                        className="bg-red-500 text-white py-1 px-2 rounded"
+                      >
+                        <i className="fa-solid fa-circle-stop"></i>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </React.Fragment>
+          ))}
+          {uiState.visibleOptions.visa && (
+            <div className="visa-options flex justify-around mt-2">
+              <button
+                onClick={() => handleVisaOptionClick(t("yes"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("yes")}
+              </button>
+              <button
+                onClick={() => handleVisaOptionClick(t("no"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("no")}
+              </button>
             </div>
-          </React.Fragment>
-        ))}
-        {uiState.visibleOptions.visa && (
-          <div className="visa-options flex justify-around mt-2">
-            <button
-              onClick={() => handleVisaOptionClick(t("yes"))}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("yes")}
-            </button>
-            <button
-              onClick={() => handleVisaOptionClick(t("no"))}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("no")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.travelVisa && (
-          <div className="visa-form-options flex justify-apart mt-2">
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/ds-160-online-nonimmigrant-visa-application.html?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("applyForNonImmigrantVisa")}
-            </button>
-            <button
-              onClick={() =>
-                window.open(
-                  `https://travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/online-immigrant-visa-forms.html?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("applyForImmigrantVisa")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.law30 && (
-          <div className="law30-options flex justify-around mt-2">
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("learnLL30")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.itin && (
-          <div className="itin-options flex justify-around mt-2">
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("TIN")}
-            </button>
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("nycITIN")}
-            </button>
+          )}
+          {uiState.visibleOptions.travelVisa && (
+            <div className="visa-form-options flex justify-apart mt-2">
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/ds-160-online-nonimmigrant-visa-application.html?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("applyForNonImmigrantVisa")}
+              </button>
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/online-immigrant-visa-forms.html?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("applyForImmigrantVisa")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.law30 && (
+            <div className="law30-options flex justify-around mt-2">
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("learnLL30")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.itin && (
+            <div className="itin-options flex justify-around mt-2">
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("TIN")}
+              </button>
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("nycITIN")}
+              </button>
 
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("irsITIN")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.visaType && (
-          <div className="visa-type-options flex justify-around mt-2">
-            <button
-              onClick={() => handleVisaTypeClick("H-1B")}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
-            >
-              H-1B
-            </button>
-            <button
-              onClick={() => handleVisaTypeClick("L-1")}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
-            >
-              L-1
-            </button>
-            <button
-              onClick={() => handleVisaTypeClick("F-1")}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
-            >
-              F-1
-            </button>
-            <button
-              onClick={() => handleVisaTypeClick("Others")}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
-            >
-              {t("more")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.ssn && (
-          <div className="ssn-options flex justify-around mt-2">
-            <button
-              onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("office")}
-            </button>
-            <button
-              onClick={() => handleSSNOptionClick(t("documentsRequired"))}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("documents")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.showDocumentButtons && (
-          <div className="document-status-buttons flex justify-around mt-2">
-            <button
-              onClick={() => handleDocumentStatus("complete")}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("complete")}
-            </button>
-            <button
-              onClick={() => handleDocumentStatus("incomplete")}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("incomplete")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.showOfficeInfoButtons && (
-          <div className="office-info-buttons flex justify-around mt-2">
-            <button
-              onClick={() => handleOfficeInfoResponse(t("yes"))}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("yes")}
-            </button>
-            <button
-              onClick={() => handleOfficeInfoResponse(t("no"))}
-              className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
-            >
-              {t("no")}
-            </button>
-          </div>
-        )}
-      </div>
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("irsITIN")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.visaType && (
+            <div className="visa-type-options flex justify-around mt-2">
+              <button
+                onClick={() => handleVisaTypeClick("H-1B")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                H-1B
+              </button>
+              <button
+                onClick={() => handleVisaTypeClick("L-1")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                L-1
+              </button>
+              <button
+                onClick={() => handleVisaTypeClick("F-1")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                F-1
+              </button>
+              <button
+                onClick={() => handleVisaTypeClick("Others")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                {t("more")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.ssn && (
+            <div className="ssn-options flex justify-around mt-2">
+              <button
+                onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("office")}
+              </button>
+              <button
+                onClick={() => handleSSNOptionClick(t("documentsRequired"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("documents")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.showDocumentButtons && (
+            <div className="document-status-buttons flex justify-around mt-2">
+              <button
+                onClick={() => handleDocumentStatus("complete")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("complete")}
+              </button>
+              <button
+                onClick={() => handleDocumentStatus("incomplete")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("incomplete")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.showOfficeInfoButtons && (
+            <div className="office-info-buttons flex justify-around mt-2">
+              <button
+                onClick={() => handleOfficeInfoResponse(t("yes"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("yes")}
+              </button>
+              <button
+                onClick={() => handleOfficeInfoResponse(t("no"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("no")}
+              </button>
+            </div>
+          )}
+        </div>
 
-      <div className="input-area p-5 border-t border-gray-300">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (
-              (input.trim() !== "" &&
-                messages[messages.length - 1].text === t("nearestOffice")) ||
-              (input.length === 5 && /^\d+$/.test(input))
-            ) {
-              setMessages((prevMessages) => [
-                ...prevMessages,
-                { text: input, sender: "user" },
-              ]);
-              handleLocationSubmit(input);
-            } else {
-              handleSubmit();
-            }
-            setInput("");
-          }}
-          className="flex"
-        >
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              resetUserInteractions();
+        <div className="input-area p-5 border-t border-gray-300">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (
+                (input.trim() !== "" &&
+                  messages[messages.length - 1].text === t("nearestOffice")) ||
+                (input.length === 5 && /^\d+$/.test(input))
+              ) {
+                setMessages((prevMessages) => [
+                  ...prevMessages,
+                  { text: input, sender: "user" },
+                ]);
+                handleLocationSubmit(input);
+              } else {
+                handleSubmit();
+              }
+              setInput("");
             }}
-            placeholder={t("type")}
-            className="flex-grow p-2 mr-2 border border-gray-300 rounded"
-          />
-          <button
-            className="send-button p-2 bg-green-500 text-white rounded"
-            type="submit"
-            disabled={!input.trim() || isLoading}
+            className="flex"
           >
-            {t("send")}
-          </button>
-          <div className="mic-button-wrapper ml-12 relative inline-block">
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                resetUserInteractions();
+              }}
+              placeholder={t("type")}
+              className="flex-grow p-2 mr-2 border border-gray-300 rounded"
+            />
+
+            {/* Microphone button */}
+            <div className="mic-button-wrapper mr-2 relative inline-block">
+              <button
+                className="mic-button bg-[#1d4c47] text-white rounded-full p-2 text-lg"
+                type="button"
+                onMouseDown={startListening}
+                onMouseUp={stopListeningAndSend}
+                onTouchStart={startListening}
+                onTouchEnd={stopListeningAndSend}
+                disabled={isLoading}
+              >
+                <i className="fa-solid fa-microphone"></i>
+              </button>
+              <span
+                className={`bubble-message ${
+                  showBubble ? "visible" : ""
+                } absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs rounded px-2 py-1`}
+              >
+                Hold to speak, release to send.
+              </span>
+            </div>
+
+            {/* Send button */}
             <button
-              className="mic-button bg-[#1d4c47] text-white rounded-full p-2 text-lg"
-              type="button"
-              onMouseDown={startListening}
-              onMouseUp={stopListeningAndSend}
-              onTouchStart={startListening}
-              onTouchEnd={stopListeningAndSend}
-              disabled={isLoading}
+              className="send-button p-2 bg-green-500 text-white rounded"
+              type="submit"
+              disabled={!input.trim() || isLoading}
             >
-              <i className="fa-solid fa-microphone"></i>
+              {t("send")}
             </button>
-            <span
-              className={`bubble-message ${
-                showBubble ? "visible" : ""
-              } absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs rounded px-2 py-1`}
-            >
-              Hold to speak, release to send.
-            </span>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
   );
 }
