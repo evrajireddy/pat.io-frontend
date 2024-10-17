@@ -2,7 +2,7 @@ import patioIcon from "../assets/icon.svg";
 
 export default function SideNavBar() {
   return (
-    <div className="bg-gray-800 text-white w-16 h-screen hidden  md:block">
+    <div className="bg-gray-800 text-white w-16 h-screen hidden md:block">
       <div>
         <img src={patioIcon} alt="Icon" className="w-16 h-16" />
       </div>

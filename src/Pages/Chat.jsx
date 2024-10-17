@@ -700,17 +700,17 @@ export default function Chat() {
     <div className="flex h-screen">
       <SideNavBar />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <div className="flex justify-apart mt-5">
-          <BreadCrumb
-            path={breadcrumbPath}
-            onNavigate={handleBreadcrumbNavigation}
-          />
+        <header className="flex justify-apart mt-5">
           <button
             onClick={handleStartOver}
             className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
           >
             {t("startOver")}
           </button>
+          <BreadCrumb
+            path={breadcrumbPath}
+            onNavigate={handleBreadcrumbNavigation}
+          />
           <button
             onClick={() => {
               // Stop and reset the audio
@@ -731,7 +731,7 @@ export default function Chat() {
           >
             Select Language
           </button>
-        </div>
+        </header>
         {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
         userLanguage={userLanguage}
