@@ -451,14 +451,14 @@ export default function Chat() {
     setShowWelcomeButtons(false);
     updateBreadcrumb(option);
     let botResponse = t("optionSelected") + option;
-    if (option === t("howToApplyForSSN")) {
+    if (option === "SSN") {
       botResponse = t("ssnSelected");
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
-    } else if (option === t("whatIsNYCLocalLaw30")) {
+    } else if (option === "LL30") {
       botResponse = t("LL30Selected");
       toggleOption("law30", true);
-    } else if (option === t("whatIsAnITIN")) {
+    } else if (option === "ITIN") {
       botResponse = t("ITINSelected");
       toggleOption("itin", true);
     } else {
@@ -698,7 +698,7 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen">
-      <SideNavBar />
+      <SideNavBar handleOptionClick={handleOptionClick} />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
         <header className="flex justify-apart mt-5">
           <button
@@ -711,7 +711,7 @@ export default function Chat() {
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
           />
-          <button
+          {/* <button
             onClick={() => {
               // Stop and reset the audio
               setIsReading({});
@@ -724,13 +724,7 @@ export default function Chat() {
             className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
           >
             Stop Audio
-          </button>
-          <button
-            className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
-            onClick={() => navigate("/language")}
-          >
-            Select Language
-          </button>
+          </button> */}
         </header>
         {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
@@ -747,7 +741,7 @@ export default function Chat() {
             <React.Fragment key={index}>
               {message.isWelcome && showWelcomeButtons && (
                 <div className="flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
-                  <button
+                  {/* <button
                     onClick={() => handleOptionClick(t("howToApplyForSSN"))}
                     className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
                   >
@@ -761,8 +755,8 @@ export default function Chat() {
                         className="object-cover w-full h-full"
                       />
                     </div>
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
                     className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
                   >
@@ -776,8 +770,8 @@ export default function Chat() {
                         className="object-cover w-full h-full"
                       />
                     </div>
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleOptionClick(t("whatIsAnITIN"))}
                     className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
                   >
@@ -791,7 +785,7 @@ export default function Chat() {
                         className="object-cover w-full h-full"
                       />
                     </div>
-                  </button>
+                  </button> */}
                 </div>
               )}
               <div
