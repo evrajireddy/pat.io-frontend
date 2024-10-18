@@ -17,6 +17,7 @@ export default function Chat() {
   const [breadcrumbPath, setBreadcrumbPath] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
   const [showBubble, setShowBubble] = useState(false);
+  const [showStarOverButton, setShowStarOverButton] = useState(false);
   const [voices, setVoices] = useState([]); // For storing available voices
 
   // Track the currently reading message (boolean array)
@@ -186,6 +187,7 @@ export default function Chat() {
       showDocumentButtons: false,
       showOfficeInfoButtons: false,
       moreVisaType: false,
+      startOver: false,
     };
 
     let newUIState = { ...resetUIState };
@@ -453,16 +455,20 @@ export default function Chat() {
     let botResponse = t("optionSelected") + option;
     if (option === "SSN") {
       botResponse = t("ssnSelected");
+      setShowStarOverButton(true);
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
     } else if (option === "LL30") {
       botResponse = t("LL30Selected");
+      setShowStarOverButton(true);
       toggleOption("law30", true);
     } else if (option === "ITIN") {
       botResponse = t("ITINSelected");
+      setShowStarOverButton(true);
       toggleOption("itin", true);
     } else {
       botResponse = "Under Construction";
+      setShowStarOverButton(true);
       toggleOption("law30", false);
       toggleOption("visa", false);
     }
@@ -701,12 +707,14 @@ export default function Chat() {
       <SideNavBar handleOptionClick={handleOptionClick} />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
         <header className="flex justify-apart mt-5">
-          <button
-            onClick={handleStartOver}
-            className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
-          >
-            {t("startOver")}
-          </button>
+          {showStarOverButton && (
+            <button
+              onClick={handleStartOver}
+              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
+            >
+              {t("startOver")}
+            </button>
+          )}
           <BreadCrumb
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
