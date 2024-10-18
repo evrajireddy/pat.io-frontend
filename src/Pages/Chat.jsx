@@ -710,21 +710,26 @@ export default function Chat() {
       <SideNavBar handleOptionClick={handleOptionClick} />
       {/* <SlideInBar handleOptionClick={handleOptionClick} /> */}
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <header className="flex justify-apart mt-5">
+        <header className="grid grid-cols-3 gap-4">
+          {/* Row 1 - Start Over Button (Column 1) and Hamburger (Column 3) */}
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
-              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
+              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 my-1 mx-1 rounded col-start-1 col-span-1"
             >
               {t("startOver")}
             </button>
           )}
+          <Hamburger handleOptionClick={handleOptionClick} />
+
+          {/* Row 2 - Breadcrumb (Spanning 3 Columns) */}
           <BreadCrumb
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
           />
-          <Hamburger handleOptionClick={handleOptionClick} />
-          {/* <button
+        </header>
+
+        {/* <button
             onClick={() => {
               // Stop and reset the audio
               setIsReading({});
@@ -738,7 +743,6 @@ export default function Chat() {
           >
             Stop Audio
           </button> */}
-        </header>
         {/* <LanguageSelector
         setUserLanguage={setUserLanguage}
         userLanguage={userLanguage}

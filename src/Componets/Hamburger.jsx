@@ -9,9 +9,9 @@ export default function Hamburger({ handleOptionClick }) {
   };
 
   return (
-    <>
+    <div className="col-start-3 col-span-1 justify-self-end">
       <div
-        className="flex flex-col justify-around w-10 h-8 ml-auto cursor-pointer mr-4 md:hidden"
+        className="flex flex-col justify-around w-10 h-8 ml-auto cursor-pointer mr-4 md:hidden mt-4"
         onClick={toggleHamburger}
       >
         <div
@@ -28,6 +28,6 @@ export default function Hamburger({ handleOptionClick }) {
       <div>
         <SlideInBar isOpen={isOpen} handleOptionClick={handleOptionClick} />
       </div>
-    </>
+    </div>
   );
 }
