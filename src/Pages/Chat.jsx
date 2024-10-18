@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
 import SideNavBar from "../Componets/SideNavBar";
+import Hamburger from "../Componets/Hamburger";
+import SlideInBar from "../Componets/SlideInBar";
 // import LanguageSelector from "../Componets/LanguageSelector";
 import myChipSvg from "../assets/patio.svg";
 import user from "../assets/user.svg";
@@ -688,6 +690,7 @@ export default function Chat() {
 
   // Function to handle the "Start Over" button click
   const handleStartOver = () => {
+    setShowStarOverButton(false);
     setBreadcrumbPath([]);
     setMessages([
       {
@@ -705,6 +708,7 @@ export default function Chat() {
   return (
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
+      {/* <SlideInBar handleOptionClick={handleOptionClick} /> */}
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
         <header className="flex justify-apart mt-5">
           {showStarOverButton && (
@@ -719,6 +723,7 @@ export default function Chat() {
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
           />
+          <Hamburger handleOptionClick={handleOptionClick} />
           {/* <button
             onClick={() => {
               // Stop and reset the audio
