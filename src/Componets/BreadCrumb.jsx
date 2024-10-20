@@ -2,7 +2,7 @@ import React from "react";
 
 export default function BreadCrumb({ path, onNavigate }) {
   return (
-    <div className="col-span-3">
+    <div className="col-span-3 hidden md:block">
       {path.map((item, index) => (
         <span key={index}>
           {index > 0 && " > "}

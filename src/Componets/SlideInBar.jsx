@@ -7,11 +7,11 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
   const navigate = useNavigate();
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-18 bg-white text-black transform transition-transform duration-300 ease-in-out border-r-2 border-[#1d4c47] ${
+      className={`fixed top-0 left-0 h-full w-18 bg-[#fffbeb] text-black transform transition-transform duration-300 ease-in-out border-r-2 border-[#1d4c47] ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="bg-white cursor-pointer hover:bg-gray-200">
+      <div className="bg-[#fffbeb] cursor-pointer hover:bg-gray-200">
         <img
           src={patioIcon}
           alt="Icon"
@@ -30,7 +30,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("SSN")}
           >
             SSN
@@ -38,7 +38,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("ITIN")}
           >
             ITIN
@@ -46,10 +46,10 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("LL30")}
           >
-            Help
+            LL30
           </button>
         </li>
         <li className="mb-4 ml-2">

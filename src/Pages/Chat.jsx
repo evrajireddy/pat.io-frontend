@@ -4,10 +4,7 @@ import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
 import SideNavBar from "../Componets/SideNavBar";
 import Hamburger from "../Componets/Hamburger";
-import SlideInBar from "../Componets/SlideInBar";
-// import LanguageSelector from "../Componets/LanguageSelector";
 import myChipSvg from "../assets/patio.svg";
-import user from "../assets/user.svg";
 import "./Chat.css";
 
 export default function Chat() {
@@ -21,9 +18,7 @@ export default function Chat() {
   const [showBubble, setShowBubble] = useState(false);
   const [showStarOverButton, setShowStarOverButton] = useState(false);
   const [voices, setVoices] = useState([]); // For storing available voices
-
-  // Track the currently reading message (boolean array)
-  const [isReading, setIsReading] = useState({});
+  const [isReading, setIsReading] = useState({}); // Track the currently reading message (boolean array)
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -269,6 +264,7 @@ export default function Chat() {
 
   // Function to get closest office
   const handleLocationSubmit = async (input) => {
+    setShowStarOverButton(true);
     if (!input || input.trim() === "") {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -320,6 +316,7 @@ export default function Chat() {
 
   // Submit sending the targetLanguage to the backend along with the message
   const handleSubmit = async () => {
+    setShowStarOverButton(true);
     resetUserInteractions();
     if (!input.trim()) return;
     setIsLoading(true);
@@ -708,10 +705,8 @@ export default function Chat() {
   return (
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
-      {/* <SlideInBar handleOptionClick={handleOptionClick} /> */}
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
         <header className="grid grid-cols-3 gap-4">
-          {/* Row 1 - Start Over Button (Column 1) and Hamburger (Column 3) */}
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
@@ -721,34 +716,11 @@ export default function Chat() {
             </button>
           )}
           <Hamburger handleOptionClick={handleOptionClick} />
-
-          {/* Row 2 - Breadcrumb (Spanning 3 Columns) */}
           <BreadCrumb
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
           />
         </header>
-
-        {/* <button
-            onClick={() => {
-              // Stop and reset the audio
-              setIsReading({});
-              stopSpeech();
-              if (audioRef.current) {
-                audioRef.current.pause(); // Stop the audio
-                audioRef.current.currentTime = 0; // Reset the audio to the beginning
-              }
-            }}
-            className="bg-red-500 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded mb-4 mt-5 mr-5 w-auto"
-          >
-            Stop Audio
-          </button> */}
-        {/* <LanguageSelector
-        setUserLanguage={setUserLanguage}
-        userLanguage={userLanguage}
-        targetLanguage={targetLanguage}
-        setTargetLanguage={setTargetLanguage}
-      /> */}
         <div
           className="message-list flex-grow overflow-y-auto flex flex-col p-5"
           ref={messageListRef}
@@ -756,55 +728,6 @@ export default function Chat() {
         >
           {messages.map((message, index) => (
             <React.Fragment key={index}>
-              {message.isWelcome && showWelcomeButtons && (
-                <div className="flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
-                  {/* <button
-                    onClick={() => handleOptionClick(t("howToApplyForSSN"))}
-                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                  >
-                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                      {t("SSN")}
-                    </div>
-                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                      <img
-                        src="src/assets/applying.webp"
-                        alt="SSN Icon"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </button> */}
-                  {/* <button
-                    onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
-                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                  >
-                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                      {t("LL30")}
-                    </div>
-                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                      <img
-                        src="src/assets/ll30.webp"
-                        alt="LL30 Icon"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </button> */}
-                  {/* <button
-                    onClick={() => handleOptionClick(t("whatIsAnITIN"))}
-                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                  >
-                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                      {t("ITIN")}
-                    </div>
-                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                      <img
-                        src="src/assets/itin.webp"
-                        alt="ITIN Icon"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </button> */}
-                </div>
-              )}
               <div
                 className={`message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
@@ -820,19 +743,42 @@ export default function Chat() {
                       />
                     </div>
                   )}
-                  {message.sender === "user" && (
-                    <div className="flex items-center justify-center">
-                      <img src={user} alt="User" className="w-10 h-10 mt-2" />
+                  {message.sender === "bot" && (
+                    <div className="flex gap-4 mt-2">
+                      {!isReading[index] && (
+                        <button
+                          onClick={() =>
+                            readMessage(message.text, targetLanguage, index)
+                          } // Pass targetLanguage to read the message in the correct language
+                          className="bg-green-500 text-white ml-1.5 px-1 rounded-3xl"
+                        >
+                          <i className="fa-solid fa-volume-high"></i>
+                        </button>
+                      )}
+                      {isReading[index] && (
+                        <button
+                          onClick={() => {
+                            stopSpeech(index);
+                            if (audioRef.current) {
+                              audioRef.current.pause(); // Stop the audio
+                              audioRef.current.currentTime = 0; // Reset the audio to the beginning
+                            }
+                          }} // Stop the speech and reset to show "Read" button
+                          className="bg-red-500 text-white ml-2 px-1 rounded-3xl"
+                        >
+                          <i className="fa-solid fa-circle-stop"></i>
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 my-2 py-2 px-3 rounded-lg ${
+                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl ${
                     message.sender === "user"
                       ? "bg-blue-100 italic font-semibold self-end whitespace-nowrap overflow-auto max-w-full"
-                      : "bg-gray-200 font-semibold self-start max-w-[70%]"
+                      : "font-semibold self-start max-w-[70%]"
                   }`}
                 >
                   {(message.text || "").split("\n").map((line, i) => (
@@ -853,34 +799,6 @@ export default function Chat() {
                     </React.Fragment>
                   ))}
                 </div>
-                {message.sender === "bot" && (
-                  <div className="flex gap-4 mt-2">
-                    {!isReading[index] && (
-                      <button
-                        onClick={() =>
-                          readMessage(message.text, targetLanguage, index)
-                        } // Pass targetLanguage to read the message in the correct language
-                        className="bg-green-500 text-white py-1 px-2 rounded"
-                      >
-                        <i className="fa-solid fa-volume-high"></i>
-                      </button>
-                    )}
-                    {isReading[index] && (
-                      <button
-                        onClick={() => {
-                          stopSpeech(index);
-                          if (audioRef.current) {
-                            audioRef.current.pause(); // Stop the audio
-                            audioRef.current.currentTime = 0; // Reset the audio to the beginning
-                          }
-                        }} // Stop the speech and reset to show "Read" button
-                        className="bg-red-500 text-white py-1 px-2 rounded"
-                      >
-                        <i className="fa-solid fa-circle-stop"></i>
-                      </button>
-                    )}
-                  </div>
-                )}
               </div>
             </React.Fragment>
           ))}
@@ -1108,7 +1026,6 @@ export default function Chat() {
               className="flex-grow p-2 mr-2 border border-gray-300 rounded"
             />
 
-            {/* Microphone button */}
             <div className="mic-button-wrapper mr-2 relative inline-block">
               <button
                 className="mic-button bg-[#1d4c47] text-white rounded-full p-2 text-lg"
@@ -1129,8 +1046,6 @@ export default function Chat() {
                 Hold to speak, release to send.
               </span>
             </div>
-
-            {/* Send button */}
             <button
               className="send-button p-2 bg-green-500 text-white rounded"
               type="submit"
