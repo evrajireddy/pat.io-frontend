@@ -148,13 +148,15 @@
   background-color: green;
 } */
 
-/* .mic-button-wrapper {
-  margin-left: 100px;
+.mic-button-wrapper {
+  touch-action: manipulation;
+  /* margin-left: 100px;
   position: relative;
-  display: inline-block;
-} */
+  display: inline-block; */
+}
 
-.mic-button {
+.mic-button,
+.fa-microphone {
   touch-action: manipulation;
   /* background-color: #007bff;
   color: white;
@@ -168,6 +170,7 @@
 
 .bubble-message {
   /* visibility: hidden; */
+  touch-action: manipulation;
   width: 120px;
   /* background-color: #333;
   color: #fff;
