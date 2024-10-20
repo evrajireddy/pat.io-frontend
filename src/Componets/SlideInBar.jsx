@@ -2,16 +2,20 @@ import { useNavigate } from "react-router-dom";
 import patioIcon from "../assets/icon.svg";
 import { useTranslation } from "react-i18next";
 
-export default function SideNavBar({ handleOptionClick }) {
+export default function SlideInBar({ handleOptionClick, isOpen }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="text-black w-18 h-screen bg-[#fffbeb] hidden md:block border-r-2 border-[#1d4c47]">
+    <div
+      className={`fixed top-0 left-0 h-full w-18 bg-[#fffbeb] text-black transform transition-transform duration-300 ease-in-out border-r-2 border-[#1d4c47] ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <div className="bg-[#fffbeb] cursor-pointer hover:bg-gray-200">
         <img
           src={patioIcon}
           alt="Icon"
-          className="w-16 h-16 bg-[#fffbeb]"
+          className="w-16 h-16"
           onClick={() => navigate("/")}
         />
       </div>
@@ -26,7 +30,7 @@ export default function SideNavBar({ handleOptionClick }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("SSN")}
           >
             SSN
@@ -34,7 +38,7 @@ export default function SideNavBar({ handleOptionClick }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("ITIN")}
           >
             ITIN
@@ -42,14 +46,14 @@ export default function SideNavBar({ handleOptionClick }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("LL30")}
           >
             LL30
           </button>
         </li>
         <li className="mb-4 ml-2">
-          <button className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-3xl cursor-pointer">
+          <button className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl cursor-pointer">
             <i className="fa-regular fa-envelope"></i>
           </button>
         </li>
