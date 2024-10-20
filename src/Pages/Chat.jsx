@@ -927,7 +927,7 @@ export default function Chat() {
                 onClick={() => handleVisaTypeClick("L-1")}
                 className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
               >
-                L-1
+                L-1A
               </button>
               <button
                 onClick={() => handleVisaTypeClick("F-1")}
@@ -941,6 +941,32 @@ export default function Chat() {
               >
                 {t("more")}
               </button>
+            </div>
+          )}
+          {uiState.visibleOptions.moreVisaType && (
+            <div className="visa-type-options grid grid-cols-4 gap-2 mt-2">
+              {[
+                "H-1B",
+                "L-1B",
+                "F-1",
+                "O-1",
+                "J-1",
+                "M-1",
+                "TN",
+                "R-1",
+                "P-1A",
+                "H-2A",
+                "P-1B",
+                "E-2",
+              ].map((visaType, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleVisaTypeClick(visaType)}
+                  className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                >
+                  {visaType}
+                </button>
+              ))}
             </div>
           )}
           {uiState.visibleOptions.ssn && (

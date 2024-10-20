@@ -26,7 +26,7 @@ export default function SideNavBar({ handleOptionClick }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-xl cursor-pointer"
+            className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("SSN")}
           >
             SSN
