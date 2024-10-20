@@ -1049,9 +1049,9 @@ export default function Chat() {
                 resetUserInteractions();
               }}
               placeholder={t("type")}
-              className="flex-grow p-2 mr-2 border border-gray-300 rounded"
+              className="flex-grow p-2 border border-gray-300 rounded"
             />
-            <div className="mic-button-wrapper ml-12 relative inline-block">
+            <div className="mic-button-wrapper ml-6 relative inline-block">
               <button
                 className="mic-button bg-[#1d4c47] text-white rounded-full p-2 text-lg"
                 type="button"
@@ -1071,7 +1071,7 @@ export default function Chat() {
                 Hold to speak, release to send.
               </span>
               <button
-                className="send-button p-2 bg-green-500 text-white rounded"
+                className="send-button p-2 bg-green-500 ml-6 text-white rounded"
                 type="submit"
                 disabled={!input.trim() || isLoading}
               >
