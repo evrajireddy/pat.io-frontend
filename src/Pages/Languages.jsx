@@ -49,7 +49,9 @@ export default function Languages() {
 
   return (
     <div className="flex flex-col items-center h-screen p-6 font-quattrocento">
-      <h1 className="text-3xl font-bold text-gray-800 mb-10">Select a Language</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-10 mt-10">
+        Select a Language
+      </h1>
       <div className="p-4 rounded-lg h-4/5 overflow-y-scroll w-full max-w-3xl custom-scrollbar">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(languageMapping).map(([lang, name]) => (
@@ -57,12 +59,18 @@ export default function Languages() {
               key={lang}
               onClick={() => handleLanguageClick(lang)}
               className={`w-40 h-16 sm:w-48 sm:h-20 flex items-center justify-center bg-[#3b7738] shadow-lg rounded-lg cursor-pointer transition-transform transform ${
-                selectedLang === lang ? "scale-110 border-2 border-green-600" : ""
+                selectedLang === lang
+                  ? "scale-110 border-2 border-green-600"
+                  : ""
               } hover:scale-105`}
             >
               <div className="flex flex-col items-center">
-                <span className="text-xl sm:text-2xl font-semibold text-white">{name[1]}</span>
-                <span className="text-sm sm:text-lg font-semibold text-white">{name[2]}</span>
+                <span className="text-xl sm:text-2xl font-semibold text-white">
+                  {name[1]}
+                </span>
+                <span className="text-sm sm:text-lg font-semibold text-white">
+                  {name[2]}
+                </span>
               </div>
             </div>
           ))}

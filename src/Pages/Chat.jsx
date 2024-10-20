@@ -706,7 +706,7 @@ export default function Chat() {
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4">
+        <header className="grid grid-cols-3 gap-4 mt-12">
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
@@ -1053,7 +1053,7 @@ export default function Chat() {
             />
             <div className="mic-button-wrapper ml-6 relative inline-block">
               <button
-                className="mic-button bg-[#1d4c47] text-white rounded-full p-2 text-lg"
+                className="mic-button bg-[#1d4c47] text-white rounded-full p-5 text-lg"
                 type="button"
                 onMouseDown={startListening}
                 onMouseUp={stopListeningAndSend}
@@ -1071,7 +1071,7 @@ export default function Chat() {
                 Hold to speak, release to send.
               </span>
               <button
-                className="send-button p-2 bg-green-500 ml-6 text-white rounded"
+                className="send-button p-2 bg-white text-white rounded"
                 type="submit"
                 disabled={!input.trim() || isLoading}
               >
