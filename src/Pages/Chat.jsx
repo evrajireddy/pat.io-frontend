@@ -706,7 +706,7 @@ export default function Chat() {
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4 mt-12">
+        <header className="grid grid-cols-3 gap-4 mt-16">
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
@@ -1019,7 +1019,7 @@ export default function Chat() {
           )}
         </div>
 
-        <div className="input-area p-5 border-t border-gray-300">
+        <div className="input-area p-5 pr-0 border-t border-gray-300">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -1071,7 +1071,7 @@ export default function Chat() {
                 Hold to speak, release to send.
               </span>
               <button
-                className="send-button p-2 bg-white text-white rounded"
+                className="send-button bg-white text-white rounded"
                 type="submit"
                 disabled={!input.trim() || isLoading}
               >
