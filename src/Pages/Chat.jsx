@@ -599,6 +599,7 @@ export default function Chat() {
 
   // Function to send the message and interactions to the backend
   const sendMessageToBackend = async (option, updatedUserInteractions) => {
+    setIsLoading(true);
     try {
       // Log the data that is about to be sent to the backend for debugging
       console.log("Sending data to backend:", {
@@ -644,6 +645,8 @@ export default function Chat() {
           sender: "bot",
         },
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -728,6 +731,56 @@ export default function Chat() {
         >
           {messages.map((message, index) => (
             <React.Fragment key={index}>
+              {/* {message.isWelcome && showWelcomeButtons && (
+                <div className="hidden md:flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
+                  <button
+                    onClick={() => handleOptionClick("SSN")}
+                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
+                  >
+                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
+                      {t("SSN")}
+                    </div>
+                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
+                      <img
+                        src="src/assets/applying.webp"
+                        alt="SSN Icon"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => handleOptionClick("LL30")}
+                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
+                  >
+                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
+                      {t("LL30")}
+                    </div>
+                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
+                      <img
+                        src="src/assets/ll30.webp"
+                        alt="LL30 Icon"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleOptionClick("ITIN")}
+                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
+                  >
+                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
+                      {t("ITIN")}
+                    </div>
+                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
+                      <img
+                        src="src/assets/itin.webp"
+                        alt="ITIN Icon"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </button>
+                </div>
+              )} */}
               <div
                 className={`message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
@@ -1018,7 +1071,20 @@ export default function Chat() {
             </div>
           )}
         </div>
+        {/* {isLoading && (
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-500"></div>
+            Wait for it Venkata
+          </div>
+        )}
 
+        {!isLoading && (
+          <div
+            className="message-list flex-grow overflow-y-auto flex flex-col p-5"
+            ref={messageListRef}
+            aria-live="polite"
+          ></div>
+        )} */}
         <div className="input-area p-5 pr-0 border-t border-gray-300">
           <form
             onSubmit={(e) => {
