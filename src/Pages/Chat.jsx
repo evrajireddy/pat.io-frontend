@@ -706,11 +706,11 @@ export default function Chat() {
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4 mt-16">
+        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-60 bg-white">
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
-              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 my-1 mx-1 rounded col-start-1 col-span-1"
+              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 mx-2 rounded col-start-1 col-span-1 "
             >
               {t("startOver")}
             </button>
@@ -722,14 +722,14 @@ export default function Chat() {
           />
         </header>
         <div
-          className="message-list flex-grow overflow-y-auto flex flex-col p-5"
+          className="message-list flex-grow overflow-y-auto flex flex-col p-5 "
           ref={messageListRef}
           aria-live="polite"
         >
           {messages.map((message, index) => (
             <React.Fragment key={index}>
               <div
-                className={`message-wrapper flex items-start space-x-2 ${
+                className={`mt-10 message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
                 }`}
               >
@@ -750,7 +750,7 @@ export default function Chat() {
                           onClick={() =>
                             readMessage(message.text, targetLanguage, index)
                           } // Pass targetLanguage to read the message in the correct language
-                          className="bg-green-500 text-white ml-1.5 px-1 rounded-3xl"
+                          className="bg-[#1d4c47] text-white ml-1.5 px-1 rounded-3xl"
                         >
                           <i className="fa-solid fa-volume-high"></i>
                         </button>
@@ -764,7 +764,7 @@ export default function Chat() {
                               audioRef.current.currentTime = 0; // Reset the audio to the beginning
                             }
                           }} // Stop the speech and reset to show "Read" button
-                          className="bg-red-500 text-white ml-2 px-1 rounded-3xl"
+                          className="bg-red-800 text-white ml-2 px-1 rounded-3xl"
                         >
                           <i className="fa-solid fa-circle-stop"></i>
                         </button>
@@ -775,9 +775,9 @@ export default function Chat() {
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl ${
+                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl shadow-md ${
                     message.sender === "user"
-                      ? "bg-blue-100 italic font-semibold self-end whitespace-nowrap overflow-auto max-w-full"
+                      ? "bg-[#1d4c47] text-white italic font-semibold self-end overflow-auto max-w-[60%]"
                       : "font-semibold self-start max-w-[70%]"
                   }`}
                 >
