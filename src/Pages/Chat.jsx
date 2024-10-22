@@ -1071,7 +1071,7 @@ export default function Chat() {
                 Hold to speak, release to send.
               </span>
               <button
-                className="send-button bg-[#1d4c47] text-white rounded"
+                className="send-button bg-white text-white rounded"
                 type="submit"
                 disabled={!input.trim() || isLoading}
               >
