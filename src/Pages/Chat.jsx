@@ -752,7 +752,7 @@ export default function Chat() {
                           } // Pass targetLanguage to read the message in the correct language
                           className="bg-[#1d4c47] text-white ml-1.5 px-1 rounded-3xl"
                         >
-                          <i className="fa-solid fa-volume-high"></i>
+                          <i className="fa-solid fa-volume-high py-1.5"></i>
                         </button>
                       )}
                       {isReading[index] && (
@@ -775,9 +775,9 @@ export default function Chat() {
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl shadow-md ${
+                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl shadow-md text-xl ${
                     message.sender === "user"
-                      ? "bg-[#1d4c47] text-white italic font-semibold self-end overflow-auto max-w-[60%]"
+                      ? "bg-[#1d4c47] text-white italic font-semibold self-start max-w-prose"
                       : "font-semibold self-start max-w-[70%]"
                   }`}
                 >
@@ -1053,7 +1053,7 @@ export default function Chat() {
             />
             <div className="mic-button-wrapper ml-6 relative inline-block">
               <button
-                className="mic-button bg-[#1d4c47] text-white rounded-full p-5 text-lg"
+                className="mic-button bg-[#1d4c47] text-white rounded-full px-5 py-4 text-sm"
                 type="button"
                 onMouseDown={startListening}
                 onMouseUp={stopListeningAndSend}
