@@ -277,7 +277,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/location", {
+      const response = await fetch("http://localhost:3123/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -325,7 +325,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -609,7 +609,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("https://pat-io.onrender.com/api/chat", {
+      const response = await fetch("http://localhost:3123/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -645,9 +645,10 @@ export default function Chat() {
           sender: "bot",
         },
       ]);
-    } finally {
-      setIsLoading(false);
     }
+    // finally {
+    //   setIsLoading(false); // preventing the messages moving up
+    // }
   };
 
   // Function to handle document status
@@ -731,7 +732,7 @@ export default function Chat() {
         >
           {messages.map((message, index) => (
             <React.Fragment key={index}>
-              {/* {message.isWelcome && showWelcomeButtons && (
+              {message.isWelcome && showWelcomeButtons && (
                 <div className="hidden md:flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
                   <button
                     onClick={() => handleOptionClick("SSN")}
@@ -780,7 +781,7 @@ export default function Chat() {
                     </div>
                   </button>
                 </div>
-              )} */}
+              )}
               <div
                 className={`message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
@@ -798,28 +799,27 @@ export default function Chat() {
                   )}
                   {message.sender === "bot" && (
                     <div className="flex gap-4 mt-2">
-                      {!isReading[index] && (
+                      {isReading[index] ? (
                         <button
                           onClick={() =>
                             readMessage(message.text, targetLanguage, index)
-                          } // Pass targetLanguage to read the message in the correct language
-                          className="bg-green-500 text-white ml-1.5 px-1 rounded-3xl"
+                          } // Start reading the message
+                          className="bg-green-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
                         >
-                          <i className="fa-solid fa-volume-high"></i>
+                          <i className="fa-solid fa-play"></i>
                         </button>
-                      )}
-                      {isReading[index] && (
+                      ) : (
                         <button
                           onClick={() => {
-                            stopSpeech(index);
+                            stopSpeech(index); // Stop the speech
                             if (audioRef.current) {
-                              audioRef.current.pause(); // Stop the audio
+                              audioRef.current.pause(); // Pause the audio
                               audioRef.current.currentTime = 0; // Reset the audio to the beginning
                             }
-                          }} // Stop the speech and reset to show "Read" button
-                          className="bg-red-500 text-white ml-2 px-1 rounded-3xl"
+                          }} // Stop the speech and reset to show "Play" button
+                          className="bg-red-500 text-white ml-2 p-2 rounded-full flex items-center justify-center"
                         >
-                          <i className="fa-solid fa-circle-stop"></i>
+                          <i className="fa-solid fa-pause"></i>
                         </button>
                       )}
                     </div>
@@ -1071,20 +1071,18 @@ export default function Chat() {
             </div>
           )}
         </div>
-        {/* {isLoading && (
-          <div className="flex justify-center items-center h-full">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-500"></div>
-            Wait for it Venkata
-          </div>
-        )}
-
         {!isLoading && (
           <div
-            className="message-list flex-grow overflow-y-auto flex flex-col p-5"
+            className="message-list flex-grow overflow-y-auto flex flex-col p-5 bg-transparent"
             ref={messageListRef}
             aria-live="polite"
           ></div>
-        )} */}
+        )}
+        {isLoading && (
+          <div className="absolute inset-0 flex justify-center items-center bg-transparent z-50 pointer-events-none">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+          </div>
+        )}
         <div className="input-area p-5 pr-0 border-t border-gray-300">
           <form
             onSubmit={(e) => {
