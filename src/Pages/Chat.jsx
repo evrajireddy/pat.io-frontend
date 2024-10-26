@@ -72,7 +72,7 @@ export default function Chat() {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     setMessages([
@@ -345,15 +345,27 @@ export default function Chat() {
       const data = await response.json();
 
       if (data.textResponse) {
-        setMessages((prev) => [
-          ...prev,
+        // setMessages((prev) => [
+        //   ...prev,
+        //   { text: input, sender: "user" },
+        //   { text: data.textResponse, sender: "bot" },
+        // ]);
+        // Add AI message and immediately start reading it
+        const newMessages = [
+          ...messages,
           { text: input, sender: "user" },
           { text: data.textResponse, sender: "bot" },
-        ]);
-      }
+        ];
 
-      if (data.audioResponse) {
-        playAudioResponse(data.audioResponse);
+        setMessages(newMessages);
+
+        // Set the reading state to true and trigger the speech synthesis for the AI message
+        const index = newMessages.length - 1; // Get the index of the AI message
+        setIsReading((prev) => ({ ...prev, [index]: true })); // Set isReading to true for the new message
+        // readMessage(data.textResponse, targetLanguage, index); // Automatically start reading the AI message
+        if (data.audioResponse) {
+          playAudioResponse(data.audioResponse, index); // Automatically start reading the AI message
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -402,7 +414,7 @@ export default function Chat() {
   };
 
   // Function to play audio response
-  const playAudioResponse = (base64Audio) => {
+  const playAudioResponse = (base64Audio, index) => {
     const byteCharacters = atob(base64Audio);
     const byteNumbers = Array.from(byteCharacters).map((char) =>
       char.charCodeAt(0)
@@ -413,6 +425,10 @@ export default function Chat() {
 
     audioRef.current.src = audioUrl;
     audioRef.current.play();
+
+    audioRef.current.onended = () => {
+      setIsReading((prev) => ({ ...prev, [index]: false }));
+    };
   };
 
   // Function to start speech recognition
@@ -801,25 +817,33 @@ export default function Chat() {
                     <div className="flex gap-4 mt-2">
                       {isReading[index] ? (
                         <button
-                          onClick={() =>
-                            readMessage(message.text, targetLanguage, index)
-                          } // Start reading the message
-                          className="bg-green-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
-                        >
-                          <i className="fa-solid fa-play"></i>
-                        </button>
-                      ) : (
-                        <button
                           onClick={() => {
                             stopSpeech(index); // Stop the speech
+                            setIsReading((prev) => ({
+                              ...prev,
+                              [index]: false,
+                            })); // Set reading state to false
                             if (audioRef.current) {
                               audioRef.current.pause(); // Pause the audio
                               audioRef.current.currentTime = 0; // Reset the audio to the beginning
                             }
-                          }} // Stop the speech and reset to show "Play" button
+                          }}
                           className="bg-red-500 text-white ml-2 p-2 rounded-full flex items-center justify-center"
                         >
                           <i className="fa-solid fa-pause"></i>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            readMessage(message.text, targetLanguage, index); // Start reading the message
+                            setIsReading((prev) => ({
+                              ...prev,
+                              [index]: true,
+                            })); // Set reading state to true
+                          }}
+                          className="bg-green-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
+                        >
+                          <i className="fa-solid fa-play"></i>
                         </button>
                       )}
                     </div>
@@ -1073,7 +1097,7 @@ export default function Chat() {
         </div>
         {!isLoading && (
           <div
-            className="message-list flex-grow overflow-y-auto flex flex-col p-5 bg-transparent"
+            className="message-list flex-grow overflow-y-auto flex flex-col bg-transparent"
             ref={messageListRef}
             aria-live="polite"
           ></div>
