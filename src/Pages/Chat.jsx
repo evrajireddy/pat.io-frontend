@@ -729,7 +729,7 @@ export default function Chat() {
           {messages.map((message, index) => (
             <React.Fragment key={index}>
               <div
-                className={`mt-10 message-wrapper flex items-start space-x-2 ${
+                className={` message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
                 }`}
               >
@@ -739,7 +739,7 @@ export default function Chat() {
                       <img
                         src={myChipSvg}
                         alt="Bot"
-                        className="w-10 h-10 mt-2"
+                        className="w-10 h-10 mt-14"
                       />
                     </div>
                   )}
@@ -775,7 +775,7 @@ export default function Chat() {
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl shadow-md text-xl ${
+                  } max-w-3/4 my-8 py-2 px-3 rounded-3xl shadow-md text-xl ${
                     message.sender === "user"
                       ? "bg-[#1d4c47] text-white italic font-semibold self-start max-w-prose"
                       : "font-semibold self-start max-w-[70%]"
@@ -1019,7 +1019,7 @@ export default function Chat() {
           )}
         </div>
 
-        <div className="input-area p-5 pr-0 border-t border-gray-300">
+        <div className="input-area p-5 pr-0">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -1038,7 +1038,7 @@ export default function Chat() {
               }
               setInput("");
             }}
-            className="flex"
+            className="flex ml-1 mr-0"
           >
             <input
               ref={inputRef}
