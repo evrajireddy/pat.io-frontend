@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import BreadCrumb from "../Componets/BreadCrumb";
-// import LanguageSelector from "../Componets/LanguageSelector";
+import SideNavBar from "../Componets/SideNavBar";
+import Hamburger from "../Componets/Hamburger";
+import myChipSvg from "../assets/patio.svg";
 import "./Chat.css";
 
 export default function Chat() {
@@ -14,6 +16,9 @@ export default function Chat() {
   const [breadcrumbPath, setBreadcrumbPath] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
   const [showBubble, setShowBubble] = useState(false);
+  const [showStarOverButton, setShowStarOverButton] = useState(false);
+  const [voices, setVoices] = useState([]); // For storing available voices
+  const [isReading, setIsReading] = useState({}); // Track the currently reading message (boolean array)
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -88,6 +93,50 @@ export default function Chat() {
     }
   }, []);
 
+  // Fetch available voices for text-to-speech
+  useEffect(() => {
+    const fetchVoices = () => {
+      const availableVoices = speechSynthesis.getVoices();
+      setVoices(availableVoices);
+    };
+
+    // Fetch voices when they become available
+    if (window.speechSynthesis) {
+      fetchVoices();
+      // Some browsers (like Chrome) might need a timeout
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = fetchVoices;
+      }
+    }
+  }, []);
+
+  // Play the text message using Web Speech API in the appropriate language
+  const readMessage = (text, language, index) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language || "en-US"; // Set the language dynamically based on the passed argument
+      window.speechSynthesis.speak(utterance);
+
+      // When the message is being read, show the "Stop" button
+      setIsReading((prev) => ({ ...prev, [index]: true }));
+
+      // Handle when speech ends (reset buttons)
+      utterance.onend = () => {
+        setIsReading((prev) => ({ ...prev, [index]: false }));
+      };
+    } else {
+      alert("Sorry, your browser does not support text-to-speech.");
+    }
+  };
+
+  // Stop the currently playing speech
+  const stopSpeech = (index) => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel(); // Stop any ongoing speech
+      setIsReading((prev) => ({ ...prev, [index]: false })); // Reset the state to show "Read" button again
+    }
+  };
+
   // Breadcrumb update function
   const updateBreadcrumb = (selection) => {
     setBreadcrumbPath((prevPath) => {
@@ -135,6 +184,7 @@ export default function Chat() {
       showDocumentButtons: false,
       showOfficeInfoButtons: false,
       moreVisaType: false,
+      startOver: false,
     };
 
     let newUIState = { ...resetUIState };
@@ -214,6 +264,7 @@ export default function Chat() {
 
   // Function to get closest office
   const handleLocationSubmit = async (input) => {
+    setShowStarOverButton(true);
     if (!input || input.trim() === "") {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -265,6 +316,7 @@ export default function Chat() {
 
   // Submit sending the targetLanguage to the backend along with the message
   const handleSubmit = async () => {
+    setShowStarOverButton(true);
     resetUserInteractions();
     if (!input.trim()) return;
     setIsLoading(true);
@@ -400,18 +452,22 @@ export default function Chat() {
     setShowWelcomeButtons(false);
     updateBreadcrumb(option);
     let botResponse = t("optionSelected") + option;
-    if (option === t("howToApplyForSSN")) {
+    if (option === "SSN") {
       botResponse = t("ssnSelected");
+      setShowStarOverButton(true);
       toggleOption("visa", true);
       updateUserInteraction("buttonClicks", "subject", "SSN");
-    } else if (option === t("whatIsNYCLocalLaw30")) {
+    } else if (option === "LL30") {
       botResponse = t("LL30Selected");
+      setShowStarOverButton(true);
       toggleOption("law30", true);
-    } else if (option === t("whatIsAnITIN")) {
+    } else if (option === "ITIN") {
       botResponse = t("ITINSelected");
+      setShowStarOverButton(true);
       toggleOption("itin", true);
     } else {
       botResponse = "Under Construction";
+      setShowStarOverButton(true);
       toggleOption("law30", false);
       toggleOption("visa", false);
     }
@@ -631,6 +687,7 @@ export default function Chat() {
 
   // Function to handle the "Start Over" button click
   const handleStartOver = () => {
+    setShowStarOverButton(false);
     setBreadcrumbPath([]);
     setMessages([
       {
@@ -646,275 +703,383 @@ export default function Chat() {
   };
 
   return (
-    <div className="chat-container">
-      {/* <h1>{t("chat")}</h1> */}
-      <BreadCrumb
-        path={breadcrumbPath}
-        onNavigate={handleBreadcrumbNavigation}
-      />
-      <button onClick={handleStartOver} className="start-over-button">
-        {t("startOver")}
-      </button>
-      {/* <LanguageSelector
-        setUserLanguage={setUserLanguage}
-        userLanguage={userLanguage}
-        targetLanguage={targetLanguage}
-        setTargetLanguage={setTargetLanguage}
-      /> */}
-      <div className="message-list" ref={messageListRef} aria-live="polite">
-        {messages.map((message, index) => (
-          <React.Fragment key={index}>
-            {message.isWelcome && showWelcomeButtons && (
-              <div className="option-grid">
-                <button
-                  onClick={() => handleOptionClick(t("howToApplyForSSN"))}
-                >
-                  {t("SSN")}
-                </button>
-                <button
-                  onClick={() => handleOptionClick(t("whatIsNYCLocalLaw30"))}
-                >
-                  {t("LL30")}
-                </button>
-                <button onClick={() => handleOptionClick(t("whatIsAnITIN"))}>
-                  {t("ITIN")}
-                </button>
-              </div>
-            )}
-            <div className={`message ${message.sender}`}>
-              {(message.text || "").split("\n").map((line, i) => (
-                <React.Fragment key={i}>
-                  {line.match(/^\d+\./) ? (
-                    <div className="checkbox-item">
-                      <input type="checkbox" id={`item-${i}`} />
-                      <label htmlFor={`item-${i}`}>{line}</label>
+    <div className="flex h-screen">
+      <SideNavBar handleOptionClick={handleOptionClick} />
+      <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
+        <header className="grid grid-cols-3 gap-4 mt-16">
+          {showStarOverButton && (
+            <button
+              onClick={handleStartOver}
+              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 my-1 mx-1 rounded col-start-1 col-span-1"
+            >
+              {t("startOver")}
+            </button>
+          )}
+          <Hamburger handleOptionClick={handleOptionClick} />
+          <BreadCrumb
+            path={breadcrumbPath}
+            onNavigate={handleBreadcrumbNavigation}
+          />
+        </header>
+        <div
+          className="message-list flex-grow overflow-y-auto flex flex-col p-5"
+          ref={messageListRef}
+          aria-live="polite"
+        >
+          {messages.map((message, index) => (
+            <React.Fragment key={index}>
+              <div
+                className={`message-wrapper flex items-start space-x-2 ${
+                  message.sender === "user" ? "ml-auto flex-row-reverse" : ""
+                }`}
+              >
+                <div>
+                  {message.sender === "bot" && (
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={myChipSvg}
+                        alt="Bot"
+                        className="w-10 h-10 mt-2"
+                      />
                     </div>
-                  ) : (
-                    line
                   )}
-                  <br />
-                </React.Fragment>
+                  {message.sender === "bot" && (
+                    <div className="flex gap-4 mt-2">
+                      {!isReading[index] && (
+                        <button
+                          onClick={() =>
+                            readMessage(message.text, targetLanguage, index)
+                          } // Pass targetLanguage to read the message in the correct language
+                          className="bg-green-500 text-white ml-1.5 px-1 rounded-3xl"
+                        >
+                          <i className="fa-solid fa-volume-high"></i>
+                        </button>
+                      )}
+                      {isReading[index] && (
+                        <button
+                          onClick={() => {
+                            stopSpeech(index);
+                            if (audioRef.current) {
+                              audioRef.current.pause(); // Stop the audio
+                              audioRef.current.currentTime = 0; // Reset the audio to the beginning
+                            }
+                          }} // Stop the speech and reset to show "Read" button
+                          className="bg-red-500 text-white ml-2 px-1 rounded-3xl"
+                        >
+                          <i className="fa-solid fa-circle-stop"></i>
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div
+                  className={`message ${
+                    message.sender
+                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl ${
+                    message.sender === "user"
+                      ? "bg-blue-100 italic font-semibold self-end whitespace-nowrap overflow-auto max-w-full"
+                      : "font-semibold self-start max-w-[70%]"
+                  }`}
+                >
+                  {(message.text || "").split("\n").map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line.match(/^\d+\./) ? (
+                        <div className="checkbox-item mb-1 flex items-start">
+                          <input
+                            type="checkbox"
+                            className="mr-1 mt-1"
+                            id={`item-${i}`}
+                          />
+                          <label htmlFor={`item-${i}`}>{line}</label>
+                        </div>
+                      ) : (
+                        line
+                      )}
+                      <br />
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </React.Fragment>
+          ))}
+          {uiState.visibleOptions.visa && (
+            <div className="visa-options flex justify-around mt-2">
+              <button
+                onClick={() => handleVisaOptionClick(t("yes"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("yes")}
+              </button>
+              <button
+                onClick={() => handleVisaOptionClick(t("no"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("no")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.travelVisa && (
+            <div className="visa-form-options flex justify-apart mt-2">
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/ds-160-online-nonimmigrant-visa-application.html?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("applyForNonImmigrantVisa")}
+              </button>
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/online-immigrant-visa-forms.html?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("applyForImmigrantVisa")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.law30 && (
+            <div className="law30-options flex justify-around mt-2">
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("learnLL30")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.itin && (
+            <div className="itin-options flex justify-around mt-2">
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("TIN")}
+              </button>
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("nycITIN")}
+              </button>
+
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
+                      userLanguage === "en" ? "eng" : userLanguage
+                    }`,
+                    "_blank",
+                    "noopener noreferrer"
+                  )
+                }
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("irsITIN")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.visaType && (
+            <div className="visa-type-options flex justify-around mt-2">
+              <button
+                onClick={() => handleVisaTypeClick("H-1B")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                H-1B
+              </button>
+              <button
+                onClick={() => handleVisaTypeClick("L-1")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                L-1A
+              </button>
+              <button
+                onClick={() => handleVisaTypeClick("F-1")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                F-1
+              </button>
+              <button
+                onClick={() => handleVisaTypeClick("Others")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+              >
+                {t("more")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.moreVisaType && (
+            <div className="visa-type-options grid grid-cols-4 gap-2 mt-2">
+              {[
+                "H-1B",
+                "L-1B",
+                "F-1",
+                "O-1",
+                "J-1",
+                "M-1",
+                "TN",
+                "R-1",
+                "P-1A",
+                "H-2A",
+                "P-1B",
+                "E-2",
+              ].map((visaType, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleVisaTypeClick(visaType)}
+                  className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                >
+                  {visaType}
+                </button>
               ))}
             </div>
-          </React.Fragment>
-        ))}
-        {uiState.visibleOptions.visa && (
-          <div className="visa-options">
-            <button onClick={() => handleVisaOptionClick(t("yes"))}>
-              {t("yes")}
-            </button>
-            <button onClick={() => handleVisaOptionClick(t("no"))}>
-              {t("no")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.travelVisa && (
-          <div className="visa-form-options">
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/ds-160-online-nonimmigrant-visa-application.html?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-            >
-              {t("applyForNonImmigrantVisa")}
-            </button>
-            <button
-              onClick={() =>
-                window.open(
-                  `https://travel-state-gov.translate.goog/content/travel/en/us-visas/visa-information-resources/forms/online-immigrant-visa-forms.html?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-            >
-              {t("applyForImmigrantVisa")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.law30 && (
-          <div className="law30-options">
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-nycservice-org.translate.goog/language_access?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-            >
-              {t("learnLL30")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.itin && (
-          <div className="itin-options">
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-irs-gov.translate.goog/individuals/international-taxpayers/taxpayer-identification-numbers-tin?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-            >
-              {t("TIN")}
-            </button>
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-nyc-gov.translate.goog/site/dca/consumers/file-your-taxes-itin.page?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
-              }
-            >
-              {t("nycITIN")}
-            </button>
+          )}
+          {uiState.visibleOptions.ssn && (
+            <div className="ssn-options flex justify-around mt-2">
+              <button
+                onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("office")}
+              </button>
+              <button
+                onClick={() => handleSSNOptionClick(t("documentsRequired"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("documents")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.showDocumentButtons && (
+            <div className="document-status-buttons flex justify-around mt-2">
+              <button
+                onClick={() => handleDocumentStatus("complete")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("complete")}
+              </button>
+              <button
+                onClick={() => handleDocumentStatus("incomplete")}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("incomplete")}
+              </button>
+            </div>
+          )}
+          {uiState.visibleOptions.showOfficeInfoButtons && (
+            <div className="office-info-buttons flex justify-around mt-2">
+              <button
+                onClick={() => handleOfficeInfoResponse(t("yes"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("yes")}
+              </button>
+              <button
+                onClick={() => handleOfficeInfoResponse(t("no"))}
+                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+              >
+                {t("no")}
+              </button>
+            </div>
+          )}
+        </div>
 
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www-irs-gov.translate.goog/individuals/individual-taxpayer-identification-number?_x_tr_sl=en&_x_tr_tl=${
-                    userLanguage === "en" ? "eng" : userLanguage
-                  }`,
-                  "_blank",
-                  "noopener noreferrer"
-                )
+        <div className="input-area p-5 pr-0 border-t border-gray-300">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (
+                (input.trim() !== "" &&
+                  messages[messages.length - 1].text === t("nearestOffice")) ||
+                (input.length === 5 && /^\d+$/.test(input))
+              ) {
+                setMessages((prevMessages) => [
+                  ...prevMessages,
+                  { text: input, sender: "user" },
+                ]);
+                handleLocationSubmit(input);
+              } else {
+                handleSubmit();
               }
-            >
-              {t("irsITIN")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.visaType && (
-          <div className="visa-type-options">
-            <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
-            <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
-            <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
-            <button onClick={() => handleVisaTypeClick("Others")}>
-              {t("more")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.moreVisaType && (
-          <div className="visa-type-options">
-            <button onClick={() => handleVisaTypeClick("H-1B")}>H-1B</button>
-            {/* <button onClick={() => handleVisaTypeClick("H-2A")}>H-2A</button> */}
-            {/* <button onClick={() => handleVisaTypeClick("H-2B")}>H-2B</button> */}
-            <button onClick={() => handleVisaTypeClick("L-1")}>L-1</button>
-            {/* <button onClick={() => handleVisaTypeClick("O-1")}>O-1</button> */}
-            {/* <button onClick={() => handleVisaTypeClick("E-1")}>E-1</button> */}
-            {/* <button onClick={() => handleVisaTypeClick("E-2")}>E-2</button> */}
-            {/* <button onClick={() => handleVisaTypeClick("TN")}>TN</button> */}
-            {/* <button onClick={() => handleVisaTypeClick("J-1")}>J-1</button> */}
-            <button onClick={() => handleVisaTypeClick("F-1")}>F-1</button>
-            {/* <button onClick={() => handleVisaTypeClick("H-4")}>H-4</button> */}
-            {/* <button onClick={() => handleVisaTypeClick("J-2")}>J-2</button> */}
-          </div>
-        )}
-        {uiState.visibleOptions.ssn && (
-          <div className="ssn-options">
-            <button
-              onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
-            >
-              {t("office")}
-            </button>
-            <button
-              onClick={() => handleSSNOptionClick(t("documentsRequired"))}
-            >
-              {t("documents")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.showDocumentButtons && (
-          <div className="document-status-buttons">
-            <button onClick={() => handleDocumentStatus("complete")}>
-              {t("complete")}
-            </button>
-            <button onClick={() => handleDocumentStatus("incomplete")}>
-              {t("incomplete")}
-            </button>
-          </div>
-        )}
-        {uiState.visibleOptions.showOfficeInfoButtons && (
-          <div className="office-info-buttons">
-            <button onClick={() => handleOfficeInfoResponse(t("yes"))}>
-              {t("yes")}
-            </button>
-            <button onClick={() => handleOfficeInfoResponse(t("no"))}>
-              {t("no")}
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="input-area">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (
-              (input.trim() !== "" &&
-                messages[messages.length - 1].text === t("nearestOffice")) ||
-              (input.length === 5 && /^\d+$/.test(input))
-            ) {
-              setMessages((prevMessages) => [
-                ...prevMessages,
-                { text: input, sender: "user" },
-              ]);
-              handleLocationSubmit(input); // get data from server about location of nearest SSA office
-            } else {
-              handleSubmit(); // gets response from OpenAI API
-            }
-            setInput("");
-          }}
-        >
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              resetUserInteractions();
+              setInput("");
             }}
-            placeholder={t("type")}
-          />
-          <button
-            className="send-button"
-            type="submit"
-            disabled={!input.trim() || isLoading}
+            className="flex"
           >
-            {t("send")}
-          </button>
-          <div className="mic-button-wrapper">
-            <button
-              className="mic-button"
-              type="button"
-              onMouseDown={startListening}
-              onMouseUp={stopListeningAndSend}
-              onTouchStart={startListening}
-              onTouchEnd={stopListeningAndSend}
-              disabled={isLoading}
-            >
-              <i className="fa-solid fa-microphone"></i>
-            </button>
-            <span className={`bubble-message ${showBubble ? "visible" : ""}`}>
-              Hold to speak, release to send.
-            </span>
-          </div>
-        </form>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                resetUserInteractions();
+              }}
+              placeholder={t("type")}
+              className="flex-grow p-2 border border-gray-300 rounded"
+            />
+            <div className="mic-button-wrapper ml-6 relative inline-block">
+              <button
+                className="mic-button bg-[#1d4c47] text-white rounded-full p-5 text-lg"
+                type="button"
+                onMouseDown={startListening}
+                onMouseUp={stopListeningAndSend}
+                onTouchStart={startListening}
+                onTouchEnd={stopListeningAndSend}
+                disabled={isLoading}
+              >
+                <i className="fa-solid fa-microphone"></i>
+              </button>
+              <span
+                className={`bubble-message ${
+                  showBubble ? "visible" : ""
+                } absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs rounded px-2 py-1`}
+              >
+                Hold to speak, release to send.
+              </span>
+              <button
+                className="send-button bg-white text-white rounded"
+                type="submit"
+                disabled={!input.trim() || isLoading}
+              >
+                {t("send")}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

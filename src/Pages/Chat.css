@@ -1,81 +1,81 @@
-.chat-container {
+/* .chat-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   max-width: 600px;
   margin: 0 auto;
   border: 1px solid #ccc;
-}
+} */
 
-.message-list {
+/* .message-list {
   flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 20px;
-}
+} */
 
 .message {
   max-width: 70%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 10px;
+  /* margin-top: 10px; */
+  /* margin-bottom: 10px; */
+  /* padding: 10px; */
+  /* border-radius: 10px; */
 }
 
-.user {
+/* .user {
   align-self: flex-end;
   background-color: #e6f2ff;
-}
+} */
 
-.bot {
+/* .bot {
   align-self: flex-start;
   background-color: #f0f0f0;
-}
-.input-area {
+} */
+/* .input-area {
   padding: 20px;
   border-top: 1px solid #ccc;
-}
+} */
 
-form {
+/* form {
   display: flex;
-}
+} */
 
-input {
+/* input {
   flex-grow: 1;
   padding: 10px;
   margin-right: 10px;
-}
+} */
 
-button {
+/* button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
-}
-.option-grid {
+} */
+/* .option-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
-}
+} */
 
-.option-grid button {
+/* .option-grid button {
   padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 
-.option-grid button:hover {
+/* .option-grid button:hover {
   background-color: #0056b3;
-}
+} */
 
-.visa-options,
+/* .visa-options,
 .visa-type-options,
 .ssn-options,
 .document-status-buttons,
@@ -86,9 +86,9 @@ button {
   display: flex;
   justify-content: space-around;
   margin-top: 10px;
-}
+} */
 
-.visa-options button,
+/* .visa-options button,
 .visa-type-options button,
 .ssn-options button,
 .document-status-buttons button,
@@ -102,9 +102,9 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 
-.visa-options button:hover,
+/* .visa-options button:hover,
 .visa-type-options button:hover,
 .ssn-options button:hover,
 .document-status-buttons button:hover,
@@ -113,75 +113,78 @@ button {
 .itin-options button:hover,
 .visa-form-options button:hover {
   background-color: #0056b3;
-}
+} */
 
-.checkbox-item {
-  /* display: flex; */
-  /* align-items: flex-start; */
+/* .checkbox-item {
   margin-bottom: 5px;
-}
+} */
 
 .checkbox-item input[type="checkbox"] {
   margin-right: 10px;
   margin-top: 3px;
 }
 
-.chat-header {
+/* .chat-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-}
+} */
 
-.start-over-button {
+/* .start-over-button {
   padding: 10px 15px;
   background-color: #007bff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-}
+} */
 
-.start-over-button:hover {
+/* .start-over-button:hover {
   background-color: #e0e0e0;
-}
+} */
 
-.send-button {
+/* .send-button {
   background-color: green;
-}
+} */
 
 .mic-button-wrapper {
+  touch-action: manipulation;
+  /* margin-left: 100px;
   position: relative;
-  display: inline-block;
+  display: inline-block; */
 }
 
-.mic-button {
-  background-color: #007bff; /* Customize your button color */
+.mic-button,
+.fa-microphone {
+  touch-action: manipulation;
+  /* background-color: #007bff;
   color: white;
   border: none;
   border-radius: 50%;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
-  position: relative;
+  position: relative; */
 }
 
 .bubble-message {
-  visibility: hidden;
+  /* visibility: hidden; */
+  touch-action: manipulation;
   width: 120px;
-  background-color: #333;
+  /* background-color: #333;
   color: #fff;
   text-align: center;
   border-radius: 5px;
   padding: 5px;
   position: absolute;
-  bottom: 100%; /* Position it above the button */
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 10px; /* Adjust distance from the button */
+  margin-bottom: 10px; */
   opacity: 0;
   transition: opacity 0.3s;
-  font-size: 12px;
+  /* font-size: 12px; */
 }
 
 /* Show the bubble when hovering over the button */
@@ -192,6 +195,10 @@ button {
   opacity: 1;
 }
 
+/* .BreadCrumb {
+  padding: 10px;
+}
+
 .breadcrumb-button {
   background: none;
   border: none;
@@ -200,4 +207,4 @@ button {
   cursor: pointer;
   padding: 0;
   font: inherit;
-}
+} */
