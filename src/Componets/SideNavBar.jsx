@@ -11,7 +11,7 @@ export default function SideNavBar({ handleOptionClick }) {
         <img
           src={patioIcon}
           alt="Icon"
-          className="w-16 h-16 bg-[#fffbeb]"
+          className="w-16 h-16 bg-[#fffbeb] display-block mx-auto"
           onClick={() => navigate("/")}
         />
       </div>

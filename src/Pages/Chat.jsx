@@ -72,7 +72,7 @@ export default function Chat() {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
-  }, [messages, isLoading]);
+  }, [messages]);
 
   useEffect(() => {
     setMessages([
@@ -828,9 +828,9 @@ export default function Chat() {
                               audioRef.current.currentTime = 0; // Reset the audio to the beginning
                             }
                           }}
-                          className="bg-red-500 text-white ml-2 p-2 rounded-full flex items-center justify-center"
+                          className="bg-red-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
                         >
-                          <i className="fa-solid fa-pause"></i>
+                          <i className="fa-solid fa-pause px-0.5"></i>
                         </button>
                       ) : (
                         <button
@@ -843,7 +843,7 @@ export default function Chat() {
                           }}
                           className="bg-green-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
                         >
-                          <i className="fa-solid fa-play"></i>
+                          <i className="fa-solid fa-play px-0.5"></i>
                         </button>
                       )}
                     </div>
@@ -1095,19 +1095,18 @@ export default function Chat() {
             </div>
           )}
         </div>
-        {!isLoading && (
-          <div
-            className="message-list flex-grow overflow-y-auto flex flex-col bg-transparent"
-            ref={messageListRef}
-            aria-live="polite"
-          ></div>
-        )}
-        {isLoading && (
-          <div className="absolute inset-0 flex justify-center items-center bg-transparent z-50 pointer-events-none">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-          </div>
-        )}
         <div className="input-area p-5 pr-0 border-t border-gray-300">
+          {!isLoading && (
+            <div
+              className="message-list flex-grow overflow-y-auto flex flex-col bg-transparent"
+              aria-live="polite"
+            ></div>
+          )}
+          {isLoading && (
+            <div className="absolute inset-0 flex justify-center items-center bg-transparent z-50 pointer-events-none">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+            </div>
+          )}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -1141,7 +1140,7 @@ export default function Chat() {
             />
             <div className="mic-button-wrapper ml-6 relative inline-block">
               <button
-                className="mic-button bg-[#1d4c47] text-white rounded-full p-5 text-lg"
+                className="mic-button bg-[#1d4c47] text-white rounded-full px-5 py-4 text-sm"
                 type="button"
                 onMouseDown={startListening}
                 onMouseUp={stopListeningAndSend}
