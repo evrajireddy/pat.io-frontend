@@ -749,7 +749,7 @@ export default function Chat() {
           {messages.map((message, index) => (
             <React.Fragment key={index}>
               <div
-                className={`message-wrapper flex items-start space-x-2 ${
+                className={` message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
                 }`}
               >

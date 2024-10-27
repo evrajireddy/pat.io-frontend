@@ -15,7 +15,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         <img
           src={patioIcon}
           alt="Icon"
-          className="w-16 h-16 display-block mx-auto"
+          className="ml-1 w-16 h-16"
           onClick={() => navigate("/")}
         />
       </div>
