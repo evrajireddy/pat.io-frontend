@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './i18n'; 
 import logo from '../assets/logo.svg'; 
+import "./Welcome.css";
 
 const languageMapping = {
   en: ['en-US', 'English'],
@@ -30,7 +31,6 @@ const languageMapping = {
   ar: ['ar-SA', 'العربية (Arabic)'],
   ur: ['ur-PK', 'اردو (Urdu)'],
   tl: ['tl-PH', 'Tagalog (Filipino)'],
-};
 
 export default function Welcome() {
   const { i18n } = useTranslation();

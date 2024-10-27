@@ -23,7 +23,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         <li className="mb-4 ml-1">
           <button
             className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 ml-1.5 cursor-pointer"
-            onClick={() => navigate("/language")}
+            onClick={() => navigate("/")}
           >
             <i className="fa-solid fa-language"></i>
           </button>

@@ -345,15 +345,27 @@ export default function Chat() {
       const data = await response.json();
 
       if (data.textResponse) {
-        setMessages((prev) => [
-          ...prev,
+        // setMessages((prev) => [
+        //   ...prev,
+        //   { text: input, sender: "user" },
+        //   { text: data.textResponse, sender: "bot" },
+        // ]);
+        // Add AI message and immediately start reading it
+        const newMessages = [
+          ...messages,
           { text: input, sender: "user" },
           { text: data.textResponse, sender: "bot" },
-        ]);
-      }
+        ];
 
-      if (data.audioResponse) {
-        playAudioResponse(data.audioResponse);
+        setMessages(newMessages);
+
+        // Set the reading state to true and trigger the speech synthesis for the AI message
+        const index = newMessages.length - 1; // Get the index of the AI message
+        setIsReading((prev) => ({ ...prev, [index]: true })); // Set isReading to true for the new message
+        // readMessage(data.textResponse, targetLanguage, index); // Automatically start reading the AI message
+        if (data.audioResponse) {
+          playAudioResponse(data.audioResponse, index); // Automatically start reading the AI message
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -402,7 +414,7 @@ export default function Chat() {
   };
 
   // Function to play audio response
-  const playAudioResponse = (base64Audio) => {
+  const playAudioResponse = (base64Audio, index) => {
     const byteCharacters = atob(base64Audio);
     const byteNumbers = Array.from(byteCharacters).map((char) =>
       char.charCodeAt(0)
@@ -413,6 +425,10 @@ export default function Chat() {
 
     audioRef.current.src = audioUrl;
     audioRef.current.play();
+
+    audioRef.current.onended = () => {
+      setIsReading((prev) => ({ ...prev, [index]: false }));
+    };
   };
 
   // Function to start speech recognition
@@ -599,6 +615,7 @@ export default function Chat() {
 
   // Function to send the message and interactions to the backend
   const sendMessageToBackend = async (option, updatedUserInteractions) => {
+    setIsLoading(true);
     try {
       // Log the data that is about to be sent to the backend for debugging
       console.log("Sending data to backend:", {
@@ -645,6 +662,9 @@ export default function Chat() {
         },
       ]);
     }
+    // finally {
+    //   setIsLoading(false); // preventing the messages moving up
+    // }
   };
 
   // Function to handle document status
@@ -745,28 +765,35 @@ export default function Chat() {
                   )}
                   {message.sender === "bot" && (
                     <div className="flex gap-4 mt-2">
-                      {!isReading[index] && (
-                        <button
-                          onClick={() =>
-                            readMessage(message.text, targetLanguage, index)
-                          } // Pass targetLanguage to read the message in the correct language
-                          className="bg-[#1d4c47] text-white ml-1.5 px-1 rounded-3xl"
-                        >
-                          <i className="fa-solid fa-volume-high py-1.5"></i>
-                        </button>
-                      )}
-                      {isReading[index] && (
+                      {isReading[index] ? (
                         <button
                           onClick={() => {
-                            stopSpeech(index);
+                            stopSpeech(index); // Stop the speech
+                            setIsReading((prev) => ({
+                              ...prev,
+                              [index]: false,
+                            })); // Set reading state to false
                             if (audioRef.current) {
-                              audioRef.current.pause(); // Stop the audio
+                              audioRef.current.pause(); // Pause the audio
                               audioRef.current.currentTime = 0; // Reset the audio to the beginning
                             }
-                          }} // Stop the speech and reset to show "Read" button
-                          className="bg-red-800 text-white ml-2 px-1 rounded-3xl"
+                          }}
+                          className="bg-red-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
                         >
-                          <i className="fa-solid fa-circle-stop"></i>
+                          <i className="fa-solid fa-pause px-0.5"></i>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            readMessage(message.text, targetLanguage, index); // Start reading the message
+                            setIsReading((prev) => ({
+                              ...prev,
+                              [index]: true,
+                            })); // Set reading state to true
+                          }}
+                          className="bg-green-500 text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
+                        >
+                          <i className="fa-solid fa-play px-0.5"></i>
                         </button>
                       )}
                     </div>
@@ -1018,8 +1045,18 @@ export default function Chat() {
             </div>
           )}
         </div>
-
-        <div className="input-area p-5 pr-0">
+        <div className="input-area p-5 pr-0 border-t border-gray-300">
+          {!isLoading && (
+            <div
+              className="message-list flex-grow overflow-y-auto flex flex-col bg-transparent"
+              aria-live="polite"
+            ></div>
+          )}
+          {isLoading && (
+            <div className="absolute inset-0 flex justify-center items-center bg-transparent z-50 pointer-events-none">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+            </div>
+          )}
           <form
             onSubmit={(e) => {
               e.preventDefault();

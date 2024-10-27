@@ -1,3 +1,15 @@
+span,
+.send-button,
+.mic-button,
+.fa-microphone,
+.bubble-message {
+  touch-action: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 /* .chat-container {
   display: flex;
   flex-direction: column;
@@ -208,3 +220,17 @@
   padding: 0;
   font: inherit;
 } */
+
+.loader {
+  border-top-color: #3498db;
+  animation: spinner 1.5s infinite linear;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
