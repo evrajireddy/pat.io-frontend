@@ -6,7 +6,7 @@ export default function SideNavBar({ handleOptionClick }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="text-black w-18 h-screen bg-[#fffbeb] hidden md:block border-r-2 border-[#1d4c47]">
+    <div className="text-[#1d4c47] w-18 h-screen bg-[#fffbeb] hidden md:block border-r-2 border-[#1d4c47]">
       <div className="bg-[#fffbeb] cursor-pointer hover:bg-gray-200">
         <img
           src={patioIcon}
@@ -18,8 +18,8 @@ export default function SideNavBar({ handleOptionClick }) {
       <ul>
         <li className="mb-4 ml-1">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 cursor-pointer"
-            onClick={() => navigate("/language")}
+            className="ml-1.5 w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 cursor-pointer"
+            onClick={() => navigate("/")}
           >
             <i className="fa-solid fa-language"></i>
           </button>
@@ -49,7 +49,7 @@ export default function SideNavBar({ handleOptionClick }) {
           </button>
         </li>
         <li className="mb-4 ml-2">
-          <button className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-3xl cursor-pointer">
+          <button className="ml-1.5 w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-3xl cursor-pointer">
             <i className="fa-regular fa-envelope"></i>
           </button>
         </li>

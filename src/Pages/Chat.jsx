@@ -726,11 +726,11 @@ export default function Chat() {
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
       <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4 mt-16">
+        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-60 bg-white">
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
-              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 my-1 mx-1 rounded col-start-1 col-span-1"
+              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 mx-2 rounded col-start-1 col-span-1 "
             >
               {t("startOver")}
             </button>
@@ -742,62 +742,12 @@ export default function Chat() {
           />
         </header>
         <div
-          className="message-list flex-grow overflow-y-auto flex flex-col p-5"
+          className="message-list flex-grow overflow-y-auto flex flex-col p-5 "
           ref={messageListRef}
           aria-live="polite"
         >
           {messages.map((message, index) => (
             <React.Fragment key={index}>
-              {message.isWelcome && showWelcomeButtons && (
-                <div className="hidden md:flex flex-col md:flex-row justify-between gap-4 mt-2 mb-2">
-                  <button
-                    onClick={() => handleOptionClick("SSN")}
-                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                  >
-                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                      {t("SSN")}
-                    </div>
-                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                      <img
-                        src="src/assets/SSN.png"
-                        alt="SSN Icon"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => handleOptionClick("LL30")}
-                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                  >
-                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                      {t("LL30")}
-                    </div>
-                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                      <img
-                        src="src/assets/LL30.png"
-                        alt="LL30 Icon"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => handleOptionClick("ITIN")}
-                    className="flex items-end gap-2 overflow-hidden rounded-xl border border-neutral-300 bg-[#3b7738] p-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#fffbeb]"
-                  >
-                    <div className="flex-1 py-2 pl-2 text-white text-3xl font-bold hover:text-black">
-                      {t("ITIN")}
-                    </div>
-                    <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
-                      <img
-                        src="src/assets/ITIN.png"
-                        alt="ITIN Icon"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </button>
-                </div>
-              )}
               <div
                 className={`message-wrapper flex items-start space-x-2 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
@@ -809,7 +759,7 @@ export default function Chat() {
                       <img
                         src={myChipSvg}
                         alt="Bot"
-                        className="w-10 h-10 mt-2"
+                        className="w-10 h-10 mt-14"
                       />
                     </div>
                   )}
@@ -852,9 +802,9 @@ export default function Chat() {
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 my-2 py-1 px-3 rounded-3xl ${
+                  } max-w-3/4 my-8 py-2 px-3 rounded-3xl shadow-md text-xl ${
                     message.sender === "user"
-                      ? "bg-blue-100 italic font-semibold self-end whitespace-nowrap overflow-auto max-w-full"
+                      ? "bg-[#1d4c47] text-white italic font-semibold self-start max-w-prose"
                       : "font-semibold self-start max-w-[70%]"
                   }`}
                 >
@@ -1125,7 +1075,7 @@ export default function Chat() {
               }
               setInput("");
             }}
-            className="flex"
+            className="flex ml-1 mr-0"
           >
             <input
               ref={inputRef}

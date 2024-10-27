@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./i18n";
-import "./Languages.css"; // Import additional custom CSS for scrollbar
+import "./Languages.css"; // Import the CSS file
 
 const languageMapping = {
   en: ["en-US", "English", "(English)"],
@@ -34,44 +34,35 @@ const languageMapping = {
 export default function Languages() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [selectedLang, setSelectedLang] = useState(null);
 
+  useEffect(() => {
+    document.body.classList.add("languages-page");
+
+    return () => {
+      document.body.classList.remove("languages-page");
+    };
+  }, []);
+
   const handleLanguageClick = (lang) => {
-    console.log("Selected language:", lang);
     setSelectedLang(lang);
     i18n.changeLanguage(lang);
-    const chatLangCode = languageMapping[lang][0] || "en-US";
-    localStorage.setItem("chatLanguage", chatLangCode);
-    setLoading(false);
+    localStorage.setItem("chatLanguage", languageMapping[lang][0] || "en-US");
     navigate("/chat");
   };
 
   return (
-    <div className="flex flex-col items-center h-screen p-6 font-quattrocento">
-      <h1 className="text-3xl font-bold text-gray-800 mb-10 mt-10">
-        Select a Language
-      </h1>
-      <div className="p-4 rounded-lg h-4/5 overflow-y-scroll w-full max-w-3xl custom-scrollbar">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="languages-container">
+      <h1 className="title">Select a Language</h1>
+      <div className="languages-grid-container">
+        <div className="languages-grid">
           {Object.entries(languageMapping).map(([lang, name]) => (
             <div
               key={lang}
               onClick={() => handleLanguageClick(lang)}
-              className={`w-40 h-16 sm:w-48 sm:h-20 flex items-center justify-center bg-[#3b7738] shadow-lg rounded-lg cursor-pointer transition-transform transform ${
-                selectedLang === lang
-                  ? "scale-110 border-2 border-green-600"
-                  : ""
-              } hover:scale-105`}
+              className={`language-card ${selectedLang === lang ? "glow" : ""}`}
             >
-              <div className="flex flex-col items-center">
-                <span className="text-xl sm:text-2xl font-semibold text-white">
-                  {name[1]}
-                </span>
-                <span className="text-sm sm:text-lg font-semibold text-white">
-                  {name[2]}
-                </span>
-              </div>
+              <span className="language-text">{name[1]}</span>
             </div>
           ))}
         </div>

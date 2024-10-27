@@ -7,7 +7,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
   const navigate = useNavigate();
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-18 bg-[#fffbeb] text-black transform transition-transform duration-300 ease-in-out border-r-2 border-[#1d4c47] ${
+      className={`fixed top-0 left-0 h-full w-18 bg-[#fffbeb] text-[#1d4c47] transform transition-transform duration-300 ease-in-out border-r-2 border-[#1d4c47] ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -22,8 +22,8 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
       <ul>
         <li className="mb-4 ml-1">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 cursor-pointer"
-            onClick={() => navigate("/language")}
+            className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 ml-1.5 cursor-pointer"
+            onClick={() => navigate("/")}
           >
             <i className="fa-solid fa-language"></i>
           </button>
@@ -53,7 +53,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
           </button>
         </li>
         <li className="mb-4 ml-2">
-          <button className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl cursor-pointer">
+          <button className="w-auto text-left hover:bg-gray-200 p-2 ml-1.5 rounded text-3xl cursor-pointer">
             <i className="fa-regular fa-envelope"></i>
           </button>
         </li>
