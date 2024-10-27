@@ -277,7 +277,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("http://localhost:3123/api/location", {
+      const response = await fetch("https://pat-io.onrender.com/api/location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -325,7 +325,7 @@ export default function Chat() {
     const finalTargetLanguage = targetLanguage || "en-US";
 
     try {
-      const response = await fetch("http://localhost:3123/api/chat", {
+      const response = await fetch("https://pat-io.onrender.com/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -625,7 +625,7 @@ export default function Chat() {
         userInteractions: updatedUserInteractions, // This should contain the correct data
       });
 
-      const response = await fetch("http://localhost:3123/api/chat", {
+      const response = await fetch("https://pat-io.onrender.com/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -759,7 +759,7 @@ export default function Chat() {
                     </div>
                     <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
                       <img
-                        src="src/assets/applying.webp"
+                        src="src/assets/SSN.png"
                         alt="SSN Icon"
                         className="object-cover w-full h-full"
                       />
@@ -774,7 +774,7 @@ export default function Chat() {
                     </div>
                     <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
                       <img
-                        src="src/assets/ll30.webp"
+                        src="src/assets/LL30.png"
                         alt="LL30 Icon"
                         className="object-cover w-full h-full"
                       />
@@ -790,7 +790,7 @@ export default function Chat() {
                     </div>
                     <div className="relative h-[120px] w-full flex-1 overflow-hidden rounded-lg">
                       <img
-                        src="src/assets/itin.webp"
+                        src="src/assets/ITIN.png"
                         alt="ITIN Icon"
                         className="object-cover w-full h-full"
                       />
