@@ -8,7 +8,7 @@ export default function BreadCrumb({ path, onNavigate }) {
           {index > 0 && " > "}
           <button
             onClick={() => onNavigate(index, item)}
-            className="breadcrumb-button hover:bg-gray-200 text-b font-semibold px-1 rounded w-auto"
+            className="breadcrumb-button text-gray-500 hover:bg-gray-200 text-b font-semibold px-1 rounded w-auto"
           >
             {item.slice(0, 8)}
           </button>
