@@ -6,25 +6,17 @@ export default function SideNavBar({ handleOptionClick }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="text-[#1d4c47] w-18 h-screen bg-[#fffbeb] hidden md:block border-r-2 border-[#1d4c47]">
-      <div className="bg-[#fffbeb] cursor-pointer hover:bg-gray-200">
+    <div className="text-gray-500 w-18 h-screen bg-yellow-50 shadow-sm  hidden md:block border-r-2 ">
+      <div className=" cursor-pointer hover:bg-gray-200">
         <img
           src={patioIcon}
           alt="Icon"
-          className="ml-1.5 w-16 h-16 bg-[#fffbeb]"
+          className="w-24 h-24 opacity-50 grayscale"
           onClick={() => navigate("/")}
         />
       </div>
       <ul>
-        <li className="mb-4 ml-1">
-          <button
-            className="ml-1.5 w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 cursor-pointer"
-            onClick={() => navigate("/language")}
-          >
-            <i className="fa-solid fa-language"></i>
-          </button>
-        </li>
-        <li className="mb-4 ml-2">
+        <li className="mb-4 ml-4">
           <button
             className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("SSN")}
@@ -32,7 +24,7 @@ export default function SideNavBar({ handleOptionClick }) {
             SSN
           </button>
         </li>
-        <li className="mb-4 ml-2">
+        <li className="mb-4 ml-4">
           <button
             className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("ITIN")}
@@ -40,7 +32,7 @@ export default function SideNavBar({ handleOptionClick }) {
             ITIN
           </button>
         </li>
-        <li className="mb-4 ml-2">
+        <li className="mb-4 ml-3">
           <button
             className="w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("LL30")}
@@ -48,7 +40,7 @@ export default function SideNavBar({ handleOptionClick }) {
             LL30
           </button>
         </li>
-        <li className="mb-4 ml-2">
+        <li className="mb-4 ml-4">
           <button className="ml-1.5 w-auto text-left hover:bg-gray-200 font-black p-2 rounded text-3xl cursor-pointer">
             <i className="fa-regular fa-envelope"></i>
           </button>

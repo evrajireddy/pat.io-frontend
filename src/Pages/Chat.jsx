@@ -705,12 +705,12 @@ export default function Chat() {
   return (
     <div className="flex h-screen">
       <SideNavBar handleOptionClick={handleOptionClick} />
-      <div className="chat-container w-full mx-auto flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-60 bg-white">
+      <div className="chat-container bg-gradient-to-r from-yellow-50 to-sky-100 w-full flex flex-col h-screen font-quattrocento">
+        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-20 bg-slate-100 shadow-sm">
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
-              className="bg-[#1d4c47] hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 mx-2 rounded col-start-1 col-span-1 "
+              className="bg-gray-500 hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 mx-2 rounded col-start-1 col-span-1 "
             >
               {t("startOver")}
             </button>
@@ -722,14 +722,14 @@ export default function Chat() {
           />
         </header>
         <div
-          className="message-list flex-grow overflow-y-auto flex flex-col p-5 "
+          className="message-list  flex-grow  overflow-y-auto flex flex-col p-5"
           ref={messageListRef}
           aria-live="polite"
         >
           {messages.map((message, index) => (
             <React.Fragment key={index}>
               <div
-                className={` message-wrapper flex items-start space-x-2 ${
+                className={` message-wrapper flex items-start space-x mx-0 md:mx-40 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
                 }`}
               >
@@ -750,7 +750,7 @@ export default function Chat() {
                           onClick={() =>
                             readMessage(message.text, targetLanguage, index)
                           } // Pass targetLanguage to read the message in the correct language
-                          className="bg-[#1d4c47] text-white ml-1.5 px-1 rounded-3xl"
+                          className="bg-gray-500 text-white ml-1.5 px-1 rounded-3xl"
                         >
                           <i className="fa-solid fa-volume-high py-1.5"></i>
                         </button>
@@ -775,10 +775,10 @@ export default function Chat() {
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 my-8 py-2 px-3 rounded-3xl shadow-md text-xl ${
+                  } max-w-3/4 mt-14 py-2 px-3 rounded-3xl shadow-md text-xl ${
                     message.sender === "user"
-                      ? "bg-[#1d4c47] text-white italic font-semibold self-start max-w-prose"
-                      : "font-semibold self-start max-w-[70%]"
+                      ? "bg-gray-500 text-white italic font-semibold self-start max-w-prose"
+                      : "text-gray-600 font-semibold self-start max-w-[70%]"
                   }`}
                 >
                   {(message.text || "").split("\n").map((line, i) => (
@@ -806,13 +806,13 @@ export default function Chat() {
             <div className="visa-options flex justify-around mt-2">
               <button
                 onClick={() => handleVisaOptionClick(t("yes"))}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("yes")}
               </button>
               <button
                 onClick={() => handleVisaOptionClick(t("no"))}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("no")}
               </button>
@@ -830,7 +830,7 @@ export default function Chat() {
                     "noopener noreferrer"
                   )
                 }
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("applyForNonImmigrantVisa")}
               </button>
@@ -844,7 +844,7 @@ export default function Chat() {
                     "noopener noreferrer"
                   )
                 }
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("applyForImmigrantVisa")}
               </button>
@@ -862,7 +862,7 @@ export default function Chat() {
                     "noopener noreferrer"
                   )
                 }
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("learnLL30")}
               </button>
@@ -880,7 +880,7 @@ export default function Chat() {
                     "noopener noreferrer"
                   )
                 }
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("TIN")}
               </button>
@@ -894,7 +894,7 @@ export default function Chat() {
                     "noopener noreferrer"
                   )
                 }
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("nycITIN")}
               </button>
@@ -909,7 +909,7 @@ export default function Chat() {
                     "noopener noreferrer"
                   )
                 }
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("irsITIN")}
               </button>
@@ -919,25 +919,25 @@ export default function Chat() {
             <div className="visa-type-options flex justify-around mt-2">
               <button
                 onClick={() => handleVisaTypeClick("H-1B")}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 rounded"
               >
                 H-1B
               </button>
               <button
                 onClick={() => handleVisaTypeClick("L-1")}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 rounded"
               >
                 L-1A
               </button>
               <button
                 onClick={() => handleVisaTypeClick("F-1")}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 rounded"
               >
                 F-1
               </button>
               <button
                 onClick={() => handleVisaTypeClick("Others")}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 rounded"
               >
                 {t("more")}
               </button>
@@ -962,7 +962,7 @@ export default function Chat() {
                 <button
                   key={index}
                   onClick={() => handleVisaTypeClick(visaType)}
-                  className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                  className="bg-gray-500 font-semibold text-white py-2 px-4 rounded"
                 >
                   {visaType}
                 </button>
@@ -973,13 +973,13 @@ export default function Chat() {
             <div className="ssn-options flex justify-around mt-2">
               <button
                 onClick={() => handleSSNOptionClick(t("closestOfficeLocation"))}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("office")}
               </button>
               <button
                 onClick={() => handleSSNOptionClick(t("documentsRequired"))}
-                className="bg-[#1d4c47] font-semibold text-white py-2 px-4 mx-2 rounded"
+                className="bg-gray-500 font-semibold text-white py-2 px-4 mx-2 rounded"
               >
                 {t("documents")}
               </button>
@@ -1019,7 +1019,7 @@ export default function Chat() {
           )}
         </div>
 
-        <div className="input-area p-5 pr-0">
+        <div className="input-area p-5 pr-0 bg-gradient-to-r from-yellow-50 to-sky-100">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -1049,11 +1049,11 @@ export default function Chat() {
                 resetUserInteractions();
               }}
               placeholder={t("type")}
-              className="flex-grow p-2 border border-gray-300 rounded"
+              className="flex-grow p-2 bg-slate-300 bg-opacity-20 border-2 border-gray-300 rounded-full"
             />
             <div className="mic-button-wrapper ml-6 relative inline-block">
               <button
-                className="mic-button bg-[#1d4c47] text-white rounded-full px-5 py-4 text-sm"
+                className="mic-button bg-gray-500 text-white rounded-full px-5 py-4 text-sm"
                 type="button"
                 onMouseDown={startListening}
                 onMouseUp={stopListeningAndSend}
@@ -1071,7 +1071,7 @@ export default function Chat() {
                 Hold to speak, release to send.
               </span>
               <button
-                className="send-button bg-white text-white rounded"
+                className="send-button bg-white bg-opacity-5 text-sky-100 rounded"
                 type="submit"
                 disabled={!input.trim() || isLoading}
               >

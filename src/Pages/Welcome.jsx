@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './i18n'; 
 import logo from '../assets/logo.svg'; 
+import "./Welcome.css"
 
 const languageMapping = {
   en: ['en-US', 'English'],
