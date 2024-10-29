@@ -15,12 +15,12 @@ export default function Hamburger({ handleOptionClick }) {
         onClick={toggleHamburger}
       >
         <div
-          className={`h-1 bg-black transition-transform duration-300 ease-in-out ${
+          className={`h-1 bg-gray-500 transition-transform duration-300 ease-in-out ${
             isOpen ? "transform rotate-45 translate-y-2" : ""
           }`}
         ></div>
         <div
-          className={`h-1 bg-black transition-transform duration-300 ease-in-out ${
+          className={`h-1 bg-gray-500 transition-transform duration-300 ease-in-out ${
             isOpen ? "transform -rotate-45 -translate-y-2" : ""
           }`}
         ></div>

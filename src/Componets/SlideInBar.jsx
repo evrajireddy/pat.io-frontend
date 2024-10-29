@@ -7,15 +7,15 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
   const navigate = useNavigate();
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-18 bg-[#fffbeb] text-[#1d4c47] transform transition-transform duration-300 ease-in-out border-r-2 border-[#1d4c47] ${
+      className={`fixed top-0 left-0 h-full w-18 bg-opacity-70 bg-white text-gray-500 transform transition-transform duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="bg-[#fffbeb] cursor-pointer hover:bg-gray-200">
+      <div className="bg-opacity-30 bg-white cursor-pointer hover:bg-gray-200">
         <img
           src={patioIcon}
           alt="Icon"
-          className="ml-1 w-16 h-16"
+          className="ml-1 w-16 h-16 grayscale"
           onClick={() => navigate("/")}
         />
       </div>
