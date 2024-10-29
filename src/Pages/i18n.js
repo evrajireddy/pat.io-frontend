@@ -58,6 +58,7 @@ i18n.use(initReactI18next).init({
           "Sorry, please visit the USCIS website below to apply for a visa.",
         applyForImmigrantVisa: "Apply for a Immigrant Visa.",
         applyForNonImmigrantVisa: "Apply for a Non Immigrant Visa.",
+        holdButton: "Hold to speak, release to send.",
       },
     },
     ru: {

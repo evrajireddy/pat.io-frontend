@@ -989,7 +989,7 @@ export default function Chat() {
                 <button
                   key={index}
                   onClick={() => handleVisaTypeClick(visaType)}
-                  className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded"
+                  className="bg-[#1d4c47] font-semibold text-white py-2 px-4 rounded w-20"
                 >
                   {visaType}
                 </button>
@@ -1105,7 +1105,7 @@ export default function Chat() {
                   showBubble ? "visible" : ""
                 } absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs rounded px-2 py-1`}
               >
-                Hold to speak, release to send.
+                {t("holdButton")}
               </span>
               <button
                 className="send-button bg-white text-white rounded"
