@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import './i18n'; 
-import logo from '../assets/Logo.svg'; 
-import "./Welcome.css"
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import "./i18n";
+import logo from "../assets/Logo.svg";
+import "./Welcome.css";
 
 const languageMapping = {
   en: ["en-US", "English"],
@@ -67,7 +67,7 @@ export default function Welcome() {
       </header>
 
       {/* Hero Section */}
-      <section className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-r from-yellow-200 to-green-300 p-4">
+      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-200 to-green-300 p-4">
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">
             Pat.io
@@ -133,25 +133,26 @@ export default function Welcome() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-              {Object.keys(languageMapping).map((lang, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleLanguageClick(lang)}
-                  className="px-2 py-3 md:px-4 md:py-4 bg-glass rounded-lg text-center cursor-pointer border-transparent border-2 transition-all hover:border-gray-400 z-10 shadow-md text-gray-600"
-                >
-                  <span className="text-base md:text-lg font-semibold">
-                    {languageMapping[lang][1].split("(")[0]}
-                  </span>
-                  <span className="text-xs md:text-sm text-white-500 block">
-                    {languageMapping[lang][1].match(/\(([^)]+)\)/)?.[1]}
-                  </span>
-                </div>
-              ))}
+            <div className="max-h-[60vh] overflow-y-auto">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-6 md:gap-4">
+                {Object.keys(languageMapping).map((lang, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleLanguageClick(lang)}
+                    className="px-2 py-3 md:px-4 md:py-4 bg-glass rounded-lg text-center cursor-pointer border-transparent border-2 transition-all hover:border-gray-400 z-10 shadow-md text-gray-600"
+                  >
+                    <span className="text-base md:text-lg font-semibold">
+                      {languageMapping[lang][1].split("(")[0]}
+                    </span>
+                    <span className="text-xs md:text-sm text-white-500 block">
+                      {languageMapping[lang][1].match(/\(([^)]+)\)/)?.[1]}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
-
         {languageSelected && (
           <div className="text-center text-lg md:text-2xl text-gray-600 py-6 md:py-8">
             {`How can I assist you with Social Security in ${languageMapping[selectedLanguage][1]}?`}
