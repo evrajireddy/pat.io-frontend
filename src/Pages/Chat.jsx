@@ -728,12 +728,14 @@ export default function Chat() {
       <div className="chat-container bg-gradient-to-r from-yellow-50 to-sky-100 w-full flex flex-col h-screen font-quattrocento">
         <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-20 bg-slate-100 shadow-sm">
           {showStarOverButton && (
-            <button
-              onClick={handleStartOver}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 mx-2 rounded col-start-1 col-span-1 "
-            >
-              {t("startOver")}
-            </button>
+            <div className="flex items-center justify-start">
+              <button
+                onClick={handleStartOver}
+                className="bg-gray-500 hover:bg-gray-700 text-white font-semibold mt-4 px-2 my-2 mx-2 rounded"
+              >
+                {t("startOver")}
+              </button>
+            </div>
           )}
           <Hamburger handleOptionClick={handleOptionClick} />
           <BreadCrumb
@@ -989,7 +991,7 @@ export default function Chat() {
                 <button
                   key={index}
                   onClick={() => handleVisaTypeClick(visaType)}
-                  className="bg-gray-500 font-semibold text-white py-2 px-4 rounded"
+                  className="bg-gray-500 font-semibold text-white rounded w-16"
                 >
                   {visaType}
                 </button>
