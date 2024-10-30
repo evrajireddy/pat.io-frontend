@@ -615,7 +615,7 @@ export default function Chat() {
 
   // Function to send the message and interactions to the backend
   const sendMessageToBackend = async (option, updatedUserInteractions) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       // Log the data that is about to be sent to the backend for debugging
       console.log("Sending data to backend:", {
