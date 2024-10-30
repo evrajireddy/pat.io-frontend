@@ -6,7 +6,7 @@ export default function SideNavBar({ handleOptionClick }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="text-gray-500 w-18 h-screen bg-yellow-50 shadow-sm  hidden md:block border-r-2 ">
+    <div className="text-gray-500 w-18 h-screen bg-yellow-100 bg-opacity-70 shadow-sm  hidden md:block border-r-2 ">
       <div className=" cursor-pointer hover:bg-gray-200">
         <img
           src={patioIcon}

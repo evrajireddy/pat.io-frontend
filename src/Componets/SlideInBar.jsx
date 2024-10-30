@@ -7,7 +7,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
   const navigate = useNavigate();
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-18 bg-opacity-70 bg-white text-gray-500 transform transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 left-0 h-full w-18 bg-opacity-40 bg-slate-100 shadow-md text-gray-500 transform transition-transform duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -15,22 +15,22 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         <img
           src={patioIcon}
           alt="Icon"
-          className="ml-1 w-16 h-16 grayscale"
+          className="ml-1 w-16 h-16 grayscale "
           onClick={() => navigate("/")}
         />
       </div>
       <ul>
-        <li className="mb-4 ml-1">
+        {/* <li className="mb-4 ml-1">
           <button
             className="w-auto text-left hover:bg-gray-200 p-2 rounded text-3xl mt-4 ml-1.5 cursor-pointer"
             onClick={() => navigate("/")}
           >
             <i className="fa-solid fa-language"></i>
           </button>
-        </li>
+        </li> */}
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
+            className="w-auto text-left [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("SSN")}
           >
             SSN
@@ -38,7 +38,7 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
+            className="w-auto text-left [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("ITIN")}
           >
             ITIN
@@ -46,14 +46,14 @@ export default function SlideInBar({ handleOptionClick, isOpen }) {
         </li>
         <li className="mb-4 ml-2">
           <button
-            className="w-auto text-left hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
+            className="w-auto text-left [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] hover:bg-gray-200 p-2 font-black rounded text-xl cursor-pointer"
             onClick={() => handleOptionClick("LL30")}
           >
             LL30
           </button>
         </li>
         <li className="mb-4 ml-2">
-          <button className="w-auto text-left hover:bg-gray-200 p-2 ml-1.5 rounded text-3xl cursor-pointer">
+          <button className="w-auto text-left [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] hover:bg-gray-200 p-2 ml-1.5 rounded text-3xl cursor-pointer">
             <i className="fa-regular fa-envelope"></i>
           </button>
         </li>
