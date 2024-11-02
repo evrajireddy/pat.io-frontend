@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./i18n";
-import logo from "../assets/Logo.svg";
 import "./Welcome.css";
 
 const languageMapping = {
@@ -39,6 +38,7 @@ export default function Welcome() {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [languageSelected, setLanguageSelected] = useState(false);
   const [isBarClicked, setIsBarClicked] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLanguageClick = (lang) => {
     setSelectedLanguage(lang);
@@ -52,29 +52,101 @@ export default function Welcome() {
     setIsBarClicked(!isBarClicked);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsSidebarOpen(false); // Close sidebar after navigating
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 font-quattrocento">
-      {/* Sticky Header */}
-      <header className="w-full glass text-green-500 py-4 sticky top-0 z-10 shadow-md flex justify-between items-center px-4 md:px-6">
-        <h1 className="text-2xl md:text-4xl font-bold text-gray-600">Pat.io</h1>
+    <div className="min-h-screen font-quattrocento">
+      {/* Hamburger Menu */}
+      <div className="p-4">
+        <div
+          className="w-8 h-8 flex flex-col justify-around cursor-pointer"
+          onClick={toggleSidebar}
+        >
+          <span
+            className={`block h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
+              isSidebarOpen ? "rotate-45 translate-y-1" : ""
+            }`}
+          ></span>
+          <span
+            className={`block h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
+              isSidebarOpen ? "-rotate-45 -translate-y-1" : ""
+            }`}
+          ></span>
+        </div>
+      </div>
 
-        {/* Logo on the top right */}
-        <img
-          src={logo}
-          alt="App Logo"
-          className="h-8 w-8 md:h-12 md:w-12 object-contain"
-        />
-      </header>
+      {/* Sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-30 z-20"
+          onClick={toggleSidebar}
+        >
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            className="fixed top-0 left-0 h-full w-64 bg-white bg-opacity-95 shadow-lg p-6 space-y-6 text-gray-700 z-30"
+          >
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">Menu</h2>
+              <button
+                className="text-gray-600 text-lg font-semibold"
+                onClick={toggleSidebar}
+              >
+                ✕
+              </button>
+            </div>
+            <ul className="space-y-4">
+              <li>
+                <button
+                  onClick={() => handleNavigation("/research")}
+                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                >
+                  Research
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigation("/contact")}
+                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                >
+                  Contact Us
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigation("/company")}
+                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                >
+                  Company
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigation("/careers")}
+                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                >
+                  Careers
+                </button>
+              </li>
+            </ul>
+          </motion.div>
+        </div>
+      )}
 
-      {/* Hero Section */}
-      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-200 to-green-300 p-4">
+      {/* Main Content */}
+      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-100 to-sky-300 p-4">
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">
-            Pat.io
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">Pat.io</h1>
           <p className="text-lg md:text-xl text-gray-700 mb-4">
-            A revolutionary AI-powered language model for Social Security
-            assistance.
+            A revolutionary AI-powered language model for Social Security assistance.
           </p>
         </div>
 
@@ -101,11 +173,8 @@ export default function Welcome() {
 
         {/* Language Scrolling Bar */}
         {!isBarClicked ? (
-          <div
-            className="relative mt-6 w-full"
-            onClick={toggleLanguageContainer}
-          >
-            <div className="w-full max-w-lg mx-auto overflow-hidden bg-gray-300 bg-opacity-30 rounded-full p-2 md:p-4 cursor-pointer">
+          <div className="relative mt-6 w-full" onClick={toggleLanguageContainer}>
+            <div className="w-full max-w-lg mx-auto overflow-hidden bg-slate-200 bg-opacity-80 border-2 border-gray-300 rounded-full p-2 md:p-4 cursor-pointer">
               <motion.div
                 className="whitespace-nowrap flex"
                 animate={{ x: ["100%", "-100%"] }}
@@ -158,38 +227,6 @@ export default function Welcome() {
             {`How can I assist you with Social Security in ${languageMapping[selectedLanguage][1]}?`}
           </div>
         )}
-      </section>
-
-      {/* Research Section - Only visible on medium and larger screens */}
-      <section
-        className="hidden md:block py-16 bg-glass"
-        style={{ display: "none" }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-              Introducing the Pat.io Model
-            </h2>
-            <p className="mt-2 md:mt-4 text-base md:text-lg text-gray-600">
-              Our AI-powered language model is designed to provide instant,
-              accurate, and engaging information on Social Security processes
-              and requirements in New York City.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-white shadow-lg rounded-lg p-6 md:p-8 text-center">
-              <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                Cost Efficiency
-              </h3>
-              <p className="text-sm md:text-lg text-gray-600">
-                Pat.io delivers valuable insights while keeping operational
-                costs low, ensuring accessibility for all users.
-              </p>
-            </div>
-            {/* Additional research items as necessary */}
-          </div>
-        </div>
       </section>
     </div>
   );
