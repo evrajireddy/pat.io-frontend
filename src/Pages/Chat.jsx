@@ -731,7 +731,7 @@ export default function Chat() {
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
-              className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 ${isOpen ? "ml-20" : "ml-8" }  rounded col-start-1 col-span-1`}
+              className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-6 my-2 ${isOpen ? "ml-20" : "ml-8" }  rounded col-start-1 col-span-1`}
             >
               {t("startOver")}
             </button>
