@@ -616,7 +616,7 @@ export default function Chat() {
 
   // Function to send the message and interactions to the backend
   const sendMessageToBackend = async (option, updatedUserInteractions) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       // Log the data that is about to be sent to the backend for debugging
       console.log("Sending data to backend:", {
@@ -729,14 +729,22 @@ export default function Chat() {
       <div className="chat-container bg-gradient-to-r from-yellow-100 to-sky-300 w-full flex flex-col h-screen font-quattrocento">
         <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-40 bg-slate-100 shadow-sm">
           {showStarOverButton && (
-            <button
-              onClick={handleStartOver}
-              className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-6 my-2 ${isOpen ? "ml-20" : "ml-8" }  rounded col-start-1 col-span-1`}
-            >
-              {t("startOver")}
-            </button>
+            <div className="flex items-center justify-start">
+              <button
+                onClick={handleStartOver}
+                className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-6 my-2 ${
+                  isOpen ? "ml-20" : "ml-8"
+                }  rounded col-start-1 col-span-1`}
+              >
+                {t("startOver")}
+              </button>
+            </div>
           )}
-          <Hamburger handleOptionClick={handleOptionClick} isOpen={isOpen} setIsOpen={setIsOpen}/>
+          <Hamburger
+            handleOptionClick={handleOptionClick}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
           <BreadCrumb
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
@@ -990,7 +998,7 @@ export default function Chat() {
                 <button
                   key={index}
                   onClick={() => handleVisaTypeClick(visaType)}
-                  className="bg-gray-500 bg-opacity-50 font-semibold text-white py-2 px-4 rounded"
+                  className="bg-gray-500 font-semibold text-white rounded w-16"
                 >
                   {visaType}
                 </button>
