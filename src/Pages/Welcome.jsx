@@ -144,8 +144,8 @@ export default function Welcome() {
       {/* Main Content */}
       <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-100 to-sky-300 p-4">
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">Pat.io</h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] ">Pat.io</h1>
+          <p className="text-lg md:text-xl text-gray-700 mb-4 [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)] ">
             A revolutionary AI-powered language model for Social Security assistance.
           </p>
         </div>
