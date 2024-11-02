@@ -67,10 +67,10 @@ export default function Welcome() {
       </header>
 
       {/* Hero Section */}
-      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-200 to-green-300 p-4">
+      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-100 to-sky-300 p-4">
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">Pat.io</h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] ">Pat.io</h1>
+          <p className="text-lg md:text-xl text-gray-700 mb-4 [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)] ">
             A revolutionary AI-powered language model for Social Security assistance.
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function Welcome() {
         {/* Language Scrolling Bar */}
         {!isBarClicked ? (
           <div className="relative mt-6 w-full" onClick={toggleLanguageContainer}>
-            <div className="w-full max-w-lg mx-auto overflow-hidden bg-gray-300 bg-opacity-30 rounded-full p-2 md:p-4 cursor-pointer">
+            <div className="w-full max-w-lg mx-auto overflow-hidden shadow-md bg-gray-300 bg-opacity-30 rounded-full p-2 md:p-4 cursor-pointer">
               <motion.div
                 className="whitespace-nowrap flex"
                 animate={{ x: ['100%', '-100%'] }}

@@ -19,6 +19,7 @@ export default function Chat() {
   const [showStarOverButton, setShowStarOverButton] = useState(false);
   const [voices, setVoices] = useState([]); // For storing available voices
   const [isReading, setIsReading] = useState({}); // Track the currently reading message (boolean array)
+  const [isOpen, setIsOpen] = useState(false);
 
   // Language selection for user and target language
   const [userLanguage, setUserLanguage] = useState(
@@ -730,12 +731,12 @@ export default function Chat() {
           {showStarOverButton && (
             <button
               onClick={handleStartOver}
-              className="bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 mx-2 rounded col-start-1 col-span-1 "
+              className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-4 my-2 ${isOpen ? "ml-20" : "ml-8" }  rounded col-start-1 col-span-1`}
             >
               {t("startOver")}
             </button>
           )}
-          <Hamburger handleOptionClick={handleOptionClick} />
+          <Hamburger handleOptionClick={handleOptionClick} isOpen={isOpen} setIsOpen={setIsOpen}/>
           <BreadCrumb
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
@@ -749,7 +750,7 @@ export default function Chat() {
           {messages.map((message, index) => (
             <React.Fragment key={index}>
               <div
-                className={` message-wrapper flex items-start space-x mx-0 md:mx-40 ${
+                className={` message-wrapper flex items-start space-x mx-0 md:mx-56 ${
                   message.sender === "user" ? "ml-auto flex-row-reverse" : ""
                 }`}
               >
@@ -791,9 +792,9 @@ export default function Chat() {
                               [index]: true,
                             })); // Set reading state to true
                           }}
-                          className="bg-gray-500 bg-opacity-50 shadow-lg text-white ml-1.5 p-2 rounded-full flex items-center justify-center"
+                          className="bg-gray-500 bg-opacity-50 shadow-lg text-white ml-0.5 p-2 rounded-full flex items-center justify-center"
                         >
-                          <i className="fa-solid fa-play px-0.5"></i>
+                          <i className="fa-solid fa-play p-0.5 px-1"></i>
                         </button>
                       )}
                     </div>
@@ -802,10 +803,10 @@ export default function Chat() {
                 <div
                   className={`message ${
                     message.sender
-                  } max-w-3/4 mt-14 py-2 px-3 rounded-3xl shadow-md [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)] text-xl ${
+                  } max-w-3/4 mt-14 py-4 px-6 rounded-3xl shadow-custom-dark [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)] text-xl ${
                     message.sender === "user"
                       ? "bg-gray-500 bg-opacity-50 text-white italic [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)] font-semibold self-start max-w-prose"
-                      : "text-gray-600 bg-opacity-50 font-semibold self-start max-w-[70%]"
+                      : "text-gray-600 bg-opacity-50 font-semibold self-start mx-4 max-w-[70%]"
                   }`}
                 >
                   {(message.text || "").split("\n").map((line, i) => (
@@ -1045,7 +1046,7 @@ export default function Chat() {
             </div>
           )}
         </div>
-        <div className="input-area p-5 pr-0">
+        <div className="input-area p-5 px-4 pl-8 md:px-52 ">
           {!isLoading && (
             <div
               className="message-list flex-grow overflow-y-auto flex flex-col bg-transparent"
@@ -1086,11 +1087,11 @@ export default function Chat() {
                 resetUserInteractions();
               }}
               placeholder={t("type")}
-              className="flex-grow p-2 bg-slate-300 bg-opacity-20 border-2 border-gray-900 border-opacity-10 shadow-md rounded-full"
+              className="flex-grow px-6 py-4 bg-slate-300 bg-opacity-20 border-2 border-gray-900 border-opacity-10 shadow-md rounded-full"
             />
-            <div className="mic-button-wrapper ml-6 relative inline-block">
+            <div className="mic-button-wrapper relative inline-block mx-4">
               <button
-                className="mic-button bg-gray-500 bg-opacity-40 shadow-md text-white rounded-full px-5 py-4 text-sm"
+                className="mic-button mt-1 bg-gray-500 bg-opacity-40 shadow-md text-white rounded-full px-6 py-5 text-md"
                 type="button"
                 onMouseDown={startListening}
                 onMouseUp={stopListeningAndSend}
@@ -1108,11 +1109,11 @@ export default function Chat() {
                 {t("holdButton")}
               </span>
               <button
-                className="send-button text-sky-300 rounded"
+                className="send-button text-yellow-500 text-opacity-0 rounded"
                 type="submit"
                 disabled={!input.trim() || isLoading}
               >
-                {t("send")}
+                s
               </button>
             </div>
           </form>
