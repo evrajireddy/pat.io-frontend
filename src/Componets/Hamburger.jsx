@@ -2,7 +2,6 @@ import { useState } from "react";
 import SlideInBar from "./SlideInBar";
 
 export default function Hamburger({ handleOptionClick, isOpen, setIsOpen }) {
-
   const toggleHamburger = () => {
     setIsOpen(!isOpen);
   };
