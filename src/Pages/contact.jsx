@@ -1,4 +1,6 @@
+// Pages/contact.jsx
 import React from "react";
+import HamburgerMenu from "../Componets/HamburgerMenu";
 import Abraham from "../assets/Abraham.png";
 import Bryan from "../assets/Bryan.png";
 import Ray from "../assets/Ray.png";

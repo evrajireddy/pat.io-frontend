@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import logo from "../assets/Logo.svg";
 import "./i18n";
 import "./Welcome.css";
 
@@ -58,41 +59,25 @@ export default function Welcome() {
 
   const handleNavigation = (path) => {
     navigate(path);
-    setIsSidebarOpen(false); // Close sidebar after navigating
+    setIsSidebarOpen(false);
   };
 
   return (
-    <div className="min-h-screen font-quattrocento">
-      {/* Hamburger Menu */}
-      <div className="p-4">
-        <div
-          className="w-8 h-8 flex flex-col justify-around cursor-pointer"
-          onClick={toggleSidebar}
-        >
-          <span
-            className={`block h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
-              isSidebarOpen ? "rotate-45 translate-y-1" : ""
-            }`}
-          ></span>
-          <span
-            className={`block h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
-              isSidebarOpen ? "-rotate-45 -translate-y-1" : ""
-            }`}
-          ></span>
-        </div>
+    <div className="welcome-container font-quattrocento">
+      {/* Hamburger Menu positioned in the top-right corner */}
+      <div className="hamburger-icon" onClick={toggleSidebar}>
+        <div className={`bar ${isSidebarOpen ? "rotate-45" : ""}`}></div>
+        <div className={`bar ${isSidebarOpen ? "-rotate-45" : ""}`}></div>
       </div>
 
       {/* Sidebar */}
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-20"
-          onClick={toggleSidebar}
-        >
+        <div className="fixed inset-0 bg-opacity-30 z-20" onClick={toggleSidebar}>
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            className="fixed top-0 left-0 h-full w-64 bg-white bg-opacity-95 shadow-lg p-6 space-y-6 text-gray-700 z-30"
+            className="fixed top-0 left-0 h-full w-64 bg-white bg-opacity-35 shadow-lg p-6 space-y-6 text-gray-700 z-30 "
           >
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Menu</h2>
@@ -107,15 +92,15 @@ export default function Welcome() {
               <li>
                 <button
                   onClick={() => handleNavigation("/research")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
-                  Research
+                  Research Page
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => handleNavigation("/contact")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
                   Contact Us
                 </button>
@@ -123,7 +108,7 @@ export default function Welcome() {
               <li>
                 <button
                   onClick={() => handleNavigation("/company")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
                   Company
                 </button>
@@ -131,7 +116,7 @@ export default function Welcome() {
               <li>
                 <button
                   onClick={() => handleNavigation("/careers")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
                   Careers
                 </button>
@@ -142,60 +127,32 @@ export default function Welcome() {
       )}
 
       {/* Main Content */}
-      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-100 to-sky-300 p-4">
+      <section className="welcome-content">
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray [text-shadow:_0_1px_0_rgb(0_0_0_/_60%)] ">Pat.io</h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-4 [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)] ">
-            A revolutionary AI-powered language model for Social Security assistance.
+
+          {/* Logo Above Header Text */}
+          <img src={logo} alt="Pat.io Logo" className="h-40 w-40 mx-auto mb-1" />
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">Pat.io</h1>
+          <p className="text-lg md:text-xl text-gray-700 mb-7">
+            A revolutionary AI Superassistant.
           </p>
         </div>
 
-        {/* Animated Finger Pointer Prompt */}
+        {/* Centered Language Selection Button - Only show if language container is hidden */}
         {!isBarClicked && (
-          <motion.div
-            className="text-center mb-2"
-            initial={{ y: -10 }}
-            animate={{ y: [0, -10, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 1,
-              ease: "easeInOut",
-            }}
-          >
-            <motion.div
-              className="text-3xl md:text-4xl mt-1 text-green-600"
-              style={{ transform: "rotate(45deg)" }}
+          <div className="flex justify-center mt-1">
+            <button
+              className="px-4 py-2 bg-slate-200 text-gray-700 rounded-full shadow-md flex items-center space-x-2 hover:bg-slate-300 transition-colors"
+              onClick={toggleLanguageContainer}
             >
-              👉
-            </motion.div>
-          </motion.div>
+              <span>Select Language</span>
+              <span>→</span>
+            </button>
+          </div>
         )}
 
-        {/* Language Scrolling Bar */}
-        {!isBarClicked ? (
-          <div className="relative mt-6 w-full" onClick={toggleLanguageContainer}>
-            <div className="w-full max-w-lg mx-auto overflow-hidden bg-slate-200 bg-opacity-80 border-2 border-gray-300 rounded-full p-2 md:p-4 cursor-pointer">
-              <motion.div
-                className="whitespace-nowrap flex"
-                animate={{ x: ["100%", "-100%"] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 30,
-                  ease: "linear",
-                }}
-              >
-                {Object.keys(languageMapping).map((lang, index) => (
-                  <span
-                    key={index}
-                    className="px-3 md:px-6 text-base md:text-lg font-semibold text-gray-700"
-                  >
-                    {languageMapping[lang][1]}
-                  </span>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        ) : (
+        {/* Language Selection Container */}
+        {isBarClicked && (
           <motion.div
             className="mt-6 bg-teal bg-opacity-10 shadow-lg rounded-lg p-4 md:p-6 max-w-4xl mx-auto border-2 border-gray-300"
             initial={{ opacity: 0, y: -100 }}
@@ -213,7 +170,7 @@ export default function Welcome() {
                     <span className="text-base md:text-lg font-semibold">
                       {languageMapping[lang][1].split("(")[0]}
                     </span>
-                    <span className="text-xs md:text-sm text-white-500 block">
+                    <span className="text-xs md:text-sm text-gray-500 block">
                       {languageMapping[lang][1].match(/\(([^)]+)\)/)?.[1]}
                     </span>
                   </div>
@@ -222,6 +179,8 @@ export default function Welcome() {
             </div>
           </motion.div>
         )}
+
+        {/* Prompt for Assistance */}
         {languageSelected && (
           <div className="text-center text-lg md:text-2xl text-gray-600 py-6 md:py-8">
             {`How can I assist you with Social Security in ${languageMapping[selectedLanguage][1]}?`}

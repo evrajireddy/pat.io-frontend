@@ -726,7 +726,7 @@ export default function Chat() {
   return (
     <div className="flex h-screen">
       {/* <SideNavBar handleOptionClick={handleOptionClick} /> */}
-      <div className="chat-container bg-gradient-to-r from-yellow-100 to-sky-300 w-full flex flex-col h-screen font-quattrocento">
+      <div className="chat-container bg-gradient-to-r from-yellow-50 to-sky-100 w-full flex flex-col h-screen font-quattrocento">
         <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-40 bg-slate-100 shadow-sm">
           {showStarOverButton && (
             <div className="flex items-center justify-start">
