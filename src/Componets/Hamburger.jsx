@@ -1,15 +1,13 @@
 import { useState } from "react";
 import SlideInBar from "./SlideInBar";
 
-export default function Hamburger({ handleOptionClick }) {
-  const [isOpen, setIsOpen] = useState(false);
-
+export default function Hamburger({ handleOptionClick, isOpen, setIsOpen }) {
   const toggleHamburger = () => {
     setIsOpen(!isOpen);
   };
 
   return (
-    <div className="col-start-3 col-span-1 justify-self-end ">
+    <div className="col-start-3 col-span-1 justify-self-end mr-4 ">
       <div
         className="flex flex-col justify-around w-8 h-8 ml-auto cursor-pointer mr-4 mt-4"
         onClick={toggleHamburger}

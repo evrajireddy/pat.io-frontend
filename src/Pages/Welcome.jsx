@@ -129,6 +129,7 @@ export default function Welcome() {
       {/* Main Content */}
       <section className="welcome-content">
         <div className="text-center">
+
           {/* Logo Above Header Text */}
           <img src={logo} alt="Pat.io Logo" className="h-40 w-40 mx-auto mb-1" />
           <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">Pat.io</h1>
