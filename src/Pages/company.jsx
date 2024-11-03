@@ -5,7 +5,8 @@ import HeroSection from "../Componets/HeroSection";
 
 export default function Company() {
   return (
-    <div className="page-container bg-gradient-to-r from-purple-200 via-pink-200 to-red-200 min-h-screen p-6 font-quattrocento">
+    <div className="max-w-6xl mx-auto px-4 py-12 max-h-screen  bg-gradient-to-r from-pink-100 to-purple-200 overflow-y-auto">
+      
       {/* Hamburger Menu */}
       <HamburgerMenu />
       
@@ -27,7 +28,7 @@ export default function Company() {
 
         {/* Section 1: Mission and Vision */}
         <section className="mb-12">
-          <h2 className="text-3xl font-semibold mb-3">1. Our Mission and Vision</h2>
+          <h2 className="text-3xl font-semibold mb-3">Our Mission and Vision</h2>
           <p className="text-lg mb-4">
             Pat.io was founded on the principle that technology should be a bridge to opportunity
             and support, not a barrier. Our mission is to use artificial intelligence to simplify
@@ -44,7 +45,7 @@ export default function Company() {
 
         {/* Section 2: Our Values */}
         <section className="mb-12">
-          <h2 className="text-3xl font-semibold mb-3">2. Our Core Values</h2>
+          <h2 className="text-3xl font-semibold mb-3">Our Core Values</h2>
           <p className="text-lg mb-4">
             Our values are the foundation of everything we do. We believe in creating
             technology that not only solves problems but also respects and uplifts the communities
@@ -64,7 +65,7 @@ export default function Company() {
 
         {/* Section 3: Meet Our Team */}
         <section className="mb-12">
-          <h2 className="text-3xl font-semibold mb-3">3. Meet Our Team</h2>
+          <h2 className="text-3xl font-semibold mb-3"> Meet Our Team</h2>
           <p className="text-lg mb-4">
             Pat.io is powered by a team of dedicated professionals who bring together expertise
             from diverse fields, including AI, social work, UX design, and software development.
@@ -79,7 +80,7 @@ export default function Company() {
 
         {/* Section 4: Partnerships and Collaborations */}
         <section className="mb-12">
-          <h2 className="text-3xl font-semibold mb-3">4. Partnerships and Collaborations</h2>
+          <h2 className="text-3xl font-semibold mb-3"> Partnerships and Collaborations</h2>
           <p className="text-lg mb-4">
             We believe that collaboration is key to making a lasting impact. Pat.io partners with
             local and national organizations to bring our services to communities in need.
@@ -98,11 +99,11 @@ export default function Company() {
 
         {/* Section 5: Our Company Culture */}
         <section className="mb-12">
-          <h2 className="text-3xl font-semibold mb-3">5. Our Company Culture</h2>
+          <h2 className="text-3xl font-semibold mb-3"> Our Company Culture</h2>
           <p className="text-lg mb-4">
             At Pat.io, we foster a culture of inclusivity, creativity, and continuous learning.
             We encourage our team to take ownership of their projects and to push the boundaries
-            of what's possible in AI and social service technology. Key aspects of our culture include:
+            of what is possible in AI and social service technology. Key aspects of our culture include:
           </p>
           <ul className="list-disc list-inside space-y-2 pl-4">
             <li><strong>Learning and Growth:</strong> Offering workshops, conferences, and
@@ -116,7 +117,7 @@ export default function Company() {
 
         {/* Section 6: Our Journey and Milestones */}
         <section className="mb-12">
-          <h2 className="text-3xl font-semibold mb-3">6. Our Journey and Milestones</h2>
+          <h2 className="text-3xl font-semibold mb-3"> Our Journey and Milestones</h2>
           <p className="text-lg mb-4">
             Pat.io has come a long way since its inception. Here are some key milestones that
             have shaped our journey and guided us to where we are today:

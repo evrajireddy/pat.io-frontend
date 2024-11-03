@@ -1,0 +1,56 @@
+/* Prevent scrolling on the main page */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Main container */
+.welcome-container,
+.page-container {
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* New scrollable container */
+.scrollable-content {
+    flex-grow: 1;
+    overflow-y: auto; /* Enable scrolling only within this container */
+    padding: 1rem;
+    scroll-behavior: smooth; /* Smooth scrolling effect */
+}
+
+/* Hamburger menu styling */
+.hamburger-icon {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 1.5rem; /* Adjusted for responsiveness */
+    height: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+}
+
+/* Responsive typography */
+@media (min-width: 768px) {
+    h1 {
+        font-size: 3rem;
+    }
+    p {
+        font-size: 1.5rem;
+    }
+    button {
+        font-size: 1.125rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    h1 {
+        font-size: 4rem;
+    }
+    p {
+        font-size: 1.75rem;
+    }
+}

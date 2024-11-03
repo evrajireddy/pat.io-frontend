@@ -1,8 +1,7 @@
 // Components/HamburgerMenu.jsx
-
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function HamburgerMenu() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,10 +18,24 @@ export default function HamburgerMenu() {
 
   return (
     <>
-      {/* Hamburger Icon */}
-      <div className="hamburger-icon" onClick={toggleSidebar}>
-        <div className={`bar ${isSidebarOpen ? "rotate-45" : ""}`}></div>
-        <div className={`bar ${isSidebarOpen ? "-rotate-45" : ""}`}></div>
+      {/* Hamburger Icon - Adjusted Size and Position */}
+      <div
+        className="hamburger-icon ml-2 cursor-pointer" // Added left margin and cursor style
+        onClick={toggleSidebar}
+        style={{ width: "24px", height: "24px" }} // Smaller size
+      >
+        <div
+          className={`h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "translate-y-1.5" : ""
+          }`}
+          style={{ width: "100%", height: "3px", marginBottom: "4px" }}
+        ></div>
+        <div
+          className={`h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "-translate-y-1.5" : ""
+          }`}
+          style={{ width: "100%", height: "3px" }}
+        ></div>
       </div>
 
       {/* Sidebar */}
@@ -32,18 +45,18 @@ export default function HamburgerMenu() {
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            className="fixed top-0 left-0 h-full w-64 bg-gray-200 bg-opacity-35 shadow-lg p-6 space-y-6 text-gray-700 z-30"
+            className="fixed top-0 left-0 h-full w-64 bg-white bg-opacity-35 shadow-lg p-6 space-y-6 text-gray-700 z-30"
           >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Menu</h2>
-              <button
-                className="text-gray-600 text-lg font-semibold"
-                onClick={toggleSidebar}
-              >
-                ✕
-              </button>
-            </div>
+            <h2 className="text-2xl font-bold">Menu</h2>
             <ul className="space-y-4">
+              <li>
+                <button
+                  onClick={() => handleNavigation("/")}
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
+                >
+                  Home
+                </button>
+              </li>
               <li>
                 <button
                   onClick={() => handleNavigation("/research")}
@@ -76,14 +89,6 @@ export default function HamburgerMenu() {
                   Careers
                 </button>
               </li>
-              <li>
-          <button
-            onClick={() => handleNavigation("/")}
-            className="text-lg font-semibold hover:text-green-600"
-          >
-            Home
-          </button>
-        </li>
             </ul>
           </motion.div>
         </div>

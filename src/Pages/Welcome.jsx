@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import logo from "../assets/Logo.svg";
+import HamburgerMenu from "../Componets/HamburgerMenu";
 import "./i18n";
 import "./Welcome.css";
 
@@ -64,11 +65,8 @@ export default function Welcome() {
 
   return (
     <div className="welcome-container font-quattrocento">
-      {/* Hamburger Menu positioned in the top-right corner */}
-      <div className="hamburger-icon" onClick={toggleSidebar}>
-        <div className={`bar ${isSidebarOpen ? "rotate-45" : ""}`}></div>
-        <div className={`bar ${isSidebarOpen ? "-rotate-45" : ""}`}></div>
-      </div>
+      
+      <HamburgerMenu />
 
       {/* Sidebar */}
       {isSidebarOpen && (
@@ -125,7 +123,7 @@ export default function Welcome() {
           </motion.div>
         </div>
       )}
-
+      <div className="scrollable-content">
       {/* Main Content */}
       <section className="welcome-content">
         <div className="text-center">
@@ -187,6 +185,7 @@ export default function Welcome() {
           </div>
         )}
       </section>
+    </div>
     </div>
   );
 }

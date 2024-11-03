@@ -35,7 +35,7 @@ export default function Careers() {
   ];
 
   return (
-    <div className="page-container bg-gradient-to-r from-green-100 to-blue-200 min-h-screen p-6 font-quattrocento">
+    <div className="max-w-6xl mx-auto px-4 py-12 max-h-screen  bg-gradient-to-r from-green-100 to-blue-200 overflow-y-auto">
       {/* Hamburger Menu */}
       <HamburgerMenu />
 
