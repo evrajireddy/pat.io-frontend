@@ -58,41 +58,25 @@ export default function Welcome() {
 
   const handleNavigation = (path) => {
     navigate(path);
-    setIsSidebarOpen(false); // Close sidebar after navigating
+    setIsSidebarOpen(false);
   };
 
   return (
-    <div className="min-h-screen font-quattrocento">
-      {/* Hamburger Menu */}
-      <div className="p-4">
-        <div
-          className="w-8 h-8 flex flex-col justify-around cursor-pointer"
-          onClick={toggleSidebar}
-        >
-          <span
-            className={`block h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
-              isSidebarOpen ? "rotate-45 translate-y-1" : ""
-            }`}
-          ></span>
-          <span
-            className={`block h-1 bg-gray-600 transition-transform duration-300 ease-in-out ${
-              isSidebarOpen ? "-rotate-45 -translate-y-1" : ""
-            }`}
-          ></span>
-        </div>
+    <div className="welcome-container font-quattrocento">
+      {/* Hamburger Menu positioned in the top-right corner */}
+      <div className="hamburger-icon" onClick={toggleSidebar}>
+        <div className={`bar ${isSidebarOpen ? "rotate-45" : ""}`}></div>
+        <div className={`bar ${isSidebarOpen ? "-rotate-45" : ""}`}></div>
       </div>
 
       {/* Sidebar */}
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-20"
-          onClick={toggleSidebar}
-        >
+        <div className="fixed inset-0 bg-opacity-30 z-20" onClick={toggleSidebar}>
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            className="fixed top-0 left-0 h-full w-64 bg-white bg-opacity-95 shadow-lg p-6 space-y-6 text-gray-700 z-30"
+            className="fixed top-0 left-0 h-full w-64 bg-white bg-opacity-35 shadow-lg p-6 space-y-6 text-gray-700 z-30 "
           >
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Menu</h2>
@@ -107,15 +91,15 @@ export default function Welcome() {
               <li>
                 <button
                   onClick={() => handleNavigation("/research")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
-                  Research
+                  Research Page
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => handleNavigation("/contact")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
                   Contact Us
                 </button>
@@ -123,7 +107,7 @@ export default function Welcome() {
               <li>
                 <button
                   onClick={() => handleNavigation("/company")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
                   Company
                 </button>
@@ -131,7 +115,7 @@ export default function Welcome() {
               <li>
                 <button
                   onClick={() => handleNavigation("/careers")}
-                  className="text-lg font-semibold hover:text-blue-600 transition-colors"
+                  className="text-lg font-semibold hover:text-green-600 transition-colors"
                 >
                   Careers
                 </button>
@@ -142,7 +126,7 @@ export default function Welcome() {
       )}
 
       {/* Main Content */}
-      <section className="w-full h-screen flex flex-col md:justify-center items-center bg-gradient-to-r from-yellow-100 to-sky-300 p-4">
+      <section className="welcome-content">
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-2 text-gray">Pat.io</h1>
           <p className="text-lg md:text-xl text-gray-700 mb-4">
@@ -174,7 +158,7 @@ export default function Welcome() {
         {/* Language Scrolling Bar */}
         {!isBarClicked ? (
           <div className="relative mt-6 w-full" onClick={toggleLanguageContainer}>
-            <div className="w-full max-w-lg mx-auto overflow-hidden bg-slate-200 bg-opacity-80 border-2 border-gray-300 rounded-full p-2 md:p-4 cursor-pointer">
+            <div className="w-full max-w-lg mx-auto overflow-hidden bg-slate-200 bg-opacity-50 border-2 border-gray-300 rounded-full p-2 md:p-4 cursor-pointer">
               <motion.div
                 className="whitespace-nowrap flex"
                 animate={{ x: ["100%", "-100%"] }}
