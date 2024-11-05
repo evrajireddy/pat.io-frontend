@@ -55,6 +55,7 @@ export default function HamburgerMenu() {
                 src={patioIcon}
                 alt="Pat.io Icon"
                 className="ml-1 w-16 h-16 grayscale"
+                onClick={() => handleNavigation("/")}
               />
            </div>
             <ul className="space-y-4">
