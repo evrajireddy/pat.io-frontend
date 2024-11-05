@@ -5,7 +5,7 @@ import HeroSection from "../Componets/HeroSection";
 
 export default function Company() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 max-h-screen  bg-gradient-to-r from-pink-100 to-purple-200 overflow-y-auto">
+    <div className="max-w-full mx-auto px-4 py-12 max-h-screen  bg-gradient-to-r from-pink-100 to-purple-200 overflow-y-auto">
       
       {/* Hamburger Menu */}
       <HamburgerMenu />

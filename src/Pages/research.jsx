@@ -18,7 +18,7 @@ const fadeIn = {
 
 export default function Research() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 max-h-screen  bg-gradient-to-r from-blue-100 to-indigo-200 overflow-y-auto">
+    <div className="max-w-full mx-auto px-4 py-12 max-h-screen  bg-gradient-to-r from-blue-100 to-indigo-200 overflow-y-auto">
       {/* Hamburger Menu */}
       <HamburgerMenu />
 

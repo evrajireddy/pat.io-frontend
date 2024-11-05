@@ -727,13 +727,13 @@ export default function Chat() {
     <div className="flex h-screen">
       {/* <SideNavBar handleOptionClick={handleOptionClick} /> */}
       <div className="chat-container w-full flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-0">
+        <header className={` ${isOpen ? "bg-white bg-opacity-35" : "bg-opacity-0"} grid grid-cols-3 gap-4 w-screen absolute`}>
           {showStarOverButton && (
             <div className="flex items-center justify-start">
               <button
                 onClick={handleStartOver}
-                className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold w-14 mt-6 my-2 ${
-                  isOpen ? "ml-20" : "ml-8"
+                className={`bg-gray-500 bg-opacity-70 hover:bg-gray-700 text-white font-semibold px-2 mt-6 my-2 ${
+                  isOpen ? "ml-64 " : "ml-8"
                 }  rounded col-start-1 col-span-1`}
               >
                 {t("startOver")}

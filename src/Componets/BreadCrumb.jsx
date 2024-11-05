@@ -2,7 +2,7 @@ import React from "react";
 
 export default function BreadCrumb({ path, onNavigate, isOpen }) {
   return (
-    <div className={ ` ${isOpen ? "ml-20" : "ml-8"} col-span-3 hidden md:block`}>
+    <div className={ ` ${isOpen ? "ml-64" : "ml-8"} col-span-3 hidden md:block`}>
       {path.map((item, index) => (
         <span key={index}>
           {index > 0 && " > "}

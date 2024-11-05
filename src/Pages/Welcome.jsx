@@ -140,7 +140,7 @@ export default function Welcome() {
         {!isBarClicked && (
           <div className="flex justify-center mt-1">
             <button
-              className="px-4 py-2 bg-slate-200 text-gray-700 rounded-full shadow-md flex items-center space-x-2 hover:bg-slate-300 transition-colors"
+              className="px-4 py-2 bg-slate-200 bg-opacity-50 text-gray-700 rounded-full shadow-md flex items-center space-x-2 hover:bg-slate-300 transition-colors"
               onClick={toggleLanguageContainer}
             >
               <span>Select Language</span>
