@@ -10,14 +10,13 @@ span,
   user-select: none;
 }
 
-/* .chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-width: 600px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-} */
+
+
+.chat-container {
+  background: linear-gradient(270deg,#5f89f4a9 ,#8afabc90, #faeb6790, #fed18a92);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+}
 
 /* .message-list {
   flex-grow: 1;

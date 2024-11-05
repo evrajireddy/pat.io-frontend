@@ -726,8 +726,8 @@ export default function Chat() {
   return (
     <div className="flex h-screen">
       {/* <SideNavBar handleOptionClick={handleOptionClick} /> */}
-      <div className="chat-container bg-gradient-to-r from-yellow-50 to-sky-100 w-full flex flex-col h-screen font-quattrocento">
-        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-40 bg-slate-100 shadow-sm">
+      <div className="chat-container w-full flex flex-col h-screen font-quattrocento">
+        <header className="grid grid-cols-3 gap-4 w-screen absolute bg-opacity-0">
           {showStarOverButton && (
             <div className="flex items-center justify-start">
               <button
@@ -745,7 +745,7 @@ export default function Chat() {
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           />
-          <BreadCrumb
+          <BreadCrumb isOpen={isOpen}
             path={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigation}
           />
